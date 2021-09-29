@@ -1,0 +1,29 @@
+{
+  "name": "dfh",
+  "version": "1.0.0",
+  "description": "company quality website",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "client": "npm run start --prefix public",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "prod": "NPM_CONFIG_PRODUCTION=true NODE_ENV='production' npm run server"
+  },
+  "author": "James McNeilan",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^6.2.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.13.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.10"
+  },
+  "engines": {
+    "node": "12.18.3",
+    "npm": "6.14.6"
+  }
+}

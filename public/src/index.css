@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.fadeError { animation: fade 1s linear 4s 1 forwards; }
+@keyframes fade {
+  from { opacity: 100; }
+  to   { opacity: 0;   }
+}
