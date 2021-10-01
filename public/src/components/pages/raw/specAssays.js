@@ -4,11 +4,12 @@ const SpecAssays = ({assays}) => {
     if (assays) {
       return assays.map((assay, index) => {
         return (
-          <div key={index} >
-            <p className="text-center capitalize">
-            {`${assay.assay_name}:
-            ${rangeString(assay.assay_min, assay.assay_max, assay.assay_units)}
-            by ${assay.assay_method}`}</p>
+          <div className="grid grid-cols-3 p-2" key={index} >
+            <p className="text-center capitalize">{assay.assay_name}:</p>
+            <p className="col-span-2 capitalize">
+              {`${rangeString(assay.assay_min, assay.assay_max, assay.assay_units)} by ${assay.assay_method}`}
+            </p>
+
           </div>
         )
       })
@@ -24,8 +25,9 @@ const SpecAssays = ({assays}) => {
   }
 
   return (
-    <div className="bg-gray-600 rounded p-2 text-blue-100 font-semibold">
-      <h2 className="text-lg text-left ml-2 underline">Assays</h2>
+    <div className="bg-gray-600 rounded text-blue-100 font-semibold">
+      <h2 className="text-lg text-left px-2 py-1 text-blue-200">Assays</h2>
+      <div className="h-px bg-gradient-to-r from-blue-200 to-transparent"/>
       {mapAssays()}
     </div>
   )

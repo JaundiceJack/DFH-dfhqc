@@ -10,7 +10,7 @@ const LotList = ({lots}) => {
 
   // Compose row classes
   const dispatch = useDispatch();
-  const rowC = "opacity-75 font-semibold text-blue-100 py-1 px-2 hover:opacity-100 truncate"
+  const rowC = "opacity-75 font-semibold text-blue-100 py-1 px-2 hover:opacity-100 truncate grid grid-cols-12 gap-x-6"
   const oddRow  = rowC + " bg-gray-600 capitalize";
   const evenRow = rowC + " bg-gray-800 capitalize";
   const selRow  = rowC + " bg-green-600 capitalize";
@@ -32,7 +32,9 @@ const LotList = ({lots}) => {
     const lot = lots[index];
     return (
       <div onClick={() => rowClick(lot)} className={ rowClasses(index, lot._id) } style={style}>
-        {`${lot.lot && lot.lot}: ${lot.item ? lot.item.number : ""} ${lot.item ? "-" : ""} ${lot.item ? lot.item.name : ""} `}
+        <p className="col-span-3">{lot.lot && lot.lot}</p>
+        <p className="col-span-2">{lot.item ? lot.item.number : ""}</p>
+        <p className="col-span-7">{lot.item ? lot.item.name : ""}</p>
       </div>
     )
   }
