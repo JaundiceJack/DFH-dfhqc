@@ -15,11 +15,10 @@ const BulkAdd = ({ toggleAdd }) => {
     {
       number: "",
       name:   "",
-      blendId: "",
-      capId: "",
+      blendId: blends.length > 0 ? blends[0]._id : "",
+      capId: raws.length > 0 ? raws.filter(raw => raw.texture === 'Empty Capsule')[0]._id : "",
       dosageType: 'capsule',
       servingUnits: 'mg',
-      blendId: "",
       batchSize: "",
       fillWeight: "",
       capsuleWeight: "",
@@ -74,7 +73,7 @@ const BulkAdd = ({ toggleAdd }) => {
                      " from-red-900 to-gray-900 fadeError ";
 
   return (
-    <div>
+    <div className="mx-4 my-2">
       <form className="flex flex-col" onSubmit={onSubmit}>
 
         <AddBasic      vals={bulkVals}

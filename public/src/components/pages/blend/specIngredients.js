@@ -53,7 +53,8 @@ const SpecIngredients = ({ ingredients, serving, batchSize, servingUnits, fillWe
             <div className="grid grid-cols-2 gap-2 md:gap-0 col-span-1">
               <p className="md:hidden mr-2 sm:mr-0 text-right">Overage:</p>
               <p className="whitespace-nowrap">
-                {ingredient.overage && `${ingredient.overage} %`}</p>
+                { ingredient.overage !== 0 && `${ingredient.overage} %`}
+              </p>
             </div>
             <div className="grid grid-cols-2 gap-2 md:gap-0 col-span-1">
               <p className="md:hidden mr-2 sm:mr-0 text-right">% of Formula:</p>

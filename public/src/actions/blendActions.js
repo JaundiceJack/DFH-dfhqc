@@ -59,8 +59,8 @@ export const deleteBlend = (id) => dispatch => {
   .catch(err => dispatch(returnMessages(err.response.data, err.response.status)))
 }
 
-export const selectBlend = (index) => dispatch => {
-  dispatch({ type: SELECT_BLEND, payload: index });
+export const selectBlend = (blend) => dispatch => {
+  dispatch({ type: SELECT_BLEND, payload: blend });
 }
 
 export const toggleAdding = () => dispatch => dispatch({ type: TOGGLE_ADDING_BLEND });

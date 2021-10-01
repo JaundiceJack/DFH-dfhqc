@@ -14,7 +14,7 @@ const SpecBasics = ({name, number, color, odor, texture, taste}) => {
         <p className="text-right mr-2">Texture:</p>
         <p className="capitalize">{texture || ""}</p>
         <p className="text-right mr-2">Taste:</p>
-        <p className="capitalize">{taste || "N/A"}</p>
+        <p className="capitalize">{taste || ""}</p>
       </div>
     </div>
   )

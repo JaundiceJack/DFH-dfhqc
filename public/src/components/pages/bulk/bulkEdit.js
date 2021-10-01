@@ -73,7 +73,7 @@ const BulkEdit = ({ toggleEdit }) => {
                      " from-red-900 to-gray-900 fadeError ";
 
   return (
-    <div>
+    <div className="mx-4 my-2">
       <form className="flex flex-col" onSubmit={onSubmit}>
 
         <AddBasic      vals={bulkVals}

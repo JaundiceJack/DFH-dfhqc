@@ -1,6 +1,8 @@
 const LotEdit = () => {
   return (
-    <div></div>
+    <div className="mx-4 my-2">
+
+    </div>
   )
 }
 

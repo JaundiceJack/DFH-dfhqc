@@ -11,7 +11,6 @@ import {
 
 const initialState = {
   bulks: [],
-  selectedIndex: null,
   selectedBulk: {},
   adding: false,
   editing: false,
@@ -30,7 +29,6 @@ const bulkReducer = (state = initialState, action) => {
         ...state,
         bulks: [...state.bulks, action.payload],
         selectedBulk: action.payload,
-        selectedIndex: null
       }
     case BULK_EDITED:
       return {
@@ -40,12 +38,10 @@ const bulkReducer = (state = initialState, action) => {
           action.payload
         ],
         selectedBulk: action.payload,
-        selectedIndex: null
       }
     case BULK_DELETED:
       return {
         ...state,
-        selectedIndex: null,
         selectedBulk: {},
         bulks: [state.bulks.filter(bulk => bulk._id !== action.payload)],
         adding: false,
@@ -55,8 +51,7 @@ const bulkReducer = (state = initialState, action) => {
     case SELECT_BULK:
       return {
         ...state,
-        selectedIndex: action.payload,
-        selectedBulk: state.bulks[action.payload]
+        selectedBulk: action.payload
       }
     case TOGGLE_ADDING_BULK:
       return {

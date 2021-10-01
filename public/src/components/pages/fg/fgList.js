@@ -7,7 +7,7 @@ import { selectFg } from '../../../actions/fgActions';
 const FgList = () => {
   // Get the items from the server upon loading
   const items = useSelector(state => state.fg.fgs);
-  const selectedIndex = useSelector(state => state.fg.selectedIndex);
+  const selectedId = useSelector(state => state.fg.selectedFg._id);
 
   // Compose row classes
   const rowC = "opacity-75 font-semibold text-blue-100 py-1 px-2 hover:opacity-100 cursor-pointer select-none"
@@ -17,9 +17,9 @@ const FgList = () => {
 
   // Handle row actions
   const dispatch = useDispatch();
-  const rowClick = (index) => { dispatch(selectFg(index)) }
-  const rowClasses = (index) => {
-    if (selectedIndex === index) return selRow;
+  const rowClick = (fg) => { dispatch(selectFg(fg)) }
+  const rowClasses = (index, id) => {
+    if (selectedId === id) return selRow;
     else {
       if (index % 2) return evenRow
       else return oddRow;
@@ -30,7 +30,7 @@ const FgList = () => {
   const Row = ({ index, style }) => {
     const item = items[index];
     return (
-      <div onClick={() => rowClick(index)} className={ rowClasses(index) } style={style}>
+      <div onClick={() => rowClick(item)} className={ rowClasses(index, item._id) } style={style}>
         {item.number}: {item.name}
       </div>
     )

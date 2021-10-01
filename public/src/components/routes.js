@@ -6,7 +6,7 @@ import { Route, Switch } from 'react-router-dom';
 //import Manage        from './manage/manage';
 import Home       from './home';
 import RawSummary from './pages/raw/rawSummary';
-import LotSummary from './pages/samples/lotSummary';
+import LotSummary from './pages/lot/lotSummary';
 import BlendSummary from './pages/blend/blendSummary';
 import BulkSummary from './pages/bulk/bulkSummary';
 import FgSummary from './pages/fg/fgSummary';

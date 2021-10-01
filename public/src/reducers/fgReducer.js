@@ -11,7 +11,6 @@ import {
 
 const initialState = {
   fgs: [],
-  selectedIndex: null,
   selectedFg: {},
   adding: false,
   editing: false,
@@ -30,7 +29,6 @@ const fgReducer = (state = initialState, action) => {
         ...state,
         fgs: [...state.fgs, action.payload],
         selectedFg: action.payload,
-        selectedIndex: null
       }
     case FG_EDITED:
       return {
@@ -39,13 +37,11 @@ const fgReducer = (state = initialState, action) => {
           ...state.fgs.filter(fg => { return fg._id !== action.payload._id }),
           action.payload
         ],
-        selectedFg: action.payload,
-        selectedIndex: null
+        selectedFg: action.payload
       }
     case FG_DELETED:
       return {
         ...state,
-        selectedIndex: null,
         selectedFg: {},
         fgs: [state.fgs.filter(fg => fg._id !== action.payload)],
         adding: false,
@@ -55,8 +51,7 @@ const fgReducer = (state = initialState, action) => {
     case SELECT_FG:
       return {
         ...state,
-        selectedIndex: action.payload,
-        selectedFg: state.fgs[action.payload]
+        selectedFg: action.payload
       }
     case TOGGLE_ADDING_FG:
       return {

@@ -1,7 +1,6 @@
 // Import action types
 import {
   GET_LOTS,
-  GET_OPTIONS,
   SELECT_LOT,
   LOT_ADDED,
   LOT_EDITED,
@@ -9,6 +8,16 @@ import {
   TOGGLE_ADDING_LOT,
   TOGGLE_EDITING_LOT,
   TOGGLE_DELETING_LOT,
+  TOGGLE_RAW_LOTS,
+  TOGGLE_BLEND_LOTS,
+  TOGGLE_BULK_LOTS,
+  TOGGLE_FG_LOTS,
+  TOGGLE_OTHER_LOTS,
+  TOGGLE_MT_LOTS,
+  TOGGLE_NV_LOTS,
+  TOGGLE_CT_LOTS,
+  INCREMENT_YEAR,
+  DECREMENT_YEAR,
    } from './types';
 // Import axios to handle http requests
 import axios from 'axios';
@@ -25,20 +34,6 @@ export const getLots = () => dispatch => {
   axios.get(`${server}/api/lots`, config)
   .then(res => {
     dispatch({ type: GET_LOTS, payload: res.data });
-  })
-  .catch(err => {
-    dispatch(returnMessages(err.response.data, err.response.status));
-  })
-}
-
-// Get the list of assay & id names, methods, and units
-export const getOptions = () => dispatch => {
-  // Set Headers
-  const config = { headers: {"Content-type": "application/json"} };
-  // Make request for lot info
-  axios.get(`${server}/api/lots/options`, config)
-  .then(res => {
-    dispatch({ type: GET_OPTIONS, payload: res.data });
   })
   .catch(err => {
     dispatch(returnMessages(err.response.data, err.response.status));
@@ -67,17 +62,27 @@ export const editLot = (lot) => dispatch => {
   .then(res => { dispatch({type: LOT_EDITED, payload: res.data}) })
   .catch(err => dispatch(returnMessages(err.response.data, err.response.status)))
 }
-export const deleteLot = (id) => dispatch => {
+export const deleteLot = (lot) => dispatch => {
   const config = { headers: {"Content-type": "application/json"} };
-  axios.delete(`${server}/api/lots/${id}`, config)
-  .then(res => { dispatch({ type: LOT_DELETED, payload: id })})
-  .catch(err => dispatch(returnMessages(err.response.data, err.response.status)))
+  axios.delete(`${server}/api/lots/${lot.item_type}/${lot._id}`, config)
+  .then(res => { dispatch({ type: LOT_DELETED, payload: lot })})
+  .catch(err => dispatch(returnMessages(err.response.data, err.response.status)));
 }
 
-export const selectLot = (index) => dispatch => {
-  dispatch({type: SELECT_LOT, payload: index});
+export const selectLot = (lot) => dispatch => {
+  dispatch({ type: SELECT_LOT, payload: lot });
 }
 
 export const toggleAdding = () => dispatch => dispatch({ type: TOGGLE_ADDING_LOT });
 export const toggleDeleting = () => dispatch => dispatch({ type: TOGGLE_DELETING_LOT });
 export const toggleEditing = () => dispatch => dispatch({ type: TOGGLE_EDITING_LOT });
+export const toggleRaws = () => dispatch => dispatch({ type: TOGGLE_RAW_LOTS });
+export const toggleBlends = () => dispatch => dispatch({ type: TOGGLE_BLEND_LOTS });
+export const toggleBulks = () => dispatch => dispatch({ type: TOGGLE_BULK_LOTS });
+export const toggleFgs = () => dispatch => dispatch({ type: TOGGLE_FG_LOTS });
+export const toggleOthers = () => dispatch => dispatch({ type: TOGGLE_OTHER_LOTS });
+export const toggleMT = () => dispatch => dispatch({ type: TOGGLE_MT_LOTS });
+export const toggleNV = () => dispatch => dispatch({ type: TOGGLE_NV_LOTS });
+export const toggleCT = () => dispatch => dispatch({ type: TOGGLE_CT_LOTS });
+export const incrementYear = () => dispatch => dispatch({ type: INCREMENT_YEAR });
+export const decrementYear = () => dispatch => dispatch({ type: DECREMENT_YEAR });

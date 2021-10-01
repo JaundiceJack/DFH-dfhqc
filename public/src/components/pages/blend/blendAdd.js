@@ -59,7 +59,7 @@ const BlendAdd = ({toggleAdd}) => {
   const onAddIngredient = () => {
     setBlendVals({ ...blendVals, ingredients: [...blendVals.ingredients,
       {
-        rawId: "613a37debc44f562dcb68491",
+        rawId: rawMats.length > 0 ? rawMats[0]._id : "613a37debc44f562dcb68491",
         claim: "",
         claimUnits: "mg/serving",
         newUnits: "",
@@ -92,7 +92,7 @@ const BlendAdd = ({toggleAdd}) => {
                      " from-red-900 to-gray-900 fadeError ";
 
   return (
-    <div>
+    <div className="mx-4 my-2">
       <form className="flex flex-col" onSubmit={onSubmit}>
 
         <AddBasic      vals={blendVals} onEntry={onEntry} ifEditing={false} />

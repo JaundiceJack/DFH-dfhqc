@@ -59,8 +59,8 @@ export const deleteFg = (id) => dispatch => {
   .catch(err => dispatch(returnMessages(err.response.data, err.response.status)))
 }
 
-export const selectFg = (index) => dispatch => {
-  dispatch({ type: SELECT_FG, payload: index });
+export const selectFg = (fg) => dispatch => {
+  dispatch({ type: SELECT_FG, payload: fg });
 }
 
 export const toggleAdding = () => dispatch => dispatch({ type: TOGGLE_ADDING_FG });

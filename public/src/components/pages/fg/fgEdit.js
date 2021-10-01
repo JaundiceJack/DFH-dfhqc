@@ -14,8 +14,7 @@ const FgEdit = ({ toggleEdit }) => {
     {
       _id: selected._id,
       number: selected.number,
-      name:   selected.name,
-      fgId: selected.fg.fg_id,
+      name:   selected.name
     }
   );
 
@@ -62,7 +61,7 @@ const FgEdit = ({ toggleEdit }) => {
                      " from-red-900 to-gray-900 fadeError ";
 
   return (
-    <div>
+    <div className="mx-4 my-2">
       <form className="flex flex-col" onSubmit={onSubmit}>
 
         <AddBasic      vals={fgVals}

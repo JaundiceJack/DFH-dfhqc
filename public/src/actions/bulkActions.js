@@ -59,8 +59,8 @@ export const deleteBulk = (id) => dispatch => {
   .catch(err => dispatch(returnMessages(err.response.data, err.response.status)))
 }
 
-export const selectBulk = (index) => dispatch => {
-  dispatch({ type: SELECT_BULK, payload: index });
+export const selectBulk = (bulk) => dispatch => {
+  dispatch({ type: SELECT_BULK, payload: bulk });
 }
 
 export const toggleAdding = () => dispatch => dispatch({ type: TOGGLE_ADDING_BULK });

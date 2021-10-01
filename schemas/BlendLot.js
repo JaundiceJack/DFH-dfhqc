@@ -3,13 +3,14 @@ const Schema = mongoose.Schema;
 
 const BlendLotSchema = new Schema({
   lot:                { type: String, required: true },
-  item_id:            { type: Schema.Types.ObjectId, ref: 'blends'},
-  item_name:          { type: String },
+  item:               { type: Schema.Types.ObjectId, ref: 'blends', required: true},
+  item_type:          { type: String, default: 'blend' },
   facility_location:  { type: String },
   warehouse_location: { type: String },
   purchase_order:     { type: Number },
   amount:             { type: Number },
   amount_units:       { type: String },
+  date_created:       { type: Date, default: Date.now }
 });
 
 module.exports = BlendLotSchema;

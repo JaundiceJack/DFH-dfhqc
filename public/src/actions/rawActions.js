@@ -74,8 +74,8 @@ export const deleteRaw = (id) => dispatch => {
   .catch(err => dispatch(returnMessages(err.response.data, err.response.status)))
 }
 
-export const selectRaw = (index) => dispatch => {
-  dispatch({type: SELECT_RAW, payload: index});
+export const selectRaw = (raw) => dispatch => {
+  dispatch({type: SELECT_RAW, payload: raw});
 }
 
 export const toggleAdding = () => dispatch => dispatch({ type: TOGGLE_ADDING_RAW });

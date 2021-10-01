@@ -6,7 +6,7 @@ import { selectBlend } from '../../../actions/blendActions';
 const BlendList = () => {
   // Get the items from the server upon loading
   const items = useSelector(state => state.blend.blends);
-  const selectedIndex = useSelector(state => state.blend.selectedIndex);
+  const selectedId = useSelector(state => state.blend.selectedBlend._id);
 
   // Compose row classes
   const rowC = "opacity-75 font-semibold text-blue-100 py-1 px-2 hover:opacity-100 cursor-pointer select-none capitalize"
@@ -16,9 +16,9 @@ const BlendList = () => {
 
   // Handle row actions
   const dispatch = useDispatch();
-  const rowClick = (index) => { dispatch(selectBlend(index)) }
-  const rowClasses = (index) => {
-    if (selectedIndex === index) return selRow;
+  const rowClick = (blend) => { dispatch(selectBlend(blend)) }
+  const rowClasses = (index, id) => {
+    if (selectedId === id) return selRow;
     else {
       if (index % 2) return evenRow
       else return oddRow;
@@ -30,7 +30,7 @@ const BlendList = () => {
     const item = items[index];
     const datum = `${item.number}: ${item.name}`
     return (
-      <div key={index} onClick={() => rowClick(index)} className={ rowClasses(index) } style={style}>
+      <div key={index} onClick={() => rowClick(item)} className={ rowClasses(index, item._id) } style={style}>
         {datum}
       </div>
     )

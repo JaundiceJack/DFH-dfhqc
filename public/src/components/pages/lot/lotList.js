@@ -1,25 +1,26 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { selectLot } from '../../../actions/lotActions';
 
-const LotList = (onSelect) => {
+const LotList = ({lots}) => {
   // Get the items from the server upon loading
-  const items = useSelector(state => state.lot.lots);
-  const selectedIndex = useSelector(state => state.lot.selectedIndex);
+  const selectedId = useSelector(state => state.lot.selectedLot._id);
 
   // Compose row classes
   const dispatch = useDispatch();
-  const rowC = "opacity-75 font-semibold text-blue-100 py-1 px-2 hover:opacity-100"
+  const rowC = "opacity-75 font-semibold text-blue-100 py-1 px-2 hover:opacity-100 truncate"
   const oddRow  = rowC + " bg-gray-600 capitalize";
   const evenRow = rowC + " bg-gray-800 capitalize";
   const selRow  = rowC + " bg-green-600 capitalize";
 
   // Handle row actions
-  const rowClick = (index) => { dispatch(selectLot(index)) }
-  const rowClasses = (index) => {
-    if (selectedIndex === index) return selRow;
+  const rowClick = (lot) => {
+    dispatch(selectLot(lot));
+  }
+  const rowClasses = (index, id) => {
+    if (selectedId === id) return selRow;
     else {
       if (index % 2) return evenRow
       else return oddRow;
@@ -28,10 +29,10 @@ const LotList = (onSelect) => {
 
   // Create a format for displaying rows
   const Row = ({ index, style }) => {
-    const item = items[index];
+    const lot = lots[index];
     return (
-      <div onClick={() => rowClick(index)} className={ rowClasses(index) } style={style}>
-        {item.number}: {item.name}
+      <div onClick={() => rowClick(lot)} className={ rowClasses(index, lot._id) } style={style}>
+        {`${lot.lot && lot.lot}: ${lot.item ? lot.item.number : ""} ${lot.item ? "-" : ""} ${lot.item ? lot.item.name : ""} `}
       </div>
     )
   }
@@ -43,7 +44,7 @@ const LotList = (onSelect) => {
           className=""
           height={height}
           width={width}
-          itemCount={items.length}
+          itemCount={lots.length}
           itemSize={35}
         >
           {Row}

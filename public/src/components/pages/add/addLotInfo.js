@@ -9,7 +9,7 @@ const AddLotInfo = ({vals, onEntry}) => {
   const bulks  = useSelector(state => state.bulk.bulks);
   const fgs    = useSelector(state => state.fg.fgs);
   const options = ['kg', 'liters', 'ths'];
-  const facilities = ['Arlee', 'Henderson', 'Suffield'];
+  const facilities = ['MT', 'NV', 'CT'];
   const whLocations = ['A1', 'A2', 'I1', 'I2', 'H1', 'H2'];
   const vendors = ['Charles Bowman', 'Charkit'];
   const manufacturers = ['Wuhan Grand', 'Beijing Ginkgo Group'];
@@ -49,6 +49,15 @@ amountUnits
           <option value="other">Other</option>
         </select>
       </div>
+
+      {vals.itemType === 'other' &&
+        <div className="grid grid-cols-3 gap-x-2">
+          <label className={labelCs}>Item Number:</label>
+          <input type="text" name="otherNumber" onChange={onEntry} value={vals.otherNumber} className={inputCs+" col-span-2"}/>
+          <label className={labelCs}>Item Name:</label>
+          <input type="text" name="otherName" onChange={onEntry} value={vals.otherName} className={inputCs+" col-span-2"}/>
+        </div>
+      }
 
       {vals.itemType === 'raw' &&
         <div className="grid grid-cols-3 gap-2">
@@ -118,6 +127,21 @@ amountUnits
       <h3 className="font-semibold text-blue-100 text-lg mt-4">Additional Info</h3>
       <div className={"mb-2 h-px w-full bg-gradient-to-r " +
                       "from-blue-300 to-transparent"} />
+
+      <div className="grid grid-cols-3 gap-2">
+        <label className={labelCs}>Facility:</label>
+        <select name="facilityLocation"
+                className={inputCs+" col-span-2"}
+                value={vals.facilityLocation}
+                onChange={onEntry}>
+          {facilities.map((fac, index) => {
+            return (
+              <option key={index} value={fac}>
+                {fac}
+              </option>)
+          })}
+        </select>
+      </div>
       <div className="grid grid-cols-3 gap-2">
         <label className={labelCs}>P.O. #:</label>
         <input className={inputCs+" col-span-1"}
@@ -142,20 +166,7 @@ amountUnits
           })}
         </select>
       </div>
-      <div className="grid grid-cols-3 gap-2">
-        <label className={labelCs}>Facility:</label>
-        <select name="facilityLocation"
-                className={inputCs+" col-span-2"}
-                value={vals.facilityLocation}
-                onChange={onEntry}>
-          {facilities.map((fac, index) => {
-            return (
-              <option key={index} value={fac}>
-                {fac}
-              </option>)
-          })}
-        </select>
-      </div>
+
       <div className="grid grid-cols-3 gap-2">
         <label className={labelCs}>WH Location:</label>
         <select name="warehouseLocation"

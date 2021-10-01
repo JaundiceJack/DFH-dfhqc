@@ -10,18 +10,17 @@ const Blend = connection.model('blend', require('../../schemas/Blend'));
 const Raw   = connection.model('raw',   require('../../schemas/Raw'));
 const Unit  = connection.model('unit',  require('../../schemas/Unit'));
 
-
-// GET -> api/blends/
-// Get a list of all blend specification
+// GET: api/blends/ | Get a list of all blend specifications | Private
 router.get('/',  (req, res) => {
   Blend.find().then( blends => {
     res.json(blends.sort((a, b) => {
-      return a.number < b.number ? -1 : a.number > b.number ? 1 : 0 }));
+      return a.number < b.number ? -1 :
+             a.number > b.number ?  1 : 0
+    }));
   });
 });
 
-// POST -> api/blends/
-// Create a new blend material with the given specifications
+// POST: api/blends/ | Create a new blend | Private
 router.post('/', async (req, res) => {
   console.log("Saving new blend...");
   // Validate entries
@@ -40,8 +39,7 @@ router.post('/', async (req, res) => {
   });
 });
 
-// POST -> api/blends/blend_id
-// Edit the blend with the given ID
+// POST: api/blends/blend_id | Edit the blend with the given ID | Private
 router.post('/:id', async (req, res) => {
   console.log("Editing selected blend...");
   // Get the blend by it's id
@@ -63,8 +61,7 @@ router.post('/:id', async (req, res) => {
   else res.status(401).json({error: "Could not locate selected blend item."});
 });
 
-// DELETE -> api/blends/
-// Remove the blend with the given ID from the database
+// DELETE: api/blends/blend_id | Remove the blend with the given ID | Private
 router.delete('/:id', (req, res) => {
   Blend
   .findById(req.params.id)
@@ -89,7 +86,7 @@ const makeIngredients = ingredients => {
           claim:              ingredient.claim,
           claim_units:        unitName,
           potency:            ingredient.potency,
-          overage:            ingredient.overage == 0 ? null : ingredient.overage,
+          overage:            ingredient.overage,
           ingredient_type:    ingredient.ingredientType.toLowerCase(),
         };
         // Save the unit type if it was new

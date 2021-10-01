@@ -11,7 +11,6 @@ import {
 
 const initialState = {
   blends: [],
-  selectedIndex: null,
   selectedBlend: {},
   adding: false,
   editing: false,
@@ -30,7 +29,6 @@ const blendReducer = (state = initialState, action) => {
         ...state,
         blends: [...state.blends, action.payload],
         selectedBlend: action.payload,
-        selectedIndex: null
       }
     case BLEND_EDITED:
       return {
@@ -40,12 +38,10 @@ const blendReducer = (state = initialState, action) => {
           action.payload
         ],
         selectedBlend: action.payload,
-        selectedIndex: null
       }
     case BLEND_DELETED:
       return {
         ...state,
-        selectedIndex: null,
         selectedBlend: {},
         blends: [state.blends.filter(blend => blend._id !== action.payload)],
         adding: false,
@@ -55,8 +51,7 @@ const blendReducer = (state = initialState, action) => {
     case SELECT_BLEND:
       return {
         ...state,
-        selectedIndex: action.payload,
-        selectedBlend: state.blends[action.payload]
+        selectedBlend: action.payload
       }
     case TOGGLE_ADDING_BLEND:
       return {

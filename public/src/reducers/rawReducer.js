@@ -12,7 +12,6 @@ import {
 
 const initialState = {
   raws: [],
-  selectedIndex: null,
   selectedRaw: {},
   adding: false,
   editing: false,
@@ -44,8 +43,7 @@ const rawReducer = (state = initialState, action) => {
       return {
         ...state,
         raws: [...state.raws, action.payload],
-        selectedRaw: action.payload,
-        selectedIndex: null
+        selectedRaw: action.payload
       }
     case RAW_EDITED:
       return {
@@ -55,12 +53,10 @@ const rawReducer = (state = initialState, action) => {
           action.payload
         ],
         selectedRaw: action.payload,
-        selectedIndex: null
       }
     case RAW_DELETED:
       return {
         ...state,
-        selectedIndex: null,
         selectedRaw: {},
         raws: [state.raws.filter(raw => raw._id !== action.payload)],
         adding: false,
@@ -70,8 +66,7 @@ const rawReducer = (state = initialState, action) => {
     case SELECT_RAW:
       return {
         ...state,
-        selectedIndex: action.payload,
-        selectedRaw: state.raws[action.payload]
+        selectedRaw: action.payload
       }
     case TOGGLE_ADDING_RAW:
       return {

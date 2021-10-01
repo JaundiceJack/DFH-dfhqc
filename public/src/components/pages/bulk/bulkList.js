@@ -6,7 +6,7 @@ import { selectBulk } from '../../../actions/bulkActions';
 const BulkList = () => {
   // Get the items from the server upon loading
   const items = useSelector(state => state.bulk.bulks);
-  const selectedIndex = useSelector(state => state.bulk.selectedIndex);
+  const selectedId = useSelector(state => state.bulk.selectedBulk._id);
 
   // Compose row classes
   const rowC = "opacity-75 font-semibold text-blue-100 py-1 px-2 hover:opacity-100 cursor-pointer select-none"
@@ -16,9 +16,9 @@ const BulkList = () => {
 
   // Handle row actions
   const dispatch = useDispatch();
-  const rowClick = (index) => { dispatch(selectBulk(index)) }
-  const rowClasses = (index) => {
-    if (selectedIndex === index) return selRow;
+  const rowClick = (bulk) => { dispatch(selectBulk(bulk)) }
+  const rowClasses = (index, id) => {
+    if (selectedId === id) return selRow;
     else {
       if (index % 2) return evenRow
       else return oddRow;
@@ -29,7 +29,7 @@ const BulkList = () => {
   const Row = ({ index, style }) => {
     const item = items[index];
     return (
-      <div onClick={() => rowClick(index)} className={ rowClasses(index) } style={style}>
+      <div onClick={() => rowClick(item)} className={ rowClasses(index, item._id) } style={style}>
         {item.number}: {item.name}
       </div>
     )

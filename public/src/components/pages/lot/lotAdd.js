@@ -1,25 +1,33 @@
 import { useState, useRef, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addLot } from '../../../actions/lotActions';
 import AddLotInfo from '../add/addLotInfo';
 
 const LotAdd = ({toggleAdd}) => {
+  // Get the materials from the redux state for initial IDs
+  const raws = useSelector(state => state.raw.raws);
+  const blends = useSelector(state => state.blend.blends);
+  const bulks = useSelector(state => state.bulk.bulks);
+  const fgs = useSelector(state => state.fg.fgs);
+
   // Set internal state variables for the form
   const [lotVals, setLotVals] = useState({
     lot: "",
     purchaseOrder: "",
-    rawItemId: "",
-    blendItemId: "",
-    bulkItemId: "",
-    fgItemId: "",
+    rawItemId: raws.length > 0 ? raws[0]._id : "",
+    blendItemId: blends.length > 0 ? blends[0]._id : "",
+    bulkItemId: bulks.length > 0 ? bulks[0]._id : "",
+    fgItemId: fgs.length > 0 ? fgs[0]._id : "",
     itemType: "raw",
     amount: 0,
     amountUnits: "kg",
-    facilityLocation: "Arlee",
+    facilityLocation: "MT",
     warehouseLocation: "A1",
     vendor: "Charles Bowman",
     manufacturer: "Wuhan Grand",
     makerLot: "",
+    otherNumber: "",
+    otherName: ""
   })
 
   // Clear the badEntries after the timer runs out
@@ -66,7 +74,7 @@ const LotAdd = ({toggleAdd}) => {
                           " from-red-900 to-gray-900 fadeError ";
 
   return (
-    <div>
+    <div className="mx-4 my-2">
       <form className="flex flex-col" onSubmit={onSubmit}>
         <AddLotInfo vals={lotVals} onEntry={onEntry} />
 
