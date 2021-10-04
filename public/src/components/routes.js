@@ -4,16 +4,16 @@
 import { Route, Switch } from 'react-router-dom';
 // Import Components
 //import Manage        from './manage/manage';
-import Home       from './home';
-import RawSummary from './pages/raw/rawSummary';
-import LotSummary from './pages/lot/lotSummary';
-import BlendSummary from './pages/blend/blendSummary';
-import BulkSummary from './pages/bulk/bulkSummary';
-import FgSummary from './pages/fg/fgSummary';
-//import Login         from './account/login';
+import Home         from './home.js';
+import RawSummary   from './pages/raw/rawSummary.js';
+import LotSummary   from './pages/lot/lotSummary.js';
+import BlendSummary from './pages/blend/blendSummary.js';
+import BulkSummary  from './pages/bulk/bulkSummary.js';
+import FgSummary    from './pages/fg/fgSummary.js';
+import Login        from './account/login.js';
 //import Forgot        from './account/forgot';
 //import Reset         from './account/reset';
-//import CreateAccount from './account/create';
+import CreateAccount from './account/create';
 
 const Routes = () => {
   // Handle the reset password route
@@ -28,6 +28,8 @@ const Routes = () => {
       <Route exact path="/bulks"   component={BulkSummary} />
       <Route exact path="/fgs"     component={FgSummary} />
       <Route exact path="/samples" component={LotSummary} />
+      <Route exact path="/login"   component={Login} />
+      <Route exact path="/create"   component={CreateAccount} />
     </Switch>
   )
 }

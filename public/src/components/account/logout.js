@@ -15,12 +15,24 @@ const Logout = () => {
     dispatch(logout());
   }
 
+  const navLinkClasses =
+    " relative flex group items-center justify-center border-blue-400 " +
+    " border-2 rounded-xl bg-gradient-to-br from-black via-gray-800 to-black " +
+    " md:h-16 md:w-20 h-14 w-16 mx-2 2xl:mx-0 my-2 cursor-pointer ";
+  const navTextClasses =
+    " absolute opacity-0 group-hover:opacity-100 whitespace-nowrap  " +
+    " text-gray-300 text-lg no-underline hover:no-underline " +
+    " transition duration-300 ease-in-out font-semibold";
+  const navIconClasses =
+    " absolute opacity-1 group-hover:opacity-0 text-gray-300 " +
+    " transition duration-300 ease-in-out ";
+
   return (
-    <Link to='/login' onClick={onLogout} className="">
-      <p className="text-blue-100">
+    <Link to='/login' onClick={onLogout} className={navLinkClasses}>
+      <p className={navTextClasses}>
         Logout
       </p>
-      <p className="">
+      <p className={navIconClasses}>
         <RiLogoutCircleLine size="40px" />
       </p>
     </Link>

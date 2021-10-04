@@ -56,11 +56,6 @@ const Nav = () => {
         {/* If logged in, show the app and logout button*/}
         {isAuthenticated &&
           <Logout />}
-        {isAuthenticated &&
-          <NavLink target="/manage" text="Manage"
-            icon=<FaBalanceScale size="40px" />
-            extraClasses={page === 'manage' ? "border-green-600" : "border-blue-200"}
-            onClick={() => changeActive('manage')} />}
       </div>
     </nav>
   );

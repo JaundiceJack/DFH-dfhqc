@@ -12,6 +12,8 @@ app.use('/api/fgs',    require('./routes/api/fgs'));
 app.use('/api/lots',   require('./routes/api/lots'));
 app.use('/api/assays', require('./routes/api/assays'));
 app.use('/api/lots',   require('./routes/api/lots'));
+app.use('/api/auth',   require('./routes/api/auth'));
+app.use('/api/users',  require('./routes/api/users'));
 app.get('/ping', (req, res) => { return res.send('pong'); });
 
 // Serve static assets if in production
