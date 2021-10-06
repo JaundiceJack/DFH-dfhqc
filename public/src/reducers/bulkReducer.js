@@ -43,7 +43,7 @@ const bulkReducer = (state = initialState, action) => {
       return {
         ...state,
         selectedBulk: {},
-        bulks: [state.bulks.filter(bulk => bulk._id !== action.payload)],
+        bulks: [...state.bulks.filter(bulk => bulk._id !== action.payload)],
         adding: false,
         editing: false,
         deleting: false

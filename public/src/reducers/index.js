@@ -6,6 +6,7 @@ import lotReducer from './lotReducer.js';
 import blendReducer from './blendReducer.js';
 import bulkReducer from './bulkReducer.js';
 import fgReducer from './fgReducer.js';
+import labReducer from './labReducer.js';
 
 export default combineReducers({
   raw: rawReducer,
@@ -14,5 +15,6 @@ export default combineReducers({
   msg: msgReducer,
   auth: authReducer,
   bulk: bulkReducer,
-  fg: fgReducer
+  fg: fgReducer,
+  lab: labReducer
 })

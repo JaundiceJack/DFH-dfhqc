@@ -11,6 +11,7 @@ import BlendSummary from './pages/blend/blendSummary.js';
 import BulkSummary  from './pages/bulk/bulkSummary.js';
 import FgSummary    from './pages/fg/fgSummary.js';
 import Login        from './account/login.js';
+import LabSummary   from './pages/lab/labSummary.js';
 //import Forgot        from './account/forgot';
 //import Reset         from './account/reset';
 import CreateAccount from './account/create';
@@ -30,6 +31,7 @@ const Routes = () => {
       <Route exact path="/samples" component={LotSummary} />
       <Route exact path="/login"   component={Login} />
       <Route exact path="/create"   component={CreateAccount} />
+      <Route exact path="/labs"   component={LabSummary} />
     </Switch>
   )
 }

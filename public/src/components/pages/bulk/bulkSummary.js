@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getBulks, toggleAdding, toggleDeleting, toggleEditing } from '../../../actions/bulkActions';
 import { getRaws, getOptions } from '../../../actions/rawActions.js';
 import { getBlends } from '../../../actions/blendActions.js';
+import { Redirect } from 'react-router-dom';
 // Import Components
 import BulkList   from './bulkList';
 import BulkSpec   from './bulkSpec';
@@ -11,6 +12,7 @@ import BulkEdit   from './bulkEdit';
 import BulkDelete from './bulkDelete';
 
 const BulkSummary = () => {
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
   const selectedId = useSelector(state => state.bulk.selectedBulk._id);
   const adding   = useSelector(state => state.bulk.adding);
   const deleting = useSelector(state => state.bulk.deleting);
@@ -33,8 +35,9 @@ const BulkSummary = () => {
   const buttonCs = " rounded py-1/2 px-2 mx-1 my-1 2xl:my-0 font-semibold transform duration-75" +
                    " ease-in-out hover:scale-105 disabled:opacity-25 hover:opacity-100 opacity-75  ";
 
-  return (
-    <div className="2xl:m-4 p-4 w-full rounded border-l border-gray-800 bg-gradient-to-br from-gray-800 via-transparent to-gray-800">
+  return !isAuthenticated ?
+    (<Redirect to="/login" />) :
+    (<div className="h-full p-4 w-full rounded border-l border-gray-800 bg-gradient-to-br from-gray-800 via-transparent to-gray-800">
       <div className="flex flex-col h-full mb-4 2xl:mb-0">
         <h1 className="mb-4 ml-2 text-xl font-bold text-blue-200"> Bulks </h1>
         <div className="grid grid-cols-5 h-full">

@@ -20,7 +20,7 @@ const SpecIngredients = ({ ingredients, serving, batchSize, servingUnits, fillWe
         const perBatchOfFormula = (percentOfFormula * 0.01 * batchSize).toFixed(3);
 
         // Make even/odd row classes
-        const rc = "p-2 grid grid-cols-1 md:grid-cols-12 rounded hover:text-yellow-200";
+        const rc = "p-2 mx-2 grid grid-cols-1 md:grid-cols-12 rounded hover:text-yellow-200";
         const rowClass = index & 1 ? rc+" bg-gray-600" : rc+" bg-gray-500";
 
         return (
@@ -73,9 +73,10 @@ const SpecIngredients = ({ ingredients, serving, batchSize, servingUnits, fillWe
   }
 
   return (
-    <div className="bg-gray-600 rounded p-2 text-blue-100 font-semibold sm:col-span-3">
-      <h2 className="text-lg text-left ml-2 underline">Ingredients</h2>
-      <div className="hidden md:grid grid-cols-12 py-2 rounded bg-gray-700 mb-1 p-2">
+    <div className="bg-gray-600 rounded text-blue-100 font-semibold sm:col-span-3">
+      <h2 className="text-lg text-left px-2 py-1 text-blue-200">Ingredients</h2>
+      <div className="h-px bg-gradient-to-r from-blue-200 to-transparent"/>
+      <div className="hidden md:grid grid-cols-12 py-2 rounded bg-gray-700 mb-1 mt-2 mx-2 p-2">
         <p className="col-span-1">Item#</p>
         <p className="col-span-2">Name</p>
         <p className="col-span-1">Label Claim</p>
@@ -86,7 +87,7 @@ const SpecIngredients = ({ ingredients, serving, batchSize, servingUnits, fillWe
         <p className="col-span-4">Per Batch</p>
       </div>
       {mapIngredients()}
-      <div className="hidden md:grid grid-cols-12 py-2 rounded bg-gray-700 mt-1 p-2">
+      <div className="hidden md:grid grid-cols-12 py-2 rounded bg-gray-700 mt-1 mb-2 mx-2 p-2">
         <p className="col-span-1">Totals</p>
         <p className="col-span-2"></p>
         <p className="col-span-1"></p>

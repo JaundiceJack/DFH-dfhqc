@@ -71,3 +71,16 @@ export const TOGGLE_NV_LOTS  = "TOGGLE_NV_LOTS";
 export const TOGGLE_CT_LOTS  = "TOGGLE_CT_LOTS";
 export const INCREMENT_YEAR  = "INCREMENT_YEAR";
 export const DECREMENT_YEAR  = "DECREMENT_YEAR";
+
+export const LOT_SAMPLED = "LOT_SAMPLED";
+export const LOT_UNSAMPLED = "LOT_UNSAMPLED";
+
+// Lab Actions
+export const GET_LABS = "GET_LABS";
+export const LAB_ADDED = "LAB_ADDED";
+export const LAB_EDITED = "LAB_EDITED";
+export const LAB_DELETED = "LAB_DELETED";
+export const TOGGLE_ADDING_LAB = "TOGGLE_ADDING_LAB";
+export const TOGGLE_EDITING_LAB = "TOGGLE_EDITING_LAB";
+export const TOGGLE_DELETING_LAB = "TOGGLE_DELETING_LAB";
+export const SELECT_LAB = "SELECT_LAB";

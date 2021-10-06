@@ -9,6 +9,7 @@ import { getOptions, getRaws } from '../../../actions/rawActions';
 import { getFgs } from '../../../actions/fgActions';
 import { getBulks } from '../../../actions/bulkActions';
 import { getBlends } from '../../../actions/blendActions';
+import { Redirect } from 'react-router-dom';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 // Import Components
 import LotList from './lotList';
@@ -18,6 +19,7 @@ import LotEdit from './lotEdit';
 import LotDelete from './lotDelete';
 
 const LotSummary = () => {
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
   const selectedId = useSelector(state => state.lot.selectedLot._id);
   const year       = useSelector(state => state.lot.currentYear);
   const rawLots    = useSelector(state => state.lot.rawLots);
@@ -100,8 +102,9 @@ const LotSummary = () => {
   // TODO: these will go in the global state. once changed they'll run a filter on the total list of lots
   //const onClick = (e) => { setVisibles({...visibles, [e.target.name]: !visibles[e.target.name] })}
 
-  return (
-    <div className={"2xl:m-4 p-4 w-full rounded border-l border-gray-800 " +
+  return !isAuthenticated ?
+    (<Redirect to="/login" />) :
+    (<div className={"h-full p-4 w-full rounded border-l border-gray-800 " +
                     "bg-gradient-to-br from-gray-800 via-transparent to-gray-800"}>
       <div className="flex flex-col h-full mb-4 2xl:mb-0">
         <h1 className="mb-4 ml-2 text-xl font-bold text-blue-200"> Sample Log </h1>

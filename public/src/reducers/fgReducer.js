@@ -43,7 +43,7 @@ const fgReducer = (state = initialState, action) => {
       return {
         ...state,
         selectedFg: {},
-        fgs: [state.fgs.filter(fg => fg._id !== action.payload)],
+        fgs: [...state.fgs.filter(fg => fg._id !== action.payload)],
         adding: false,
         editing: false,
         deleting: false

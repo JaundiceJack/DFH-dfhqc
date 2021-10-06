@@ -20,6 +20,7 @@ const domain = process.env.DOMAIN;
 
 // POST api/auth | authenticate the user for logging in | Public
 router.post('/', trycatch( async (req, res) => {
+  console.log("logging in...");
   // Validate the entries
   const { email, password } = req.body;
   if (!email || !password)
@@ -47,11 +48,13 @@ router.post('/', trycatch( async (req, res) => {
       )
     }
     else {
-      return res.status(401).json({msg: "Incorrect email or password."});
+      res.status(401);
+      throw new Error("Incorrect email or password.");
     }
   }
   else {
-    return res.status(401).json({ msg: "Incorrect email or password." });
+    res.status(401);
+    throw new Error("Incorrect email or password.");
   }
 }));
 

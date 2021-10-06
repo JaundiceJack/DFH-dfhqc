@@ -5,7 +5,7 @@ import { GET_MESSAGES, CLEAR_MESSAGES } from './types';
 export const returnMessages = (msg, status, id = null) => {
   return {
     type: GET_MESSAGES,
-    payload: { msg, status, id }
+    payload: { error: msg.error, warning: msg.warning, info: msg.info, status: status, id: id }
   }
 }
 

@@ -58,6 +58,66 @@ router.post('/', trycatch(async (req, res) => {
   }).catch(e => res.status(401).json({ error: "Failed to save new lot." }));
 }));
 
+// POST: api/lots/take_raw_sample | Set/Create a result object | Private
+router.post('/take_raw_sample', trycatch( async (req, res) => {
+
+  // TODO: I should pass in an index with the request body, so that certain ones can be edited
+
+  // find the raw sample
+  const lot = await RawLot.findById(req.body.lotId).populate('item');
+  if (lot) {
+    if (req.body.resultType === 'pesticide') {
+      const pestResult = {
+        result: null,
+        sent_to: null,
+        sample_date: Date.now(),
+        sent_date: null,
+        result_date: null
+      }
+      lot.pesticide_results.push(pestResult);
+    }
+    else if (req.body.resultType === 'heavy metal') {
+      const hmResult = {
+        arsenic: null,
+        cadmium: null,
+        lead: null,
+        mercury: null,
+        nickel: null,
+        sent_to: null,
+        sample_date: Date.now(),
+        sent_date: null,
+        result_date: null
+      }
+      lot.hm_results.push(hmResult);
+    }
+    lot.save()
+    .then(lot => res.json(lot))
+    .catch(err => res.status(400).json({error: "Unable to edit the selected lot."}));
+  }
+  else {
+    res.status(404);
+    throw new Error("Server was unable to find the raw material to sample.");
+  }
+}));
+
+router.post('/remove_raw_sample', trycatch( async (req, res) => {
+  // find the raw sample
+  const lot = await RawLot.findById(req.body.lotId).populate('item');
+  if (lot) {
+    if (req.body.resultType === 'pesticide')
+      lot.pesticide_results.pop();
+    if (req.body.resultType === 'heavy metal')
+      lot.hm_results.pop();
+    lot.save()
+    .then(lot => res.json(lot))
+    .catch(err => res.status(400).json({error: "Unable to edit the selected lot."}));
+  }
+  else {
+    res.status(404);
+    throw new Error("Server was unable to find the requested lot.");
+  }
+}))
+
 // POST: api/lots/lot_id | Edit the lot with the given ID | Private
 router.post('/:id', trycatch(async (req, res) => {
   console.log("Editing selected lot...");
@@ -106,7 +166,7 @@ router.delete('/other/:id', (req, res) => {
   return;
 });
 
-// The thought is if i include the item type with each lot type, I can hinge on that in the front end to make requests to delete specific ones and get around the id uniqueness issue
+
 
 // Validate entries and convert them to the required format
 const formatEntries = async (lotType, body) => {

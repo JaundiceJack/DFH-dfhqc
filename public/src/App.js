@@ -15,10 +15,13 @@ class App extends Component {
       <Provider store={store}>
         {/*Connect nav links to their routes via Browser Router*/}
         <BrowserRouter>
-          <main className={"flex flex-col 2xl:flex-row min-h-screen" +
+          <main className={"flex flex-col 2xl:flex-row min-h-screen " +
                            " bg-gradient-to-br from-black via-gray-900 to-blue-900"}>
             <Nav />
-            <Routes />
+            <div className="p-4 w-full  min-h-screen">
+              <Routes />
+            </div>
+
           </main>
         </BrowserRouter>
       </Provider>

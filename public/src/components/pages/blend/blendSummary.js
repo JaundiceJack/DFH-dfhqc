@@ -2,6 +2,7 @@ import { useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getBlends, toggleAdding, toggleDeleting, toggleEditing } from '../../../actions/blendActions';
 import { getRaws, getOptions } from '../../../actions/rawActions.js';
+import { Redirect } from 'react-router-dom';
 // Import Components
 import BlendList   from './blendList';
 import BlendSpec   from './blendSpec';
@@ -10,6 +11,7 @@ import BlendEdit   from './blendEdit';
 import BlendDelete from './blendDelete';
 
 const BlendSummary = () => {
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
   const selectedId = useSelector(state => state.blend.selectedBlend._id);
   const adding   = useSelector(state => state.blend.adding);
   const deleting = useSelector(state => state.blend.deleting);
@@ -34,8 +36,9 @@ const BlendSummary = () => {
   const buttonCs = " rounded py-1/2 px-2 mx-1 my-1 2xl:my-0 font-semibold transform duration-75" +
                    " ease-in-out hover:scale-105 disabled:opacity-25 hover:opacity-100 opacity-75  ";
 
-  return (
-    <div className="2xl:m-4 p-4 w-full rounded border-l border-gray-800 bg-gradient-to-br from-gray-800 via-transparent to-gray-800">
+  return !isAuthenticated ?
+    (<Redirect to="/login" />) :
+    (<div className="h-full p-4 w-full rounded border-l border-gray-800 bg-gradient-to-br from-gray-800 via-transparent to-gray-800">
       <div className="flex flex-col h-full mb-4 2xl:mb-0">
         <h1 className="mb-4 ml-2 text-xl font-bold text-blue-200"> Blends </h1>
         <div className="grid grid-cols-5 h-full">

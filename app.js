@@ -1,5 +1,5 @@
 const express = require('express');
-
+const { notFound, errorFound } = require('./middleware/error.js');
 // Instance the app server and use the express body-parser
 const app = express();
 app.use(express.json());
@@ -12,9 +12,13 @@ app.use('/api/fgs',    require('./routes/api/fgs'));
 app.use('/api/lots',   require('./routes/api/lots'));
 app.use('/api/assays', require('./routes/api/assays'));
 app.use('/api/lots',   require('./routes/api/lots'));
+app.use('/api/labs',   require('./routes/api/labs'));
 app.use('/api/auth',   require('./routes/api/auth'));
 app.use('/api/users',  require('./routes/api/users'));
 app.get('/ping', (req, res) => { return res.send('pong'); });
+
+app.use(notFound);
+app.use(errorFound);
 
 // Serve static assets if in production
 if (process.env.NODE_ENV === 'production') {

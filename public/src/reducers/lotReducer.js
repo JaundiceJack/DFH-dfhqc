@@ -16,7 +16,9 @@ import {
   TOGGLE_CT_LOTS,
   SELECT_LOT,
   INCREMENT_YEAR,
-  DECREMENT_YEAR
+  DECREMENT_YEAR,
+  LOT_SAMPLED,
+  LOT_UNSAMPLED
 } from '../actions/types.js';
 
 
@@ -68,13 +70,16 @@ const lotReducer = (state = initialState, action) => {
         otherLots:   action.payload.item_type === 'other' ? [...state.otherLots, action.payload] : state.otherLots,
         selectedLot: action.payload
       }
+    case LOT_SAMPLED:
+    case LOT_UNSAMPLED:
     case LOT_EDITED:
       return {
         ...state,
-        lots: [
-          ...state.lots.filter(lot => { return lot._id !== action.payload._id }),
-          action.payload
-        ],
+        rawLots:   action.payload.item_type === 'raw'   ? [...state.rawLots.filter(lot => { return lot._id !== action.payload._id }), action.payload].sort((a, b) => { return Date(b.date_created) - Date(a.date_created) }) : state.rawLots,
+        blendLots: action.payload.item_type === 'blend' ? [...state.blendLots.filter(lot => { return lot._id !== action.payload._id }), action.payload].sort((a, b) => { return Date(b.date_created) - Date(a.date_created) }) : state.blendLots,
+        bulkLots:  action.payload.item_type === 'bulk'  ? [...state.bulkLots.filter(lot => { return lot._id !== action.payload._id }), action.payload].sort((a, b) => { return Date(b.date_created) - Date(a.date_created) }) : state.bulkLots,
+        fgLots:    action.payload.item_type === 'fg'    ? [...state.fgLots.filter(lot => { return lot._id !== action.payload._id }), action.payload].sort((a, b) => { return Date(b.date_created) - Date(a.date_created) }) : state.fgLots,
+        otherLots: action.payload.item_type === 'other' ? [...state.otherLots.filter(lot => { return lot._id !== action.payload._id }), action.payload].sort((a, b) => { return Date(b.date_created) - Date(a.date_created) }) : state.otherLots,
         selectedLot: action.payload
       }
     case LOT_DELETED:

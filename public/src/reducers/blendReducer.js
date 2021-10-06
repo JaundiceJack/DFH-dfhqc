@@ -43,7 +43,7 @@ const blendReducer = (state = initialState, action) => {
       return {
         ...state,
         selectedBlend: {},
-        blends: [state.blends.filter(blend => blend._id !== action.payload)],
+        blends: [...state.blends.filter(blend => blend._id !== action.payload)],
         adding: false,
         editing: false,
         deleting: false

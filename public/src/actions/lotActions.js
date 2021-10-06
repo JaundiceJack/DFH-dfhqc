@@ -18,6 +18,8 @@ import {
   TOGGLE_CT_LOTS,
   INCREMENT_YEAR,
   DECREMENT_YEAR,
+  LOT_SAMPLED,
+  LOT_UNSAMPLED
    } from './types';
 // Import axios to handle http requests
 import axios from 'axios';
@@ -86,3 +88,32 @@ export const toggleNV = () => dispatch => dispatch({ type: TOGGLE_NV_LOTS });
 export const toggleCT = () => dispatch => dispatch({ type: TOGGLE_CT_LOTS });
 export const incrementYear = () => dispatch => dispatch({ type: INCREMENT_YEAR });
 export const decrementYear = () => dispatch => dispatch({ type: DECREMENT_YEAR });
+
+// Create a sample for the given lot and result
+export const takeRawSample = (lotId, resultType) => dispatch => {
+  const config = { headers: {"Content-type": "application/json"} };
+  const sample = JSON.stringify({lotId, resultType});
+  axios.post(`${server}/api/lots/take_raw_sample`, sample, config)
+  .then(res => { dispatch({type: LOT_SAMPLED, payload: res.data}) })
+  .catch(err => {
+    const errmsg = err.response ?
+                   {error: err.response.data ? err.response.data.msg : "Error encountered"} :
+                   {error: "Error encountered"};
+    const errstatus = err.response ? err.response.status : null;
+    dispatch(returnMessages(errmsg, errstatus));
+  })
+}
+// Remove a sample for the given lot and result
+export const removeRawSample = (lotId, resultType) => dispatch => {
+  const config = { headers: {"Content-type": "application/json"} };
+  const sample = JSON.stringify({lotId, resultType});
+  axios.post(`${server}/api/lots/remove_raw_sample`, sample, config)
+  .then(res => { dispatch({type: LOT_UNSAMPLED, payload: res.data}) })
+  .catch(err => {
+    const errmsg = err.response ?
+                   {error: err.response.data ? err.response.data.msg : "Error encountered"} :
+                   {error: "Error encountered"};
+    const errstatus = err.response ? err.response.status : null;
+    dispatch(returnMessages(errmsg, errstatus));
+  })
+}

@@ -7,6 +7,7 @@ const AssayResultSchema = new Schema({
   assay: { type: Schema.Types.ObjectId, ref: 'assays' },
   result: { type: Number },
   sent_to: { type: Schema.Types.ObjectId, ref: 'labs' },
+  sample_date: { type: Date },
   sent_date: { type: Date },
   result_date: { type: Date },
 });
@@ -14,6 +15,7 @@ const IdentityResultSchema = new Schema({
   identity: { type: Schema.Types.ObjectId, ref: 'ids' },
   result: { type: Boolean },
   sent_to: { type: Schema.Types.ObjectId, ref: 'labs' },
+  sample_date: { type: Date },
   sent_date: { type: Date },
   result_date: { type: Date },
 });
@@ -24,6 +26,7 @@ const HmResultSchema = new Schema({
   mercury: { type: Number },
   nickel:  { type: Number },
   sent_to: { type: Schema.Types.ObjectId, ref: 'labs' },
+  sample_date: { type: Date },
   sent_date: { type: Date },
   result_date: { type: Date },
 });
@@ -36,36 +39,42 @@ const MicroResultSchema = new Schema({
   staph:      { type: Boolean },
   paeru:      { type: Boolean },
   sent_to: { type: Schema.Types.ObjectId, ref: 'labs' },
+  sample_date: { type: Date },
   sent_date: { type: Date },
   result_date: { type: Date },
 });
 const PesticideResultSchema = new Schema({
   result: { type: Boolean },
   sent_to: { type: Schema.Types.ObjectId, ref: 'labs' },
+  sample_date: { type: Date },
   sent_date: { type: Date },
   result_date: { type: Date },
 });
 const MoistureResultSchema = new Schema({
   result: { type: Number },
   sent_to: { type: Schema.Types.ObjectId, ref: 'labs' },
+  sample_date: { type: Date },
   sent_date: { type: Date },
   result_date: { type: Date },
 });
 const DensityResultSchema = new Schema({
   result: { type: Number },
   sent_to: { type: Schema.Types.ObjectId, ref: 'labs' },
+  sample_date: { type: Date },
   sent_date: { type: Date },
   result_date: { type: Date },
 });
 const SolventResultSchema = new Schema({
   result: { type: Boolean },
   sent_to: { type: Schema.Types.ObjectId, ref: 'labs' },
+  sample_date: { type: Date },
   sent_date: { type: Date },
   result_date: { type: Date },
 });
 const AllergenResultSchema = new Schema({
   allergen: { type: String },
   sent_to: { type: Schema.Types.ObjectId, ref: 'labs' },
+  sample_date: { type: Date },
   sent_date: { type: Date },
   result_date: { type: Date },
 });
@@ -73,6 +82,7 @@ const RancidityResultSchema = new Schema({
   peroxide: { type: Number },
   p_anisidine: { type: Number },
   sent_to: { type: Schema.Types.ObjectId, ref: 'labs' },
+  sample_date: { type: Date },
   sent_date: { type: Date },
   result_date: { type: Date },
 });

@@ -4,6 +4,7 @@ import { getFgs, toggleAdding, toggleDeleting, toggleEditing } from '../../../ac
 import { getOptions, getRaws } from '../../../actions/rawActions';
 import { getBulks } from '../../../actions/bulkActions';
 import { getBlends } from '../../../actions/blendActions';
+import { Redirect } from 'react-router-dom';
 // Import Components
 import FgList   from './fgList';
 import FgSpec   from './fgSpec';
@@ -12,6 +13,7 @@ import FgEdit   from './fgEdit';
 import FgDelete from './fgDelete';
 
 const FgSummary = () => {
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
   const selectedId = useSelector(state => state.fg.selectedFg._id);
   const adding   = useSelector(state => state.fg.adding);
   const deleting = useSelector(state => state.fg.deleting);
@@ -35,8 +37,9 @@ const FgSummary = () => {
   const buttonCs = " rounded py-1/2 px-2 mx-1 my-1 2xl:my-0 font-semibold transform duration-75" +
                    " ease-in-out hover:scale-105 disabled:opacity-25 hover:opacity-100 opacity-75  ";
 
-  return (
-    <div className="2xl:m-4 p-4 w-full rounded border-l border-gray-800 bg-gradient-to-br from-gray-800 via-transparent to-gray-800">
+  return !isAuthenticated ?
+    (<Redirect to="/login" />) :
+    (<div className="h-full p-4 w-full rounded border-l border-gray-800 bg-gradient-to-br from-gray-800 via-transparent to-gray-800">
       <div className="flex flex-col h-full mb-4 2xl:mb-0">
         <h1 className="mb-4 ml-2 text-xl font-bold text-blue-200"> Finished Goods </h1>
         <div className="grid grid-cols-5 h-full">

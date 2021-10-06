@@ -58,7 +58,7 @@ const rawReducer = (state = initialState, action) => {
       return {
         ...state,
         selectedRaw: {},
-        raws: [state.raws.filter(raw => raw._id !== action.payload)],
+        raws: [...state.raws.filter(raw => raw._id !== action.payload)],
         adding: false,
         editing: false,
         deleting: false

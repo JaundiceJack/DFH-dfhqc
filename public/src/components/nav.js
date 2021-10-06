@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { FaBalanceScale } from 'react-icons/fa';
 import { GiPowder, GiPowderBag, GiBarrel, GiMedicinePills } from 'react-icons/gi';
 import { RiLoginCircleLine } from 'react-icons/ri';
+import { ImLab } from 'react-icons/im';
 import { IoDocuments } from 'react-icons/io5';
 // Import components
 import NavLink        from './navLink';
@@ -46,6 +47,10 @@ const Nav = () => {
                icon=<IoDocuments size="40px" />
                extraClasses={page === 'samples' ? "border-green-600" : "border-blue-400"}
                onClick={ () => changeActive('samples') } />
+      <NavLink target="/labs" text="Labs"
+               icon=<ImLab size="40px" />
+               extraClasses={page === 'labs' ? "border-green-600" : "border-blue-400"}
+               onClick={ () => changeActive('labs') } />
         {/*If not logged in, show the login button*/}
         {!isAuthenticated &&
           <NavLink target="/login" text="Login"
