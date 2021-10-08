@@ -102,7 +102,7 @@ const Login = () => {
           </button>
         </div>
       </form>
-      {isAuthenticated && <Redirect to="/samples" />}
+      {isAuthenticated && <Redirect to="/" />}
     </section>
   );
 

@@ -7,6 +7,11 @@ import blendReducer from './blendReducer.js';
 import bulkReducer from './bulkReducer.js';
 import fgReducer from './fgReducer.js';
 import labReducer from './labReducer.js';
+import assayReducer from './assayReducer.js';
+import methodReducer from './methodReducer.js';
+import unitReducer from './unitReducer.js';
+import identityReducer from './identityReducer.js';
+import textureReducer from './textureReducer.js';
 
 export default combineReducers({
   raw: rawReducer,
@@ -16,5 +21,10 @@ export default combineReducers({
   auth: authReducer,
   bulk: bulkReducer,
   fg: fgReducer,
-  lab: labReducer
+  lab: labReducer,
+  assay: assayReducer,
+  identity: identityReducer,
+  method: methodReducer,
+  unit: unitReducer,
+  texture: textureReducer
 })

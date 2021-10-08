@@ -2,6 +2,9 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { getLabs, toggleAdding, toggleDeleting, toggleEditing } from '../../../actions/labActions';
+import { getAssays } from '../../../actions/assayActions.js';
+import { getIdentities } from '../../../actions/identityActions.js';
+import { getMethods } from '../../../actions/methodActions.js';
 // Import Components
 import LabList   from './labList.js';
 import LabSpec   from './labSpec.js';
@@ -20,6 +23,9 @@ const LabSummary = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getLabs());
+    dispatch(getAssays());
+    dispatch(getIdentities());
+    dispatch(getMethods());
     return () => { cleanup() };
   }, []);
   const cleanup = () => { setTimeout(() => { return }, 5000); }

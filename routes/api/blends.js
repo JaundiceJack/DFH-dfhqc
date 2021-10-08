@@ -6,9 +6,9 @@ const connection = require('../../mongo');
 // Import route access protection
 //const auth = require('../../middleware/auth');
 // Import schemas and make models
-const Blend = connection.model('blend', require('../../schemas/Blend'));
-const Raw   = connection.model('raw',   require('../../schemas/Raw'));
-const Unit  = connection.model('unit',  require('../../schemas/Unit'));
+const Blend = connection.model('blends', require('../../schemas/Blend'));
+const Raw   = connection.model('raws',   require('../../schemas/Raw'));
+const Unit  = connection.model('units',  require('../../schemas/Unit'));
 
 // GET: api/blends/ | Get a list of all blend specifications | Private
 router.get('/',  (req, res) => {

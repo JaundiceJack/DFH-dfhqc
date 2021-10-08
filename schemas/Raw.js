@@ -8,7 +8,7 @@ const RawSchema = new Schema({
   color: { type: String },
   odor: { type: String },
   taste: { type: String },
-  texture: { type: String },
+  texture: { type: Schema.Types.ObjectId, ref: 'textures' },
 //Heavy Metals
   arsenic_max: { type: Number },
   cadmium_max: { type: Number },
@@ -37,25 +37,17 @@ const RawSchema = new Schema({
   paeru_tested: { type: Boolean },
 //Assays
   assays: [{
-    assay_id: {type: Schema.Types.ObjectId, ref: 'assays'},
-    assay_name: {type: String},
-    assay_min: {type: Number},
-    assay_max: {type: Number},
-    assay_units: {type: String},
-    assay_method: {type: String}
+    assay:  { type: Schema.Types.ObjectId, ref: 'assays' },
+    units:  { type: Schema.Types.ObjectId, ref: 'units' },
+    method: { type: Schema.Types.ObjectId, ref: 'methods' },
+    min:  { type: Number },
+    max:  { type: Number },
   }],
 //IDs
   ids: [{
-    identity_id: {type: Schema.Types.ObjectId, ref: 'identity'},
-    identity_name: {type: String},
-    identity_method: {type: String},
-    identity_posneg: {type: String},
-    identity_is_botanical: {type: Boolean},
-    identity_genus: {type: String},
-    identity_species: {type: String},
-    identity_part: {type: String},
-    identity_solvent: {type: String},
-    identity_ratio: {type: String}
+    identity: { type: Schema.Types.ObjectId, ref: 'ids' },
+    method:   { type: Schema.Types.ObjectId, ref: 'methods' },
+    posneg:   { type: String },
   }],
 //Pesticides
   pesticide_tested: { type: Boolean },

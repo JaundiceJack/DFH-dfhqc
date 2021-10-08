@@ -58,6 +58,67 @@ router.post('/', trycatch(async (req, res) => {
   }).catch(e => res.status(401).json({ error: "Failed to save new lot." }));
 }));
 
+
+
+
+const makePesticideSample = (date) => {
+  return {
+    result: null,
+    sent_to: null,
+    sample_date: new Date(date + 'T00:00:00'),
+    sent_date: null,
+    result_date: null
+  }
+}
+const makeHMSample = (date) => {
+  return {
+    arsenic: null,
+    cadmium: null,
+    lead: null,
+    mercury: null,
+    nickel: null,
+    sent_to: null,
+    sample_date: new Date(date + 'T00:00:00'),
+    sent_date: null,
+    result_date: null
+  }
+}
+const makeSolventSample = (date) => {
+  return {
+    result: null,
+    sent_to: null,
+    sample_date: new Date(date + 'T00:00:00'),
+    sent_date: null,
+    result_date: null,
+  }
+}
+const makeRanciditySample = (date) => {
+  return {
+    peroxide: null,
+    p_anisidine: null,
+    sent_to: null,
+    sample_date: new Date(date + 'T00:00:00'),
+    sent_date: null,
+    result_date: null,
+  }
+}
+const makeMicroSample = (date) => {
+  return {
+    tpc: null,
+    ym: null,
+    entero: null,
+    salmonella: null,
+    ecoli: null,
+    staph: null,
+    paeru: null,
+    sent_to: null,
+    sample_date: new Date(date + 'T00:00:00'),
+    sent_date: null,
+    result_date: null,
+  }
+}
+
+
 // POST: api/lots/take_raw_sample | Set/Create a result object | Private
 router.post('/take_raw_sample', trycatch( async (req, res) => {
 
@@ -66,30 +127,16 @@ router.post('/take_raw_sample', trycatch( async (req, res) => {
   // find the raw sample
   const lot = await RawLot.findById(req.body.lotId).populate('item');
   if (lot) {
-    if (req.body.resultType === 'pesticide') {
-      const pestResult = {
-        result: null,
-        sent_to: null,
-        sample_date: Date.now(),
-        sent_date: null,
-        result_date: null
-      }
-      lot.pesticide_results.push(pestResult);
-    }
-    else if (req.body.resultType === 'heavy metal') {
-      const hmResult = {
-        arsenic: null,
-        cadmium: null,
-        lead: null,
-        mercury: null,
-        nickel: null,
-        sent_to: null,
-        sample_date: Date.now(),
-        sent_date: null,
-        result_date: null
-      }
-      lot.hm_results.push(hmResult);
-    }
+    if (req.body.resultType === 'pesticide')
+      lot.pesticide_results.push(makePesticideSample(req.body.date));
+    else if (req.body.resultType === 'solvent')
+      lot.solvent_results.push(makeSolventSample(req.body.date));
+    else if (req.body.resultType === 'rancidity')
+      lot.rancidity_results.push(makeRanciditySample(req.body.date));
+    else if (req.body.resultType === 'heavy metal')
+      lot.hm_results.push(makeHMSample(req.body.date));
+    else if (req.body.resultType === 'micro')
+      lot.micro_results.push(makeMicroSample(req.body.date));
     lot.save()
     .then(lot => res.json(lot))
     .catch(err => res.status(400).json({error: "Unable to edit the selected lot."}));
@@ -101,13 +148,19 @@ router.post('/take_raw_sample', trycatch( async (req, res) => {
 }));
 
 router.post('/remove_raw_sample', trycatch( async (req, res) => {
-  // find the raw sample
+  // find the raw sample and populate item for the return value
   const lot = await RawLot.findById(req.body.lotId).populate('item');
   if (lot) {
     if (req.body.resultType === 'pesticide')
       lot.pesticide_results.pop();
-    if (req.body.resultType === 'heavy metal')
+    else if (req.body.resultType === 'solvent')
+      lot.solvent_results.pop();
+    else if (req.body.resultType === 'rancidity')
+      lot.rancidity_results.pop();
+    else if (req.body.resultType === 'heavy metal')
       lot.hm_results.pop();
+    else if (req.body.resultType === 'micro')
+      lot.micro_results.pop();
     lot.save()
     .then(lot => res.json(lot))
     .catch(err => res.status(400).json({error: "Unable to edit the selected lot."}));
@@ -117,6 +170,18 @@ router.post('/remove_raw_sample', trycatch( async (req, res) => {
     throw new Error("Server was unable to find the requested lot.");
   }
 }))
+
+router.post('/test_raw_sample', trycatch( async (req, res) => {
+
+  // TODO: I should pass in an index with the request body, so that certain ones can be edited
+
+  // find the raw sample
+  const lot = await RawLot.findById(req.body.lotId).populate('item');
+  // find the lab the sample was sent to
+  const lab = await Lab.findById(req.body.labId);
+
+  
+}));
 
 // POST: api/lots/lot_id | Edit the lot with the given ID | Private
 router.post('/:id', trycatch(async (req, res) => {

@@ -26,11 +26,11 @@ const AddOrgano = ({vals, onEntry, textures}) => {
       <div className="grid grid-cols-3">
         <label className={labelCs+" col-span-1"}>Texture:</label>
         <select className="rounded my-1 py-1 pl-2 bg-gray-200 col-span-2"
-                name="texture"
-                value={vals.texture}
+                name="textureId"
+                value={vals.textureId}
                 onChange={onEntry} >
-          {textures.map(tex => {
-            return (<option key={tex} value={tex}>{tex}</option>)
+          {textures.map((tex, index) => {
+            return (<option key={index} value={tex._id}>{tex.name}</option>)
           })}
         </select>
       </div>

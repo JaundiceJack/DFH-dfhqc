@@ -1,40 +1,95 @@
 import { BiPlus } from 'react-icons/bi';
+import Button from '../../../button.js';
+import Sampling from './sampling.js';
+import TestLine from './testLine.js';
+import { useState } from 'react';
 
 const MicroTests = ({lot}) => {
-  const buttonCs = " rounded py-1/2 px-2 mx-1 my-1 2xl:my-0 font-semibold transform duration-75" +
-                   " ease-in-out hover:scale-105 disabled:opacity-25 hover:opacity-100 opacity-75  ";
-  const textColor = (tested) => {
-    return tested ? "text-red-300" : "text-blue-100" };
-  const testText = (results, resultProp, tested) => {
-    return results.length > 0 ? results[0][resultProp] :
-      tested ? "Needs test" : "Not tested" };
+  const [showMicroSampling, setShowMicroSampling] = useState(false);
 
   return (
     <div className="bg-gray-600 rounded text-blue-100 font-semibold">
       <div className="flex flex-row px-2 py-1">
         <h3 className="text-lg text-left px-2 text-blue-200">Microbials</h3>
         <div className="flex-grow"></div>
-        <button className={buttonCs+"bg-blue-300 text-black flex flex-row items-center"}><BiPlus /> Test</button>
-        <button className={buttonCs+"bg-green-300 text-black flex flex-row items-center"}><BiPlus /> Result</button>
+
       </div>
       <div className="h-px bg-gradient-to-r from-blue-200 to-transparent"/>
-      <div className="grid grid-cols-3 p-2">
-        <p className="text-right mr-2">TPC:</p>
-        <p className={textColor(lot.item.tpc_max) + " col-span-2"}>{testText(lot.micro_results, 'tpc', lot.item.tpc_max)}</p>
-        <p className="text-right mr-2">Y&M:</p>
-        <p className={lot.item.ym_max ? "text-red-300 col-span-2" : "col-span-2"}>{lot.micro_results.length > 0 ? lot.micro_results[0].ym : lot.item.ym_max ? "Needs test" : "Not tested"}</p>
-        <p className="text-right mr-2">Enterobacteria:</p>
-        <p className={lot.item.entero_max ? "text-red-300 col-span-2" : "col-span-2"}>{lot.micro_results.length > 0 ? lot.micro_results[0].entero : lot.item.entero_max ? "Needs test" : "Not tested"}</p>
-        <p className="text-right mr-2">Salmonella:</p>
-        <p className={lot.item.salmonella ? "text-red-300 col-span-2" : "col-span-2"}>{lot.micro_results.length > 0 ? lot.micro_results[0].salmonella : lot.item.salmonella ? "Needs test" : "Not tested"}</p>
-        <p className="text-right mr-2">E. Coli:</p>
-        <p className={lot.item.ecoli ? "text-red-300 col-span-2" : "col-span-2"}>{lot.micro_results.length > 0 ? lot.micro_results[0].ecoli : lot.item.ecoli ? "Needs test" : "Not tested"}</p>
-        <p className="text-right mr-2">Staph:</p>
-        <p className={lot.item.staph ? "text-red-300 col-span-2" : "col-span-2"}>{lot.micro_results.length > 0 ? lot.micro_results[0].staph : lot.item.staph ? "Needs test" : "Not tested"}</p>
-        {lot.item && lot.item.nickel_tested &&
-          <p className="text-right mr-2">P. Aeruginosa:</p>}
-        {lot.item && lot.item.nickel_tested &&
-          <p className={lot.item.paeru ? "text-red-300 col-span-2" : "col-span-2"}>{lot.micro_results.length > 0 ? lot.micro_results[0].paeru : lot.item.paeru ? "Needs test" : "Not tested"}</p>}
+      <div className=" p-2">
+        {!showMicroSampling &&
+          <div>
+            <TestLine
+              text="TPC"
+              type='micro'
+              id={lot._id}
+              tested={lot.item.tpc_max}
+              results={lot.micro_results}
+              toggle={showMicroSampling}
+              onSample={setShowMicroSampling} />
+            <TestLine
+              text="Y&M"
+              type='micro'
+              id={lot._id}
+              tested={lot.item.ym_max}
+              results={lot.micro_results}
+              toggle={showMicroSampling}
+              onSample={setShowMicroSampling}
+              hideButton={true} />
+            <TestLine
+              text="Enterobacteria"
+              type='micro'
+              id={lot._id}
+              tested={lot.item.entero_max}
+              results={lot.micro_results}
+              toggle={showMicroSampling}
+              onSample={setShowMicroSampling}
+              hideButton={true} />
+            <TestLine
+              text="Salmonella"
+              type='micro'
+              id={lot._id}
+              tested={lot.item.salmonella}
+              results={lot.micro_results}
+              toggle={showMicroSampling}
+              onSample={setShowMicroSampling}
+              hideButton={true} />
+            <TestLine
+              text="E. Coli"
+              type='micro'
+              id={lot._id}
+              tested={lot.item.ecoli}
+              results={lot.micro_results}
+              toggle={showMicroSampling}
+              onSample={setShowMicroSampling}
+              hideButton={true} />
+            <TestLine
+              text="Staph"
+              type='micro'
+              id={lot._id}
+              tested={lot.item.staph}
+              results={lot.micro_results}
+              toggle={showMicroSampling}
+              onSample={setShowMicroSampling}
+              hideButton={true} />
+            {lot.item.paeru_tested &&
+              <TestLine
+                text="P. Aeru."
+                type='micro'
+                id={lot._id}
+                tested={lot.item.paeru}
+                results={lot.micro_results}
+                toggle={showMicroSampling}
+                onSample={setShowMicroSampling}
+                hideButton={true} />
+            }
+          </div>
+        }
+        {showMicroSampling &&
+          <Sampling
+            id={lot._id}
+            type='micro'
+            onToggle={setShowMicroSampling} />
+        }
       </div>
     </div>
   )

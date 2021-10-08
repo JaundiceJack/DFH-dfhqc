@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const AssayMethodSchema = new Schema({
+const TextureSchema = new Schema({
   name: { type: String, required: true, unique: true }
 });
 
-module.exports = AssayMethodSchema;
+module.exports = TextureSchema;

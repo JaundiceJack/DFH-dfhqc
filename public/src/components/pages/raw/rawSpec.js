@@ -26,7 +26,7 @@ const RawSpec = () => {
                       number={selectedRaw.number}
                       color={selectedRaw.color}
                       odor={selectedRaw.odor}
-                      texture={selectedRaw.texture}
+                      texture={selectedRaw.texture ? selectedRaw.texture.name : ""}
                       taste={selectedRaw.taste} />
           <SpecPhysical densityMin={selectedRaw.density_min}
                         densityMax={selectedRaw.density_max}

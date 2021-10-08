@@ -19,7 +19,9 @@ import {
   INCREMENT_YEAR,
   DECREMENT_YEAR,
   LOT_SAMPLED,
-  LOT_UNSAMPLED
+  LOT_UNSAMPLED,
+  LOT_TESTED,
+  LOT_UNTESTED
    } from './types';
 // Import axios to handle http requests
 import axios from 'axios';
@@ -90,9 +92,9 @@ export const incrementYear = () => dispatch => dispatch({ type: INCREMENT_YEAR }
 export const decrementYear = () => dispatch => dispatch({ type: DECREMENT_YEAR });
 
 // Create a sample for the given lot and result
-export const takeRawSample = (lotId, resultType) => dispatch => {
+export const takeRawSample = (lotId, resultType, date) => dispatch => {
   const config = { headers: {"Content-type": "application/json"} };
-  const sample = JSON.stringify({lotId, resultType});
+  const sample = JSON.stringify({lotId, resultType, date});
   axios.post(`${server}/api/lots/take_raw_sample`, sample, config)
   .then(res => { dispatch({type: LOT_SAMPLED, payload: res.data}) })
   .catch(err => {
@@ -109,6 +111,33 @@ export const removeRawSample = (lotId, resultType) => dispatch => {
   const sample = JSON.stringify({lotId, resultType});
   axios.post(`${server}/api/lots/remove_raw_sample`, sample, config)
   .then(res => { dispatch({type: LOT_UNSAMPLED, payload: res.data}) })
+  .catch(err => {
+    const errmsg = err.response ?
+                   {error: err.response.data ? err.response.data.msg : "Error encountered"} :
+                   {error: "Error encountered"};
+    const errstatus = err.response ? err.response.status : null;
+    dispatch(returnMessages(errmsg, errstatus));
+  })
+}
+
+export const testRawSample = (lotId, resultType, lab, date) => dispatch => {
+  const config = { headers: {"Content-type": "application/json"} };
+  const sample = JSON.stringify({lotId, resultType, lab, date});
+  axios.post(`${server}/api/lots/test_raw_sample`, sample, config)
+  .then(res => { dispatch({type: LOT_TESTED, payload: res.data}) })
+  .catch(err => {
+    const errmsg = err.response ?
+                   {error: err.response.data ? err.response.data.msg : "Error encountered"} :
+                   {error: "Error encountered"};
+    const errstatus = err.response ? err.response.status : null;
+    dispatch(returnMessages(errmsg, errstatus));
+  })
+}
+export const removeRawTest = (lotId, resultType) => dispatch => {
+  const config = { headers: {"Content-type": "application/json"} };
+  const sample = JSON.stringify({lotId, resultType});
+  axios.post(`${server}/api/lots/remove_raw_test`, sample, config)
+  .then(res => { dispatch({type: LOT_UNTESTED, payload: res.data}) })
   .catch(err => {
     const errmsg = err.response ?
                    {error: err.response.data ? err.response.data.msg : "Error encountered"} :

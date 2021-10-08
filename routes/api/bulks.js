@@ -6,10 +6,10 @@ const connection = require('../../mongo');
 // Import route access protection
 //const auth = require('../../middleware/auth');
 // Import schemas and make models
-const Blend = connection.model('blend', require('../../schemas/Blend'));
-const Bulk  = connection.model('bulk',  require('../../schemas/Bulk'));
-const Raw   = connection.model('raw',   require('../../schemas/Raw'));
-const Unit  = connection.model('unit',  require('../../schemas/Unit'));
+const Blend = connection.model('blends', require('../../schemas/Blend'));
+const Bulk  = connection.model('bulks',  require('../../schemas/Bulk'));
+const Raw   = connection.model('raws',   require('../../schemas/Raw'));
+const Unit  = connection.model('units',  require('../../schemas/Unit'));
 
 // GET -> api/bulks/
 // Get a list of all bulk specification
