@@ -10,20 +10,17 @@ import AddHms from '../add/addHms';
 import AddMicros from '../add/addMicros';
 import AddAllergens from '../add/addAllergens';
 import AddAnnuals from '../add/addAnnuals';
+import Button from '../../button.js';
+import Message from '../../message.js';
 
 const RawEdit = ({toggleEdit}) => {
   // Get id and assay names from the redux state/server
-  const selected     = useSelector(state => state.raw.selectedRaw);
-  const idNames      = useSelector(state => state.raw.idNames);
-  const assayNames   = useSelector(state => state.raw.assayNames);
-  const assayUnits   = useSelector(state => state.raw.units);
-  const assayMethods = useSelector(state => state.raw.assayMethods);
-  const idMethods    = useSelector(state => state.raw.idMethods);
-  const textureOptions = ["Powder", "Empty Capsule", "Capsule", "Softgel", "Thick Liquid",
-                          "Thin Liquid", "Oily Liquid", "Gel", "Solid",
-                          "Fine Powder", "Granular Powder", "Crystalline Powder",
-                          "Dry Powder", "Free Flowing Powder", "Sticky Powder",
-                          "Fluffy Powder", "Coarse Powder", "Beadlets", "Flakes"];
+  const selected = useSelector(state => state.raw.selectedRaw);
+  const ids = useSelector(state => state.identity.identities);
+  const assays = useSelector(state => state.assay.assays.sort((a, b) => b.name < a.name));
+  const units = useSelector(state => state.unit.units);
+  const methods = useSelector(state => state.method.methods.sort((a, b) => b.name < a.name));
+  const textures = useSelector(state => state.texture.textures.sort((a, b) => b.name < a.name));
 
   // Set internal state variables for the form
   const [rawVals, setRawVals] = useState({
@@ -58,28 +55,19 @@ const RawEdit = ({toggleEdit}) => {
     peroxideMax: selected.peroxide_max,
     pAnisidineMax: selected.p_anisidine_max,
     totoxMax: selected.totox_max,
-    texture: selected.texture,
-    assays: selected.assays.map(assay => {
-      return {
-        name: assay.assay_name,
-        min: assay.assay_min,
-        max: assay.assay_max,
-        units: assay.assay_units,
-        method: assay.assay_method
-      }
-
-    }),
+    textureId: selected.texture._id,
+    assays: selected.assays,
     ids: selected.ids.map(id => {
       return {
-        name: id.identity_name,
-        posneg: id.identity_posneg,
-        isBotanical: id.identity_is_botanical,
-        genus: id.identity_genus,
-        species: id.identity_species,
-        part: id.identity_part,
-        ratio: id.identity_ratio,
-        solvent: id.identity_solvent,
-        method: id.identity_method
+        identity: id.identity,
+        posneg: id.posneg,
+        isBotanical: id.is_botanical,
+        genus: id.genus,
+        species: id.species,
+        part: id.part,
+        ratio: id.ratio,
+        solvent: id.solvent,
+        method: id.method
       }
     }),
     rancidityTested: selected.rancidity_tested,
@@ -101,8 +89,7 @@ const RawEdit = ({toggleEdit}) => {
   const dispatch = useDispatch();
   const [badEntries, setBadEntries] = useState([]);
   const clearTimer = useRef(null);
-  const setClear   = () => {
-    clearTimer.current = setTimeout(() => {
+  const setClear   = () => { clearTimer.current = setTimeout(() => {
       setBadEntries([]);
       clearTimer.current = null;
     }, 5000);
@@ -135,13 +122,16 @@ const RawEdit = ({toggleEdit}) => {
   const onAddAssay = () => {
     setRawVals({ ...rawVals, assays: [...rawVals.assays,
       {
-        name: assayNames[0],
-        newName: "",
         min: "",
         max: "",
-        units: assayUnits[0],
-        newUnits: "",
-        method: assayMethods[0],
+        name:     (!assays.loading && assays.length > 0) ? assays[0].name : "",
+        assayId:  (!assays.loading && assays.length > 0) ? assays[0]._id : "",
+        newName: "",
+        units:    (!units.loading && units.length > 0) ? units[0].name : "",
+        unitId:   (!units.loading && units.length > 0) ? units[0]._id : "",
+        newUnit: "",
+        method:   (!methods.loading && methods.length > 0) ? methods[0].name : "",
+        methodId: (!methods.loading && methods.length > 0) ? methods[0]._id : "",
         newMethod: ""
       }
     ]})
@@ -149,16 +139,18 @@ const RawEdit = ({toggleEdit}) => {
   const onAddId = () => {
     setRawVals({...rawVals, ids: [...rawVals.ids,
       {
-        name: idNames[0],
-        newName: "",
         posneg: "Positive",
-        isBotanical: false,
-        genus: "",
-        species: "",
-        part: "",
-        ratio: "",
-        solvent: "",
-        method: idMethods[0],
+        isBotanical: (!ids.loading && ids.length > 0) ? ids[0].is_botanical : "",
+        genus:       (!ids.loading && ids.length > 0) ? ids[0].genus : "",
+        species:     (!ids.loading && ids.length > 0) ? ids[0].species : "",
+        part:        (!ids.loading && ids.length > 0) ? ids[0].part : "",
+        ratio:       (!ids.loading && ids.length > 0) ? ids[0].ratio : "",
+        solvent:     (!ids.loading && ids.length > 0) ? ids[0].solvent : "",
+        name:        (!ids.loading && ids.length > 0) ? ids[0].name : "",
+        identityId:  (!ids.loading && ids.length > 0) ? ids[0]._id : "",
+        newName: "",
+        method:      (!methods.loading && methods.length > 0) ? methods[0].name : "",
+        methodId:    (!methods.loading && methods.length > 0) ? methods[0]._id : "",
         newMethod: ""
       }
     ]})
@@ -186,38 +178,54 @@ const RawEdit = ({toggleEdit}) => {
       edited[index][e.target.name] = e.target.value;
     setRawVals({...rawVals, ids: edited});
   }
-
-  // Compose classes
-  const buttonCs = " rounded py-1 px-2 mx-1 font-semibold transform duration-75" +
-                   " ease-in-out hover:scale-105 hover:opacity-75 opacity-50 " +
-                   " bg-green-300 col-span-2 mt-4 mx-auto ";
-  const errorMsgCs = " px-3 py-2 mb-2 font-semibold text-white rounded-xl" +
-                          " border-l border-gray-500 bg-gradient-to-tl" +
-                          " from-red-900 to-gray-900 fadeError ";
-
   return (
     <div className="mx-4 my-2">
       <form className="flex flex-col" onSubmit={onSubmit}>
 
-        <AddBasic     vals={rawVals} onEntry={onEntry} ifEditing={true} />
-        <AddOrgano    vals={rawVals} onEntry={onEntry}
-          textures={textureOptions} />
-        <AddAssays    vals={rawVals} onEdit={onEditAssay}
-          onAdd={onAddAssay} onRemove={onRemoveAssay} nameOptions={assayNames}
-          methodOptions={assayMethods} unitOptions={assayUnits} />
-        <AddIds       vals={rawVals} onEdit={onEditId}
-          onAdd={onAddId} onRemove={onRemoveId} nameOptions={idNames}
-          methodOptions={idMethods} />
-        <AddPhysical  vals={rawVals} onEntry={onEntry} />
-        <AddHms       vals={rawVals} onEntry={onEntry} onClick={onClick} />
-        <AddMicros    vals={rawVals} onEntry={onEntry} onClick={onClick} />
-        <AddAnnuals   vals={rawVals} onEntry={onEntry} onClick={onClick} />
-        <AddAllergens vals={rawVals} onClick={onClick} />
+        <AddBasic
+          vals={rawVals}
+          onEntry={onEntry}
+          ifEditing={true} />
+        <AddOrgano
+          vals={rawVals}
+          onEntry={onEntry}
+          textures={textures} />
+        <AddAssays
+          vals={rawVals}
+          onEdit={onEditAssay}
+          onAdd={onAddAssay}
+          onRemove={onRemoveAssay}
+          assayOptions={assays}
+          methodOptions={methods}
+          unitOptions={units} />
+        <AddIds
+          vals={rawVals}
+          onEdit={onEditId}
+          onAdd={onAddId}
+          onRemove={onRemoveId}
+          nameOptions={ids}
+          methodOptions={methods} />
+        <AddPhysical
+          vals={rawVals}
+          onEntry={onEntry} />
+        <AddHms
+          vals={rawVals}
+          onEntry={onEntry}
+          onClick={onClick} />
+        <AddMicros
+          vals={rawVals}
+          onEntry={onEntry}
+          onClick={onClick} />
+        <AddAnnuals
+          vals={rawVals}
+          onEntry={onEntry}
+          onClick={onClick} />
+        <AddAllergens
+          vals={rawVals}
+          onClick={onClick} />
 
-        { badEntries.map(err => <div className={errorMsgCs}>{err}</div> )  }
-        <button type="submit" className={buttonCs}>
-          Apply Changes
-        </button>
+        { badEntries.map(err => <Message error={err} /> )  }
+        <Button type="submit" color="bg-green-300" text="Apply Changes" />
       </form>
     </div>
   )

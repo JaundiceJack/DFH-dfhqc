@@ -2,13 +2,12 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const connection = require('../../mongo');
 // Import route access protection
-//const auth = require('../../middleware/auth');
+const auth = require('../../middleware/auth');
 // Import schemas and make models
-const Blend = connection.model('blends', require('../../schemas/Blend'));
-const Raw   = connection.model('raws',   require('../../schemas/Raw'));
-const Unit  = connection.model('units',  require('../../schemas/Unit'));
+const Blend = mongoose.connection.model('blends', require('../../schemas/Blend'));
+const Raw   = mongoose.connection.model('raws',   require('../../schemas/Raw'));
+const Unit  = mongoose.connection.model('units',  require('../../schemas/Unit'));
 
 // GET: api/blends/ | Get a list of all blend specifications | Private
 router.get('/',  (req, res) => {

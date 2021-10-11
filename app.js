@@ -1,8 +1,13 @@
 const express = require('express');
 const { notFound, errorFound } = require('./middleware/error.js');
-// Instance the app server and use the express body-parser
+const connect = require('./mongo');
+const dotenv = require('dotenv');
+dotenv.config();
+
+// Instance the app server
 const app = express();
 app.use(express.json());
+connect();
 
 // Define Routes //
 app.use('/api/raws',   require('./routes/api/raws'));

@@ -2,12 +2,11 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const connection = require('../../mongo');
 const trycatch = require('express-async-handler');
 // Import route access protection
-//const auth = require('../../middleware/auth');
+const auth = require('../../middleware/auth');
 // Import schemas and make models
-const Unit = connection.model('units', require('../../schemas/Unit'));
+const Unit = mongoose.connection.model('units', require('../../schemas/Unit'));
 
 
 // GET: api/units/ | Get a list of all units | Private

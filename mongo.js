@@ -1,10 +1,17 @@
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-dotenv.config();
 
-const connection = mongoose.createConnection(
-  process.env.MONGO_URI,
-  { useCreateIndex: true, useUnifiedTopology: true, useNewUrlParser: true }
-);
+const connect = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+      useCreateIndex: true
+    })
+    console.log(`MongoDB connected! Hosted at ${conn.connection.host}.`)
+  } catch (err) {
+    console.log(`Error: ${err}`)
+    process.exit(1)
+  }
+}
 
-module.exports = connection;
+module.exports = connect;

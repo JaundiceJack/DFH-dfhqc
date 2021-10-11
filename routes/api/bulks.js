@@ -2,14 +2,13 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const connection = require('../../mongo');
 // Import route access protection
-//const auth = require('../../middleware/auth');
+const auth = require('../../middleware/auth');
 // Import schemas and make models
-const Blend = connection.model('blends', require('../../schemas/Blend'));
-const Bulk  = connection.model('bulks',  require('../../schemas/Bulk'));
-const Raw   = connection.model('raws',   require('../../schemas/Raw'));
-const Unit  = connection.model('units',  require('../../schemas/Unit'));
+const Blend = mongoose.connection.model('blends', require('../../schemas/Blend'));
+const Bulk  = mongoose.connection.model('bulks',  require('../../schemas/Bulk'));
+const Raw   = mongoose.connection.model('raws',   require('../../schemas/Raw'));
+const Unit  = mongoose.connection.model('units',  require('../../schemas/Unit'));
 
 // GET -> api/bulks/
 // Get a list of all bulk specification

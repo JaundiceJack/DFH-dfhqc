@@ -2,21 +2,20 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const connection = require('../../mongo');
 const trycatch = require('express-async-handler');
 // Import route access protection
-//const auth = require('../../middleware/auth');
+const auth = require('../../middleware/auth');
 // Import schemas and make models
-const Raw         = connection.model('raws',     require('../../schemas/Raw'));
-const Assay       = connection.model('assays',   require('../../schemas/Assay'));
-const Identity    = connection.model('ids',      require('../../schemas/Identity'));
-const Method      = connection.model('methods',  require('../../schemas/Method'));
-const Unit        = connection.model('units',    require('../../schemas/Unit'));
-const Texture     = connection.model('textures', require('../../schemas/Texture'));
+const Raw         = mongoose.connection.model('raws',     require('../../schemas/Raw'));
+const Assay       = mongoose.connection.model('assays',   require('../../schemas/Assay'));
+const Identity    = mongoose.connection.model('ids',      require('../../schemas/Identity'));
+const Method      = mongoose.connection.model('methods',  require('../../schemas/Method'));
+const Unit        = mongoose.connection.model('units',    require('../../schemas/Unit'));
+const Texture     = mongoose.connection.model('textures', require('../../schemas/Texture'));
 
 // GET: api/raws/ | Get a list of all raw specifications | Private
 router.get('/', trycatch( async (req, res) => {
-  const raws = await Raw.find().populate('textures');
+  const raws = await Raw.find().populate('texture').exec();
   if (raws) res.status(201).json(raws);
   else { res.status(404); throw new Error("Unable to find raw materials.") };
 }));
@@ -62,42 +61,57 @@ const makeAssays = assays => {
       };
 
       // Check for a new assay
-      if (assay.newName !== "") {
-        const newAssay = new Assay({name: assay.newName});
-        const savedAssay = await newAssay.save();
-        if (savedAssay) formatted.assay = savedAssay._id;
-        else reject("Unable to save new assay.");
+      if (assay.newName) {
+        const assayCheck = await Assay.findOne({ name: assay.newName.toLowerCase() });
+        if (!assayCheck) {
+          const newAssay = new Assay({name: assay.newName.toLowerCase()});
+          const savedAssay = await newAssay.save();
+          if (savedAssay) formatted.assay = savedAssay._id;
+          else reject("Unable to save new assay.");
+        } else formatted.assay = assayCheck._id;
       }
       else {
-        const currentAssay = await Assay.findById(assay.assayId);
-        if (currentAssay) formatted.assay = currentAssay._id;
-        else reject("Unable to locate selected assay.");
+        if (assay.assayId) {
+          const currentAssay = await Assay.findById(assay.assayId);
+          if (currentAssay) formatted.assay = currentAssay._id;
+          else reject("Unable to locate selected assay.");
+        } else reject("No assay selected.");
       }
 
       // Check for a new method
-      if (assay.newMethod !== "") {
-        const newMethod = new Method({name: assay.newMethod});
-        const savedMethod = await newMethod.save();
-        if (savedMethod) formatted.method = savedMethod._id;
-        else reject("Unable to save new method.");
+      if (assay.newMethod) {
+        const methCheck = await Method.findOne({ name: assay.newMethod });
+        if (!methCheck) {
+          const newMethod = new Method({name: assay.newMethod});
+          const savedMethod = await newMethod.save();
+          if (savedMethod) formatted.method = savedMethod._id;
+          else reject("Unable to save new method.");
+        } else formatted.method = methCheck._id;
       }
       else {
-        const currentMethod = await Method.findById(assay.methodId);
-        if (currentMethod) formatted.method = currentMethod._id;
-        else reject("Unable to locate selected method.");
+        if (assay.methodId) {
+          const currentMethod = await Method.findById(assay.methodId);
+          if (currentMethod) formatted.method = currentMethod._id;
+          else reject("Unable to locate selected method.");
+        } else reject("No assay method selected.");
       }
 
       // Check for new units
-      if (assay.newUnit !== "") {
-        const newUnit = new Unit({name: assay.newUnit});
-        const savedUnit = await newUnit.save();
-        if (savedUnit) formatted.unit = savedUnit._id;
-        else reject("Unable to save new unit.");
+      if (assay.newUnit) {
+        const unitCheck = await Unit.findOne({ name: assay.newUnit });
+        if (!unitCheck) {
+          const newUnit = new Unit({name: assay.newUnit});
+          const savedUnit = await newUnit.save();
+          if (savedUnit) formatted.unit = savedUnit._id;
+          else reject("Unable to save new unit.");
+        } else formatted.unit = unitCheck._id;
       }
       else {
-        const currentUnit = await Unit.findById(assay.unitId);
-        if (currentUnit) formatted.unit = currentUnit._id;
-        else reject("Unable to locate selected unit")
+        if (assay.unitId) {
+          const currentUnit = await Unit.findById(assay.unitId);
+          if (currentUnit) formatted.unit = currentUnit._id;
+          else reject("Unable to locate selected unit");
+        } else reject("No assay unit selected.");
       }
 
       // Return one of the completed assays and go to the next Promise
@@ -111,37 +125,51 @@ const makeAssays = assays => {
 const makeIds = ids => {
   return Promise.all(ids.map(id => {
     return new Promise(async (resolve, reject) => {
-      // Get any existing id & method
-      const current = id.newName === "" ? await Identity.findById(id.identityId) : null;
-      const method = id.newMethod === "" ? await Method.findById(id.methodId) : null;
-
       // Format the assay entries to have proper data-types
       let formatted = { posneg: id.posneg };
 
-      // If found, assign the identity's id, otherwise make a new one
-      if (current) { formatted.identity = current._id; }
+      // Check for a new identity
+      if (id.newName) {
+        const idCheck = await Identity.findOne({ name: id.newName.toLowerCase() });
+        if (!idCheck) {
+          const newId = new Identity({
+            name:         id.newName.toLowerCase(),
+            is_botanical: id.isBotanical,
+            genus:        id.genus.toLowerCase(),
+            species:      id.species.toLowerCase(),
+            part:         id.part.toLowerCase(),
+            solvent:      id.solvent.toLowerCase(),
+            ratio:        id.ratio
+          });
+          const savedId = await newId.save();
+          if (savedId) formatted.identity = savedId._id;
+          else reject("Unable to save new identity.");
+        } else formatted.identity = idCheck._id;
+      }
       else {
-        const newId = new Identity({
-          name:         id.newName.toLowerCase(),
-          is_botanical: id.isBotanical,
-          genus:        id.genus.toLowerCase(),
-          species:      id.species.toLowerCase(),
-          part:         id.part.toLowerCase(),
-          solvent:      id.solvent.toLowerCase(),
-          ratio:        id.ratio
-        });
-        const savedId = await newId.save();
-        if (savedId) formatted.identity = savedId._id;
-        else reject("Unable to save new identity.");
-      };
+        if (id.identityId) {
+          const currentIdentity = await Identity.findById(id.identityId);
+          if (currentIdentity) formatted.identity = currentIdentity._id;
+          else reject("Unable to locate selected identity.");
+        } else reject("No identity selected.");
+      }
 
-      // If found, assign the method's id, otherwise make a new one
-      if (method) { formatted.method = method._id; }
+      // Check for a new method
+      if (id.newMethod) {
+        const methCheck = await Method.findOne({ name: id.newMethod });
+        if (!methCheck) {
+          const newMethod = new Method({name: id.newMethod});
+          const savedMethod = await newMethod.save();
+          if (savedMethod) formatted.method = savedMethod._id;
+          else reject("Unable to save new method.");
+        } else formatted.method = methCheck._id;
+      }
       else {
-        const newMethod = new IdMethod({ name: id.newMethod });
-        const savedMethod = await newMethod.save();
-        if (savedMethod) formatted.method = savedMethod._id;
-        else reject("Unable to save new method.");
+        if (id.methodId) {
+          const currentMethod = await Method.findById(id.methodId);
+          if (currentMethod) formatted.method = currentMethod._id;
+          else reject("Unable to locate selected method.");
+        } else reject("No identity method selected.");
       }
 
       // Return one of the completed identities and go to the next Promise
@@ -150,18 +178,24 @@ const makeIds = ids => {
   }));
 };
 
+// Return an id from the texture collection in the database
 const makeTexture = (id, newName) => {
   return new Promise(async (resolve, reject) => {
-    if (newName !== "") {
-      const newTexture = new Texture({name: newName});
-      const savedTexture = await newTexture.save();
-      if (savedTexture) resolve(savedTexture._id);
-      else reject("Unable to save new texture.");
+    if (newName) {
+      const texCheck = await Texture.findOne({ name: newName.toLowerCase() });
+      if (!texCheck) {
+        const newTexture = new Texture({name: newName.toLowerCase()});
+        const savedTexture = await newTexture.save();
+        if (savedTexture) resolve(savedTexture._id);
+        else reject("Unable to save new texture.");
+      } else resolve(texCheck._id);
     }
     else {
-      const currentTexture = await Texture.findById(id);
-      if (currentTexture) resolve(currentTexture._id);
-      else reject("Unable to locate selected texture.");
+      if (id) {
+        const currentTexture = await Texture.findById(id);
+        if (currentTexture) resolve(currentTexture._id);
+        else reject("Unable to locate selected texture.");
+      } else reject("No texture selected.");
     }
   });
 }
@@ -201,16 +235,15 @@ const formatEntries = async body => {
     solvent_tested:   body.solventTested, // Boolean
     solvent_standard: body.solventStandard, // Selected String
     rancidity_tested: body.rancidityTested, // Boolean
-
     allergens: {
-      soy: body.soy,
-      egg: body.egg,
-      milk: body.milk,
-      fish: body.fish,
-      wheat: body.wheat,
-      peanut: body.peanut,
-      tree_nut: body.treeNut,
-      shellfish: body.shellfish
+      soy: body.soy,            // Boolean
+      egg: body.egg,            // Boolean
+      milk: body.milk,          // Boolean
+      fish: body.fish,          // Boolean
+      wheat: body.wheat,        // Boolean
+      peanut: body.peanut,      // Boolean
+      tree_nut: body.treeNut,   // Boolean
+      shellfish: body.shellfish // Boolean
     },
     peroxide_max:     Number(body.peroxideMax), // Number
     p_anisidine_max:  Number(body.pAnisidineMax), // Number

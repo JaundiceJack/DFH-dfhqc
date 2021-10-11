@@ -2,12 +2,11 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const connection = require('../../mongo');
 const trycatch = require('express-async-handler');
 // Import route access protection
-//const auth = require('../../middleware/auth');
+const auth = require('../../middleware/auth');
 // Import schemas and make models
-const Identity = connection.model('identities', require('../../schemas/Identity'));
+const Identity = mongoose.connection.model('identities', require('../../schemas/Identity'));
 
 
 // GET: api/identities/ | Get a list of all identities | Private

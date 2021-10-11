@@ -28,7 +28,7 @@ const RawAdd = ({toggleAdd}) => {
     color: "",
     odor: "",
     taste: "",
-    textureId: !textures.loading && textures.length > 0 ? textures[0]._id : "",
+    textureId: (!textures.loading && textures.length > 0) ? textures[0]._id : "",
     newTexture: "",
     arsenicMax: "5",
     cadmiumMax: "0.3",
@@ -111,16 +111,16 @@ const RawAdd = ({toggleAdd}) => {
   const onAddAssay = () => {
     setRawVals({ ...rawVals, assays: [...rawVals.assays,
       {
-        name:    !assays.loading && assays.length > 0 ? assays[0].name : "",
-        assayId: !assays.loading && assays.length > 0 ? assays[0]._id : "",
-        newName: "",
         min: "",
         max: "",
-        units: !units.loading && units.length > 0 ? units[0].name : "",
-        unitId: !units.loading && units.length > 0 ? units[0]._id : "",
+        name:     (!assays.loading && assays.length > 0) ? assays[0].name : "",
+        assayId:  (!assays.loading && assays.length > 0) ? assays[0]._id : "",
+        newName: "",
+        units:    (!units.loading && units.length > 0) ? units[0].name : "",
+        unitId:   (!units.loading && units.length > 0) ? units[0]._id : "",
         newUnit: "",
-        method: !methods.loading && methods.length > 0 ? methods[0].name : "",
-        methodId: !methods.loading && methods.length > 0 ? methods[0]._id : "",
+        method:   (!methods.loading && methods.length > 0) ? methods[0].name : "",
+        methodId: (!methods.loading && methods.length > 0) ? methods[0]._id : "",
         newMethod: ""
       }
     ]})
@@ -128,18 +128,18 @@ const RawAdd = ({toggleAdd}) => {
   const onAddId = () => {
     setRawVals({...rawVals, ids: [...rawVals.ids,
       {
-        name:       !ids.loading && ids.length > 0 ? ids[0].name : "",
-        identityId: !ids.loading && ids.length > 0 ? ids[0]._id : "",
-        newName: "",
         posneg: "Positive",
-        isBotanical: !ids.loading && ids.length > 0 ? ids[0].is_botanical : "",
-        genus:       !ids.loading && ids.length > 0 ? ids[0].genus : "",
-        species:     !ids.loading && ids.length > 0 ? ids[0].species : "",
-        part:        !ids.loading && ids.length > 0 ? ids[0].part : "",
-        ratio:       !ids.loading && ids.length > 0 ? ids[0].ratio : "",
-        solvent:     !ids.loading && ids.length > 0 ? ids[0].solvent : "",
-        method:   !methods.loading && methods.length > 0 ? methods[0].name : "",
-        methodId: !methods.loading && methods.length > 0 ? methods[0]._id : "",
+        isBotanical: (!ids.loading && ids.length > 0) ? ids[0].is_botanical : "",
+        genus:       (!ids.loading && ids.length > 0) ? ids[0].genus : "",
+        species:     (!ids.loading && ids.length > 0) ? ids[0].species : "",
+        part:        (!ids.loading && ids.length > 0) ? ids[0].part : "",
+        ratio:       (!ids.loading && ids.length > 0) ? ids[0].ratio : "",
+        solvent:     (!ids.loading && ids.length > 0) ? ids[0].solvent : "",
+        name:        (!ids.loading && ids.length > 0) ? ids[0].name : "",
+        identityId:  (!ids.loading && ids.length > 0) ? ids[0]._id : "",
+        newName: "",
+        method:      (!methods.loading && methods.length > 0) ? methods[0].name : "",
+        methodId:    (!methods.loading && methods.length > 0) ? methods[0]._id : "",
         newMethod: ""
       }
     ]})

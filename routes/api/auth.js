@@ -5,14 +5,13 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const mongoose = require('mongoose');
-const connection = require('../../mongo');
 const trycatch = require('express-async-handler')
 
 // Import route access protection
 const auth = require('../../middleware/auth.js');
 
 // Import the User Model
-const User = connection.model('users', require('../../schemas/User'));
+const User = mongoose.connection.model('users', require('../../schemas/User'));
 
 // Grab the json web token key and domain
 const jwtk = process.env.JWT_SECRET;

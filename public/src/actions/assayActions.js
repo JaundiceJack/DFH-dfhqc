@@ -22,7 +22,7 @@ export const getAssays = () => dispatch => {
   dispatch({ type: LOADING_ASSAYS });
   axios.get(`${server}/api/assays`, config)
   .then(res => { dispatch({type: GET_ASSAYS, payload: res.data}) })
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 
 // Submit a request to add a new assay

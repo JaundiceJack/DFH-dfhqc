@@ -2,12 +2,11 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const connection = require('../../mongo');
 const trycatch = require('express-async-handler');
 // Import route access protection
-//const auth = require('../../middleware/auth');
+const auth = require('../../middleware/auth');
 // Import schemas and make models
-const Texture = connection.model('textures', require('../../schemas/Texture'));
+const Texture = mongoose.connection.model('textures', require('../../schemas/Texture'));
 
 
 // GET: api/textures/ | Get a list of all textures | Private

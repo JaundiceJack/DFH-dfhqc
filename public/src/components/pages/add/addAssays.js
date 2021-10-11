@@ -31,6 +31,7 @@ const AddAssays = ({
                   <p className="col-span-2 text-blue-100 font-semibold ml-2">New Name:</p>
                   <input name="newName"
                          type="text"
+                         value={assay.newName}
                          onChange={e => onEdit(e, index)}
                          className={inputCs+'w-full col-span-4'} />
                 </div>

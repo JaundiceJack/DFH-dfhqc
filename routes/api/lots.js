@@ -2,20 +2,19 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const connection = require('../../mongo');
 const trycatch = require('express-async-handler');
 // Import route access protection
-//const auth = require('../../middleware/auth');
+const auth = require('../../middleware/auth');
 // Import schemas and make models
-const Unit     = connection.model('units',     require('../../schemas/Unit'));
-const Raw      = connection.model('raws',      require('../../schemas/Raw'));
-const RawLot   = connection.model('rawlots',   require('../../schemas/RawLot'));
-const Blend    = connection.model('blends',    require('../../schemas/Blend'));
-const BlendLot = connection.model('blendlots', require('../../schemas/BlendLot'));
-const Bulk     = connection.model('bulks',     require('../../schemas/Bulk'));
-const BulkLot  = connection.model('bulklots',  require('../../schemas/BulkLot'));
-const FinishedGood = connection.model('finishedgoods', require('../../schemas/FinishedGood'));
-const FinishedGoodLot = connection.model('finishedgoodlots', require('../../schemas/FinishedGoodLot'));
+const Unit     = mongoose.connection.model('units',     require('../../schemas/Unit'));
+const Raw      = mongoose.connection.model('raws',      require('../../schemas/Raw'));
+const RawLot   = mongoose.connection.model('rawlots',   require('../../schemas/RawLot'));
+const Blend    = mongoose.connection.model('blends',    require('../../schemas/Blend'));
+const BlendLot = mongoose.connection.model('blendlots', require('../../schemas/BlendLot'));
+const Bulk     = mongoose.connection.model('bulks',     require('../../schemas/Bulk'));
+const BulkLot  = mongoose.connection.model('bulklots',  require('../../schemas/BulkLot'));
+const FinishedGood = mongoose.connection.model('finishedgoods', require('../../schemas/FinishedGood'));
+const FinishedGoodLot = mongoose.connection.model('finishedgoodlots', require('../../schemas/FinishedGoodLot'));
 
 // GET: api/lots/ | Get lists of each type of lot | Private
 router.get('/', trycatch(async (req, res) => {
@@ -180,7 +179,7 @@ router.post('/test_raw_sample', trycatch( async (req, res) => {
   // find the lab the sample was sent to
   const lab = await Lab.findById(req.body.labId);
 
-  
+
 }));
 
 // POST: api/lots/lot_id | Edit the lot with the given ID | Private

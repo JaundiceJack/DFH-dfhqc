@@ -2,14 +2,13 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const connection = require('../../mongo');
 const trycatch = require('express-async-handler');
 // Import route access protection
-//const auth = require('../../middleware/auth');
+const auth = require('../../middleware/auth');
 // Import schemas and make models
-const Lab = connection.model('labs', require('../../schemas/Lab'));
-const Assay = connection.model('assays', require('../../schemas/Assay'));
-const Method = connection.model('methods', require('../../schemas/Method'));
+const Lab = mongoose.connection.model('labs', require('../../schemas/Lab'));
+const Assay = mongoose.connection.model('assays', require('../../schemas/Assay'));
+const Method = mongoose.connection.model('methods', require('../../schemas/Method'));
 
 // GET: api/labs/ | Get a list of all labs | Private
 router.get('/', trycatch( async (req, res) => {

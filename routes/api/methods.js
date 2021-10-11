@@ -2,12 +2,11 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const connection = require('../../mongo');
 const trycatch = require('express-async-handler');
 // Import route access protection
-//const auth = require('../../middleware/auth');
+const auth = require('../../middleware/auth');
 // Import schemas and make models
-const Method = connection.model('methods', require('../../schemas/Method'));
+const Method = mongoose.connection.model('methods', require('../../schemas/Method'));
 
 
 // GET: api/methods/ | Get a list of all methods | Private
