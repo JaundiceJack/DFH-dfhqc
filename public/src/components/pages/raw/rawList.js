@@ -5,7 +5,7 @@ import { selectRaw } from '../../../actions/rawActions';
 
 const RawList = () => {
   // Get the items from the server upon loading
-  const items = useSelector(state => state.raw.raws);
+  const items = useSelector(state => state.raw.raws.sort((a, b) => b.number < a.number));
   const selectedId = useSelector(state => state.raw.selectedRaw._id);
 
   // Compose row classes

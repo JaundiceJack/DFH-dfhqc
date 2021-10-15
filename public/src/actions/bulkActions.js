@@ -12,57 +12,51 @@ import {
 // Import axios to handle http requests
 import axios from 'axios';
 // Import server actions: to report errors
-import { returnMessages } from './msgActions';
+import { handleError } from './msgActions';
 // Import the server route
 import server from './route';
 
+// Get a header with the token if available
+const tokenConfig = getState => {
+  const token = getState().auth.token;
+  const config = { headers: {"Content-type": "application/json"} };
+  if (token) config.headers["x-auth-token"] = token;
+  return config;
+}
+
 // Obtain an array of bulks from the server and dispatch them to the redux state
-export const getBulks = () => dispatch => {
-  // Set Headers
-  const config = { headers: {"Content-type": "application/json"} };
-  // Make request for bulk info
+export const getBulks = () => (dispatch, getState) => {
+  const config = tokenConfig(getState);
   axios.get(`${server}/api/bulks`, config)
-  .then(res => {
-    dispatch({ type: GET_BULKS, payload: res.data });
-  })
-  .catch(err => {
-    dispatch(returnMessages(err.response.data, err.response.status));
-  })
+  .then(res => { dispatch({ type: GET_BULKS, payload: res.data }) })
+  .catch(err => { dispatch(handleError(err)) });
 }
-
-// TODO: add authentication
 // Take entries and add a new bulk to the database
-export const addBulk = (bulk) => dispatch => {
-  // Set Headers
-  const config = { headers: {"Content-type": "application/json"} };
-  // Convert the new bulk to JSON for sending
+export const addBulk = bulk => (dispatch, getState) => {
+  const config = tokenConfig(getState);
   const newBulk = JSON.stringify(bulk);
-  // Submit a post with the new bulk
   axios.post(`${server}/api/bulks/`, newBulk, config)
-  .then(res => { dispatch({type: BULK_ADDED, payload: res.data}) })
-  .catch(err => dispatch(returnMessages(err.response.data, err.response.status)))
+  .then(res => { dispatch({ type: BULK_ADDED, payload: res.data }) })
+  .catch(err => { dispatch(handleError(err)) });
 }
-export const editBulk = (bulk) => dispatch => {
-  // Set Headers
-  const config = { headers: {"Content-type": "application/json"} };
-  // Convert the new bulk to JSON for sending
+// Modify the selected bulk
+export const editBulk = bulk => (dispatch, getState) => {
+  const config = tokenConfig(getState);
   const editedBulk = JSON.stringify(bulk);
-  // Submit a post with the new bulk
   axios.post(`${server}/api/bulks/${bulk._id}`, editedBulk, config)
-  .then(res => { dispatch({type: BULK_EDITED, payload: res.data}) })
-  .catch(err => dispatch(returnMessages(err.response.data, err.response.status)))
+  .then(res => { dispatch({ type: BULK_EDITED, payload: res.data }) })
+  .catch(err => { dispatch(handleError(err)) });
 }
-export const deleteBulk = (id) => dispatch => {
-  const config = { headers: {"Content-type": "application/json"} };
+// Remove the selected bulk
+export const deleteBulk = id => (dispatch, getState) => {
+  const config = tokenConfig(getState);
   axios.delete(`${server}/api/bulks/${id}`, config)
-  .then(res => { dispatch({ type: BULK_DELETED, payload: id })})
-  .catch(err => dispatch(returnMessages(err.response.data, err.response.status)))
+  .then(res => { dispatch({ type: BULK_DELETED, payload: id }) })
+  .catch(err => { dispatch(handleError(err)) });
 }
 
-export const selectBulk = (bulk) => dispatch => {
-  dispatch({ type: SELECT_BULK, payload: bulk });
-}
-
-export const toggleAdding = () => dispatch => dispatch({ type: TOGGLE_ADDING_BULK });
+// Selection and toggles
+export const selectBulk = bulk => dispatch => { dispatch({ type: SELECT_BULK, payload: bulk }) }
+export const toggleAdding   = () => dispatch => dispatch({ type: TOGGLE_ADDING_BULK });
 export const toggleDeleting = () => dispatch => dispatch({ type: TOGGLE_DELETING_BULK });
-export const toggleEditing = () => dispatch => dispatch({ type: TOGGLE_EDITING_BULK });
+export const toggleEditing  = () => dispatch => dispatch({ type: TOGGLE_EDITING_BULK });

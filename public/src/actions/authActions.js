@@ -13,7 +13,7 @@ import {
 // Import axios to handle http requests
 import axios from 'axios';
 // Import server actions: to report authorization errors
-import { returnMessages, clearMessages } from './msgActions';
+import { returnMessages, clearMessages, handleError } from './msgActions';
 // Import the server route
 import server from './route';
 
@@ -29,13 +29,11 @@ export const loadUser = () => (dispatch, getState) => {
   // Get the json web token and authenticate the user
   const config = tokenConfig(getState);
   axios.get(`${server}/api/auth/user`, config)
-  .then(res => {
-    // If successful, return the user data to the current state
-    dispatch({ type: USER_LOADED, payload: res.data })})
+  .then(res => { dispatch({ type: USER_LOADED, payload: res.data }) })
   .catch(err => {
-    // If unsuccessful, put the errors in the current state
-    dispatch(returnMessages(err.response.data, err.response.status));
-    dispatch({ type: AUTH_ERROR }) });
+    dispatch(handleError(err));
+    dispatch({ type: AUTH_ERROR });
+  });
 }
 
 // Attempt to create a new user with the given email, & password
@@ -55,18 +53,8 @@ export const register = ({ email, password }) => dispatch => {
 export const login = ({ email, password }) => dispatch => {
   // Send the registry with the body and config
   axios.post(`${server}/api/auth`, ...basicConfig({ email, password }))
-  .then(res => {
-    dispatch({ type: LOGIN_SUCCESS, payload: res.data });
-  }).catch(err => {
-    // If unsuccessful, put the errors in the current state
-    const errmsg = err.response ?
-                   {error: err.response.data ? err.response.data.msg : "Error encountered"} :
-                   {error: "Error encountered"};
-    const errstatus = err.response ? err.response.status : null;
-    console.log("Error message:", errmsg);
-    console.log("Error status:", errstatus);
-    dispatch(returnMessages(errmsg, errstatus, 'LOGIN_FAIL'));
-  });
+  .then(res => { dispatch({ type: LOGIN_SUCCESS, payload: res.data }) })
+  .catch(err => { dispatch(handleError(err, 'LOGIN_FAIL')) });
 }
 
 // Request a password reset link

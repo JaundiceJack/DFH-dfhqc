@@ -6,8 +6,7 @@ const trycatch = require('express-async-handler');
 // Import route access protection
 const auth = require('../../middleware/auth');
 // Import schemas and make models
-const Identity = mongoose.connection.model('identities', require('../../schemas/Identity'));
-
+const Identity = mongoose.connection.model('ids', require('../../schemas/Identity'));
 
 // GET: api/identities/ | Get a list of all identities | Private
 router.get('/', trycatch( async (req, res) => {
@@ -23,7 +22,7 @@ router.post('/', trycatch( async (req, res) => {
   const savedIdentity = await newIdentity.save();
   if (savedIdentity) res.status(201).json(savedIdentity);
   else { res.status(401); throw new Error("Unable to save the new identity."); };
-}));
+})); 
 
 // POST: api/identities/identity_id | Edit the identity with the given ID | Private
 router.post('/:id', trycatch( async (req, res) => {

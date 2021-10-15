@@ -10,7 +10,7 @@ const LotList = ({lots}) => {
 
   // Compose row classes
   const dispatch = useDispatch();
-  const rowC = "opacity-75 font-semibold text-blue-100 py-1 px-2 hover:opacity-100 truncate grid grid-cols-12 gap-x-6"
+  const rowC = "opacity-75 font-semibold text-blue-100 py-1 px-2 hover:opacity-100 truncate grid grid-cols-12 gap-x-6 cursor-pointer select-none "
   const oddRow  = rowC + " bg-gray-600 capitalize";
   const evenRow = rowC + " bg-gray-800 capitalize";
   const selRow  = rowC + " bg-green-600 capitalize";

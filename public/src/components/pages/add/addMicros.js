@@ -7,97 +7,97 @@ const AddMicros = ({vals, onEntry, onClick}) => {
       <div className="mb-2 h-px w-full bg-gradient-to-r from-blue-300 to-transparent" />
       <div className="grid grid-cols-3">
         <p className={labelCs}>TPC Max:</p>
-        <input className="rounded my-1 py-1 pl-2 bg-gray-200"
-               name="tpcMax"
-               type="text"
-               value={vals.tpcMax || ""}
-               onChange={onEntry} />
-        <select className="rounded my-1 py-1 pl-2 bg-gray-200 w-20 ml-2"
-                name="tpcUnits"
-                value={vals.tpcUnits}
-                onChange={onEntry} >
+        <input type="text"
+               name="tpc"
+               value={vals.tpc || ""}
+               onChange={onEntry}
+               className="rounded my-1 py-1 pl-2 bg-gray-200" />
+        <select name="tpc_units"
+                value={vals.tpc_units}
+                onChange={onEntry}
+                className="rounded my-1 py-1 pl-2 bg-gray-200 w-20 ml-2" >
           <option value="CFU/g">CFU/g</option>
           <option value="CFU/mL">CFU/mL</option>
         </select>
       </div>
       <div className="grid grid-cols-3">
         <p className={labelCs}>Y&M Max:</p>
-        <input className="rounded my-1 py-1 pl-2 bg-gray-200"
-               name="ymMax"
-               type="text"
-               value={vals.ymMax || ""}
-               onChange={onEntry} />
-        <select className="rounded my-1 py-1 pl-2 bg-gray-200 w-20 ml-2"
-                name="ymUnits"
-                value={vals.ymUnits}
-                onChange={onEntry} >
+        <input type="text"
+               name="ym"
+               value={vals.ym || ""}
+               onChange={onEntry}
+               className="rounded my-1 py-1 pl-2 bg-gray-200" />
+        <select name="ym_units"
+                value={vals.ym_units}
+                onChange={onEntry}
+                className="rounded my-1 py-1 pl-2 bg-gray-200 w-20 ml-2" >
           <option value="CFU/g">CFU/g</option>
           <option value="CFU/mL">CFU/mL</option>
         </select>
       </div>
       <div className="grid grid-cols-3">
         <p className={labelCs}>Entero. Max:</p>
-        <input className="rounded my-1 py-1 pl-2 bg-gray-200"
-               name="enteroMax"
-               type="text"
-               value={vals.enteroMax || ""}
-               onChange={onEntry} />
-        <select className="rounded my-1 py-1 pl-2 bg-gray-200 w-20 ml-2"
-                name="enteroUnits"
-                value={vals.enteroUnits}
-                onChange={onEntry} >
+        <input type="text"
+               name="entero"
+               value={vals.entero || ""}
+               onChange={onEntry}
+               className="rounded my-1 py-1 pl-2 bg-gray-200" />
+        <select name="entero_units"
+                value={vals.entero_units}
+                onChange={onEntry}
+                className="rounded my-1 py-1 pl-2 bg-gray-200 w-20 ml-2" >
           <option value="MPN/g">MPN/g</option>
           <option value="MPN/mL">MPN/mL</option>
         </select>
       </div>
       <div className="grid grid-cols-3">
         <p className={labelCs}>Salmonella:</p>
-        <select className="rounded my-1 py-1 pl-2 bg-gray-200"
-                name="salmonella"
+        <select name="salmonella"
                 value={vals.salmonella}
-                onChange={onEntry} >
+                onChange={onEntry}
+                className="rounded my-1 py-1 pl-2 bg-gray-200" >
           <option value="Negative">Negative</option>
           <option value="Positive">Positive</option>
         </select>
       </div>
       <div className="grid grid-cols-3">
         <p className={labelCs}>Staph:</p>
-        <select className="rounded my-1 py-1 pl-2 bg-gray-200"
-                name="staph"
+        <select name="staph"
                 value={vals.staph}
-                onChange={onEntry} >
+                onChange={onEntry}
+                className="rounded my-1 py-1 pl-2 bg-gray-200" >
           <option value="Negative">Negative</option>
           <option value="Positive">Positive</option>
         </select>
       </div>
       <div className="grid grid-cols-3 mb-2">
         <p className={labelCs}>E. Coli:</p>
-        <select className="rounded my-1 py-1 pl-2 bg-gray-200"
-                name="ecoli"
+        <select name="ecoli"
                 value={vals.ecoli}
-                onChange={onEntry} >
+                onChange={onEntry}
+                className="rounded my-1 py-1 pl-2 bg-gray-200" >
           <option value="Negative">Negative</option>
           <option value="Positive">Positive</option>
         </select>
       </div>
       <div className="grid grid-cols-3 mb-4">
-        {!vals.paeruTested && <p className={labelCs}>P. Aeru. Tested?</p>}
-        {vals.paeruTested && <p className={labelCs}>P. Aeru. Max:</p>}
-        {vals.paeruTested &&
-          <select className="rounded my-1 py-1 pl-2 bg-gray-200"
-                  name="paeru"
+        {!vals.paeru_tested && <p className={labelCs}>P. Aeru. Tested?</p>}
+        {vals.paeru_tested && <p className={labelCs}>P. Aeru. Max:</p>}
+        {vals.paeru_tested &&
+          <select name="paeru"
                   value={vals.paeru}
-                  onChange={onEntry} >
+                  onChange={onEntry}
+                  className="rounded my-1 py-1 pl-2 bg-gray-200" >
             <option value="Negative">Negative</option>
             <option value="Positive">Positive</option>
           </select>
         }
-        <input className="ml-4 mt-1 justify-self-start"
-               name="paeruTested"
-               type="checkbox"
-               value={vals.paeruTested}
-               defaultChecked={vals.paeruTested}
-               onClick={onClick} />
+        <input type="checkbox"
+               name="paeru_tested"               
+               value={vals.paeru_tested}
+               defaultChecked={vals.paeru_tested}
+               onClick={onClick}
+               className="ml-4 mt-1 justify-self-start" />
       </div>
     </div>
   )

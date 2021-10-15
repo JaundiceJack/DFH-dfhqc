@@ -1,6 +1,5 @@
 import {
   GET_RAWS,
-  GET_OPTIONS,
   RAW_ADDED,
   RAW_EDITED,
   RAW_DELETED,
@@ -16,73 +15,40 @@ const initialState = {
   adding: false,
   editing: false,
   deleting: false,
-  assayNames: [],
-  idNames: [],
-  assayMethods: [],
-  idMethods: [],
-  units: []
 }
 
 const rawReducer = (state = initialState, action) => {
   switch(action.type) {
-    case GET_RAWS:
-      return {
-        ...state,
-        raws: action.payload
-      }
-    case GET_OPTIONS:
-      return {
-        ...state,
-        assayNames: action.payload.assayNames,
-        idNames: action.payload.idNames,
-        assayMethods: action.payload.assayMethods,
-        idMethods: action.payload.idMethods,
-        units: action.payload.units,
-      }
+    case GET_RAWS: return { ...state, raws: action.payload }
     case RAW_ADDED:
-      return {
-        ...state,
+      return { ...state,
         raws: [...state.raws, action.payload],
         selectedRaw: action.payload
       }
     case RAW_EDITED:
-      return {
-        ...state,
+      return { ...state,
         raws: [
-          ...state.raws.filter(raw => { return raw._id !== action.payload._id }),
+          ...state.raws.filter(raw => raw._id !== action.payload._id),
           action.payload
         ],
         selectedRaw: action.payload,
       }
     case RAW_DELETED:
-      return {
-        ...state,
-        selectedRaw: {},
+      return { ...state,
         raws: [...state.raws.filter(raw => raw._id !== action.payload)],
+        selectedRaw: {},
         adding: false,
         editing: false,
         deleting: false
       }
     case SELECT_RAW:
-      return {
-        ...state,
-        selectedRaw: action.payload
-      }
+      return { ...state, selectedRaw: action.payload }
     case TOGGLE_ADDING_RAW:
-      return {
-        ...state,
-        adding: !state.adding
-      }
+      return { ...state, adding: !state.adding }
     case TOGGLE_DELETING_RAW:
-      return {
-        ...state,
-        deleting: !state.deleting
-      }
+      return { ...state, deleting: !state.deleting }
     case TOGGLE_EDITING_RAW:
-      return {
-        ...state,
-        editing: !state.editing
-      }
+      return { ...state, editing: !state.editing }
     default:
       return state;
   }

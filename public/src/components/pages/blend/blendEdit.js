@@ -1,35 +1,39 @@
+// Import basics
 import { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+// Import server actions
 import { editBlend } from '../../../actions/blendActions';
-import AddBasic from '../add/addBasic';
+// Import components
+import AddBasic      from '../add/addBasic';
 import AddIngredient from '../add/addIngredient';
-import AddBlendInfo from '../add/addBlendInfo';
+import AddBlendInfo  from '../add/addBlendInfo';
+import Button        from '../../button.js';
+import Message       from '../../message.js';
 
 const BlendEdit = ({toggleEdit}) => {
   // Get the list of possible raw ingredients
   const selected = useSelector(state => state.blend.selectedBlend);
   const rawMats = useSelector(state => state.raw.raws);
-  const units = useSelector(state => state.raw.units);
+  const units    = useSelector(state => state.unit.units);
   // Set internal state variables for the form
   const [blendVals, setBlendVals] = useState(
     {
-      _id:         selected._id,
-      number:      selected.number,
-      name:        selected.name,
-      batchSize:   selected.batch_size,
-      unitsPerServing: selected.units_per_serving,
-      ingredients: selected.ingredients.map(ing => {
+      _id:               selected._id,
+      number:            selected.number,
+      name:              selected.name,
+      batch_size:        selected.batch_size,
+      units_per_serving: selected.units_per_serving,
+      customer: "dfh",
+      ingredients:       selected.ingredients.map(ing => {
         return {
-          rawId:          ing.raw_id,
-          claim:          ing.claim,
-          claimUnits:     ing.claim_units,
-          newUnits:       "",
-          potency:        ing.potency,
-          overage:        ing.overage,
-          ingredientType: ing.ingredient_type
+          raw:     ing.raw._id,
+          claim:   ing.claim,
+          units:   ing.units,
+          potency: ing.potency,
+          overage: ing.overage,
+          type:    ing.type
         }
       }),
-      customer: "dfh",
     }
   );
 
@@ -69,12 +73,11 @@ const BlendEdit = ({toggleEdit}) => {
   const onAddIngredient = () => {
     setBlendVals({ ...blendVals, ingredients: [...blendVals.ingredients,
       {
-        rawId: "613a37debc44f562dcb68491",
-        claim: "",
-        claimUnits: "mg/serving",
-        newUnits: "",
+        raw:     "613a37debc44f562dcb68491",
+        claim:   "",
+        units:   "mg/serving",
         potency: "100",
-        ingredientType: "Vitamin"
+        type:    "vitamin"
       }
     ]})
   }
@@ -92,28 +95,30 @@ const BlendEdit = ({toggleEdit}) => {
     setBlendVals({...blendVals, ingredients: edited});
   }
 
-  // Compose classes
-  const buttonCs = " rounded py-1 px-2 mx-1 font-semibold transform duration-75" +
-                   " ease-in-out hover:scale-105 hover:opacity-75 opacity-50 " +
-                   " bg-green-300 col-span-2 mt-4 mx-auto ";
-  const errorMsgCs = " px-3 py-2 mb-2 font-semibold text-white rounded-xl" +
-                     " border-l border-gray-500 bg-gradient-to-tl" +
-                     " from-red-900 to-gray-900 fadeError ";
-
   return (
     <div className="mx-4 my-2">
       <form className="flex flex-col" onSubmit={onSubmit}>
 
-        <AddBasic      vals={blendVals} onEntry={onEntry} ifEditing={true} />
-        <AddIngredient vals={blendVals} onAdd={onAddIngredient}
-                       onRemove={onRemoveIngredient} onEdit={onEditIngredient}
-                       ifEditing={true} rawOptions={rawMats} unitOptions={units} />
-        <AddBlendInfo  vals={blendVals} onEntry={onEntry} rawOptions={rawMats} ifEditing={true} />
+        <AddBasic
+          vals={blendVals}
+          onEntry={onEntry}
+          ifEditing={true} />
+        <AddIngredient
+          vals={blendVals}
+          onAdd={onAddIngredient}
+          onRemove={onRemoveIngredient}
+          onEdit={onEditIngredient}
+          ifEditing={true}
+          rawOptions={rawMats}
+          unitOptions={units} />
+        <AddBlendInfo
+          vals={blendVals}
+          onEntry={onEntry}
+          ifEditing={true} />
 
-        { badEntries.map(err => <div className={errorMsgCs}>{err}</div> )  }
-        <button type="submit" className={buttonCs}>
-          Edit Blend
-        </button>
+        <div className="h-6" />
+        { badEntries.map(err => <Message error={err} /> )  }
+        <Button type="submit" color="bg-green-300" text="Apply Changes" extraClasses="h-10" />
       </form>
     </div>
   )

@@ -1,6 +1,6 @@
 import { BiPlus } from 'react-icons/bi';
 import Button from '../../../button.js';
-import Sampling from './sampling.js';
+import AddSample from './addSample.js';
 import TestLine from './testLine.js';
 import { useState } from 'react';
 
@@ -19,58 +19,58 @@ const HmTests = ({lot}) => {
         {!showHMSampling &&
           <div>
             <TestLine
-              text="Arsenic"
+              testName="Arsenic"
               type='heavy metal'
-              id={lot._id}
-              tested={lot.item.arsenic_max}
-              results={lot.hm_results}
+              lotId={lot._id}
+              isTested={lot.item.hm.arsenic}
+              results={lot.testing.hm}
               toggle={showHMSampling}
-              onSample={setShowHMSampling} />
+              showSampling={() => setShowHMSampling(true)} />
             <TestLine
-              text="Cadmium"
+              testName="Cadmium"
               type='heavy metal'
-              id={lot._id}
-              tested={lot.item.cadmium_max}
-              results={lot.hm_results}
+              lotId={lot._id}
+              isTested={lot.item.hm.cadmium}
+              results={lot.testing.hm}
               toggle={showHMSampling}
-              onSample={setShowHMSampling}
+              showSampling={() => setShowHMSampling(true)}
               hideButton={true} />
             <TestLine
-              text="Lead"
+              testName="Lead"
               type='heavy metal'
-              id={lot._id}
-              tested={lot.item.lead_max}
-              results={lot.hm_results}
+              lotId={lot._id}
+              isTested={lot.item.hm.lead}
+              results={lot.testing.hm}
               toggle={showHMSampling}
-              onSample={setShowHMSampling}
+              showSampling={() => setShowHMSampling(true)}
               hideButton={true} />
             <TestLine
-              text="Mercury"
+              testName="Mercury"
               type='heavy metal'
-              id={lot._id}
-              tested={lot.item.mercury_max}
-              results={lot.hm_results}
+              lotId={lot._id}
+              isTested={lot.item.hm.mercury}
+              results={lot.testing.hm}
               toggle={showHMSampling}
-              onSample={setShowHMSampling}
+              showSampling={() => setShowHMSampling(true)}
               hideButton={true} />
             {lot.item.nickel_tested &&
               <TestLine
-                text="Nickel"
+                testName="Nickel"
                 type='heavy metal'
-                id={lot._id}
-                tested={lot.item.nickel_max}
-                results={lot.hm_results}
+                lotId={lot._id}
+                isTested={lot.item.hm.nickel}
+                results={lot.testing.hm}
                 toggle={showHMSampling}
-                onSample={setShowHMSampling}
+                showSampling={() => setShowHMSampling(true)}
                 hideButton={true} />
             }
           </div>
         }
         {showHMSampling &&
-          <Sampling
-            id={lot._id}
+          <AddSample
+            lotId={lot._id}
             type='heavy metal'
-            onToggle={setShowHMSampling} />
+            onToggle={() => setShowHMSampling(false)} />
         }
       </div>
     </div>

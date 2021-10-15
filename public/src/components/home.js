@@ -6,7 +6,7 @@ import logo from '../images/logo_full.png';
 // Import router links
 import { Link } from 'react-router-dom'
 // Import actions
-import { changePage, login, logout } from '../actions/authActions.js';
+import { loadUser, changePage, login, logout } from '../actions/authActions.js';
 import { clearMessages } from '../actions/msgActions.js'
 import Button from './button.js';
 import TextInput from './textInput.js';
@@ -31,7 +31,7 @@ const Home = () => {
     updateTimer.current = null; }, 5000);
   }
   // Update errors from the server
-  useEffect(() => { !updateTimer.current && setUpdate() }, [errorMsg]);
+  useEffect(() => { dispatch(loadUser()); !updateTimer.current && setUpdate() }, [errorMsg]);
   // Clear the timer on unmount
   useEffect(() => { return () => {
     updateTimer.current && clearTimeout(updateTimer.current); }; }, []);
@@ -75,7 +75,7 @@ const Home = () => {
           {isAuthenticated &&
             <Button color="bg-red-300"
                     text="Logout"
-                    onClick={onLogout} /> }
+                    onClick={onLogout} extraClasses="px-6" /> }
           {!isAuthenticated && (
             <div className="flex flex-row w-full">
               <div className="grid gap-y-2 mr-1">
@@ -126,6 +126,18 @@ const Home = () => {
           </div>
         </div>
         <div />
+        <div className="sm:mx-5 mx-2 mt-10 rounded border-l border-gray-800 bg-gray-700">
+          <h2 className="font-semibold text-blue-200 text-xl mx-4 my-2">Documents</h2>
+          <div className="bg-blue-200 h-px w-full rounded-full mb-2" />
+          <div className="mx-4 mb-4 flex flex-col justify-start items-start">
+            <Link to="/sops" onClick={() => changeActive('sops')}>
+              <p className={linkTextCs}>SOPs</p>
+            </Link>
+            <Link to="/wos" onClick={() => changeActive('wos')}>
+              <p className={linkTextCs}>Work Orders</p>
+            </Link>
+          </div>
+        </div>
         <div className="sm:mx-5 mx-2 mt-10 rounded border-l border-gray-800 bg-gray-700">
           <h2 className="font-semibold text-blue-200 text-xl mx-4 my-2">Other</h2>
           <div className="bg-blue-200 h-px w-full rounded-full mb-2" />

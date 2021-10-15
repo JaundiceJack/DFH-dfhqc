@@ -12,6 +12,8 @@ import methodReducer from './methodReducer.js';
 import unitReducer from './unitReducer.js';
 import identityReducer from './identityReducer.js';
 import textureReducer from './textureReducer.js';
+import vendorReducer from './vendorReducer.js';
+import manufacturerReducer from './manufacturerReducer.js';
 
 export default combineReducers({
   raw: rawReducer,
@@ -26,5 +28,7 @@ export default combineReducers({
   identity: identityReducer,
   method: methodReducer,
   unit: unitReducer,
-  texture: textureReducer
+  texture: textureReducer,
+  vendor: vendorReducer,
+  manufacturer: manufacturerReducer
 })

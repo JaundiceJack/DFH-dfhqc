@@ -9,14 +9,12 @@ const BlendSchema = new Schema({
   customer:      { type: String },
   ingredients: [
     {
-      raw_id:          { type: Schema.Types.ObjectId, ref: 'raws' },
-      raw_name:        { type: String },
-      raw_number:      { type: Number },
+      raw:             { type: Schema.Types.ObjectId, ref: 'raws' },
+      units:           { type: String, default: 'mg/serving' },
       claim:           { type: Number },
-      claim_units:     { type: String },
       potency:         { type: Number },
       overage:         { type: Number },
-      ingredient_type: { type: String }
+      type:            { type: String }
     }
   ],
 });

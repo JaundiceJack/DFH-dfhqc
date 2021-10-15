@@ -5,10 +5,14 @@ import { getLots,
   toggleRaws, toggleBlends, toggleBulks, toggleFgs, toggleOthers,
   toggleMT, toggleNV, toggleCT, incrementYear, decrementYear
 } from '../../../actions/lotActions';
-import { getOptions, getRaws } from '../../../actions/rawActions';
+import { getRaws } from '../../../actions/rawActions';
 import { getFgs } from '../../../actions/fgActions';
 import { getBulks } from '../../../actions/bulkActions';
 import { getBlends } from '../../../actions/blendActions';
+import { getVendors } from '../../../actions/vendorActions.js';
+import { getManufacturers } from '../../../actions/manufacturerActions.js';
+import { getLabs } from '../../../actions/labActions.js';
+import { loadUser } from '../../../actions/authActions.js';
 import { Redirect } from 'react-router-dom';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 // Import Components
@@ -17,10 +21,12 @@ import LotInfo from './lotInfo';
 import LotAdd from './lotAdd';
 import LotEdit from './lotEdit';
 import LotDelete from './lotDelete';
+import Button from '../../button.js'
+import Message from '../../message.js';
 
 const LotSummary = () => {
-  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
-  const selectedId = useSelector(state => state.lot.selectedLot._id);
+  const user       = useSelector(state => state.auth);
+  const selected   = useSelector(state => state.lot.selectedLot);
   const year       = useSelector(state => state.lot.currentYear);
   const rawLots    = useSelector(state => state.lot.rawLots);
   const blendLots  = useSelector(state => state.lot.blendLots);
@@ -50,7 +56,7 @@ const LotSummary = () => {
       showMT && locs.push('MT');
       showNV && locs.push('NV');
       showCT && locs.push('CT');
-      return (locs.indexOf(lot.facility_location) !== -1);
+      return (locs.indexOf(lot.receiving.facility) !== -1);
     })
   }
   const lotArray = () => {
@@ -66,12 +72,15 @@ const LotSummary = () => {
   // Load the items when the component loads
   const dispatch = useDispatch();
   useEffect(() => {
+    dispatch(loadUser());
     dispatch(getFgs());
+    dispatch(getLabs());
     dispatch(getLots());
     dispatch(getRaws());
     dispatch(getBulks());
     dispatch(getBlends());
-    dispatch(getOptions());
+    dispatch(getVendors());
+    dispatch(getManufacturers());
     return () => { cleanup() };
   }, []);
   const cleanup = () => { setTimeout(() => { return }, 5000); }
@@ -95,16 +104,10 @@ const LotSummary = () => {
     }
   }
 
-  const buttonCs = " rounded py-1/2 px-2 mx-1 my-1 2xl:my-0 font-semibold transform duration-75" +
-                   " ease-in-out hover:scale-105 disabled:opacity-25 hover:opacity-100 opacity-75  ";
-
-
-  // TODO: these will go in the global state. once changed they'll run a filter on the total list of lots
-  //const onClick = (e) => { setVisibles({...visibles, [e.target.name]: !visibles[e.target.name] })}
-
-  return !isAuthenticated ?
-    (<Redirect to="/login" />) :
-    (<div className={"h-full p-4 w-full rounded border-l border-gray-800 " +
+  if (!user.token) return (<Redirect to='/login' />)
+  else if (!user.isAuthenticated) return (<Message info="Authenticating..." extraClasses="w-1/2 self-center mx-auto" />)
+  else return (
+    <div className={"h-full p-4 w-full rounded border-l border-gray-800 " +
                     "bg-gradient-to-br from-gray-800 via-transparent to-gray-800"}>
       <div className="flex flex-col h-full mb-4 2xl:mb-0">
         <h1 className="mb-4 ml-2 text-xl font-bold text-blue-200"> Sample Log </h1>
@@ -122,21 +125,23 @@ const LotSummary = () => {
               }
               <div className="flex-grow" />
               {!deleting && !editing &&
-                <button className={!adding ? buttonCs+"bg-green-300" : buttonCs+"bg-red-400"}
-                        onClick={onAddClick}
-                        >{adding ? "X" : "Add"}</button>}
+                <Button
+                  color={!adding ? "bg-green-300" : "bg-red-400"}
+                  text={adding ? "X" : "Add"}
+                  onClick={onAddClick} /> }
               {!adding && !deleting &&
-                <button className={!editing ? buttonCs + "bg-blue-300" : buttonCs+"bg-red-400"}
-                        onClick={onEditClick}
-                        disabled={selectedId === undefined ? true : false}
-                        >{editing ? "X" : "Edit"}</button>}
+                <Button
+                  color={!editing ? "bg-blue-300" : "bg-red-400"}
+                  text={editing ? "X" : "Edit"}
+                  onClick={onEditClick}
+                  disabled={Object.entries(selected).length === 0 ? true : false} /> }
               {!adding && !editing &&
-                <button className={buttonCs + "bg-red-400"}
-                        onClick={onRemoveClick}
-                        disabled={selectedId === undefined ? true : false}
-                        >{deleting ? "X" : "Remove"}</button>}
+                <Button
+                  color="bg-red-400"
+                  text={deleting ? "X" : "Remove"}
+                  onClick={onRemoveClick}
+                  disabled={Object.entries(selected).length === 0 ? true : false} /> }
             </div>
-
 
             <div className="bg-gray-500 h-px w-full rounded-full" />
 
@@ -190,11 +195,11 @@ const LotSummary = () => {
                 <LotList lots={lotArray()} />
               </div>
             }
+
             {adding && <LotAdd toggleAdd={onAddClick} /> }
             {editing && <LotEdit toggleEdit={onEditClick} />}
             {deleting && <LotDelete toggleDelete={onRemoveClick} /> }
           </div>
-
           <LotInfo />
         </div>
       </div>

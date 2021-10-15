@@ -9,12 +9,12 @@ export const returnMessages = (msg, status, id = null) => {
   }
 }
 
-export const handleError = (err) => {
+export const handleError = (err, id=null) => {
   const errmsg = err.response ?
                  {error: err.response.data ? err.response.data.msg : "Error encountered"} :
                  {error: "Error encountered"};
   const errstatus = err.response ? err.response.status : null;
-  returnMessages(errmsg, errstatus);
+  returnMessages(errmsg, errstatus, id);
 }
 
 // Remove any messages from the current state

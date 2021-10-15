@@ -1,4 +1,4 @@
-const SpecPhysical = ({densityMin, densityMax, moistureMin, moistureMax}) => {
+const SpecPhysical = ({ density, moisture }) => {
   // Get a string representing the range with the given units
   const rangeString = (min, max, units) => {
     if (min && max) { return `${min} - ${max} ${units}`; }
@@ -13,9 +13,11 @@ const SpecPhysical = ({densityMin, densityMax, moistureMin, moistureMax}) => {
       <div className="h-px bg-gradient-to-r from-blue-200 to-transparent"/>
       <div className="grid grid-cols-4 p-2">
         <p className="text-right mr-2">Density:</p>
-        <p className="col-span-3">{rangeString(densityMin, densityMax, "g/mL")}</p>
+        <p className="col-span-3">
+          {density && rangeString(density.min, density.max, "g/mL")}</p>
         <p className="text-right mr-2">Moisture:</p>
-        <p className="col-span-3">{rangeString(moistureMin, moistureMax, "%")}</p>
+        <p className="col-span-3">
+          {moisture && rangeString(moisture.min, moisture.max, "%")}</p>
       </div>
     </div>
   )

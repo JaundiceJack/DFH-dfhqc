@@ -55,7 +55,7 @@
 
 /* When the checkbox is checked, add a blue background */
 .container input:checked ~ .checkmark {
- background-color: #6c6;
+ background-image: radial-gradient(#9f9, #6c6);
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */

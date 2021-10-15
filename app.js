@@ -24,6 +24,8 @@ app.use('/api/methods',  require('./routes/api/methods'));
 app.use('/api/units',  require('./routes/api/units'));
 app.use('/api/textures',  require('./routes/api/textures'));
 app.use('/api/identities', require('./routes/api/identities'));
+app.use('/api/vendors', require('./routes/api/vendors'));
+app.use('/api/manufacturers', require('./routes/api/manufacturers'));
 app.get('/ping', (req, res) => { return res.send('pong'); });
 
 app.use(notFound);

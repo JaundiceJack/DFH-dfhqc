@@ -17,6 +17,8 @@ const User = mongoose.connection.model('users', require('../../schemas/User'));
 const jwtk = process.env.JWT_SECRET;
 const domain = process.env.DOMAIN;
 
+// TODO: I've set the token to expire in 4.16 days (360000 seconds), implement expiration login redirect
+
 // POST api/auth | authenticate the user for logging in | Public
 router.post('/', trycatch( async (req, res) => {
   console.log("logging in...");
@@ -33,7 +35,7 @@ router.post('/', trycatch( async (req, res) => {
       jwt.sign(
         { id: user._id },
         jwtk,
-        { expiresIn: 3600 },
+        { expiresIn: 360000 },
         (err, token) => { if (err) throw err;
           return res.json({
             user: {

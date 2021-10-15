@@ -16,6 +16,14 @@ import { returnMessages } from './msgActions';
 // Import the server route
 import server from './route';
 
+// Get a header with the token if available
+const tokenConfig = getState => {
+  const token = getState().auth.token;
+  const config = { headers: {"Content-type": "application/json"} };
+  if (token) config.headers["x-auth-token"] = token;
+  return config;
+}
+
 // Obtain an array of fgs from the server and dispatch them to the redux state
 export const getFgs = () => dispatch => {
   // Set Headers

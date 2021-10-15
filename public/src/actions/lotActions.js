@@ -26,7 +26,7 @@ import {
 // Import axios to handle http requests
 import axios from 'axios';
 // Import server actions: to report errors
-import { returnMessages } from './msgActions';
+import { handleError } from './msgActions';
 // Import the server route
 import server from './route';
 
@@ -36,12 +36,8 @@ export const getLots = () => dispatch => {
   const config = { headers: {"Content-type": "application/json"} };
   // Make request for lot info
   axios.get(`${server}/api/lots`, config)
-  .then(res => {
-    dispatch({ type: GET_LOTS, payload: res.data });
-  })
-  .catch(err => {
-    dispatch(returnMessages(err.response.data, err.response.status));
-  })
+  .then(res => { dispatch({ type: GET_LOTS, payload: res.data }) })
+  .catch(err => { dispatch(handleError(err)) });
 }
 
 // TODO: add authentication
@@ -54,7 +50,7 @@ export const addLot = (lot) => dispatch => {
   // Submit a post with the new lot
   axios.post(`${server}/api/lots/`, newLot, config)
   .then(res => { dispatch({type: LOT_ADDED, payload: res.data}) })
-  .catch(err => dispatch(returnMessages(err.response.data, err.response.status)))
+  .catch(err => { dispatch(handleError(err)) });
 }
 export const editLot = (lot) => dispatch => {
   // Set Headers
@@ -64,13 +60,13 @@ export const editLot = (lot) => dispatch => {
   // Submit a post with the new lot
   axios.post(`${server}/api/lots/${lot._id}`, editedLot, config)
   .then(res => { dispatch({type: LOT_EDITED, payload: res.data}) })
-  .catch(err => dispatch(returnMessages(err.response.data, err.response.status)))
+  .catch(err => { dispatch(handleError(err)) });
 }
 export const deleteLot = (lot) => dispatch => {
   const config = { headers: {"Content-type": "application/json"} };
   axios.delete(`${server}/api/lots/${lot.item_type}/${lot._id}`, config)
   .then(res => { dispatch({ type: LOT_DELETED, payload: lot })})
-  .catch(err => dispatch(returnMessages(err.response.data, err.response.status)));
+  .catch(err => { dispatch(handleError(err)) });
 }
 
 export const selectLot = (lot) => dispatch => {
@@ -91,33 +87,27 @@ export const toggleCT = () => dispatch => dispatch({ type: TOGGLE_CT_LOTS });
 export const incrementYear = () => dispatch => dispatch({ type: INCREMENT_YEAR });
 export const decrementYear = () => dispatch => dispatch({ type: DECREMENT_YEAR });
 
+// So, our testing results are arrays of result objects,
+// with the general ones, its just the dates and result and the test is implicit,
+// with the assay ones, i'll need to pass in an assayId
+
 // Create a sample for the given lot and result
-export const takeRawSample = (lotId, resultType, date) => dispatch => {
+export const takeRawSample = (lotId, resultType, sample) => dispatch => {
   const config = { headers: {"Content-type": "application/json"} };
-  const sample = JSON.stringify({lotId, resultType, date});
-  axios.post(`${server}/api/lots/take_raw_sample`, sample, config)
+  const body = JSON.stringify({lotId, resultType, sample});
+  axios.post(`${server}/api/lots/take_raw_sample`, body, config)
   .then(res => { dispatch({type: LOT_SAMPLED, payload: res.data}) })
-  .catch(err => {
-    const errmsg = err.response ?
-                   {error: err.response.data ? err.response.data.msg : "Error encountered"} :
-                   {error: "Error encountered"};
-    const errstatus = err.response ? err.response.status : null;
-    dispatch(returnMessages(errmsg, errstatus));
-  })
+  .catch(err => { dispatch(handleError(err)) });
+}
+export const editRawSample = (lotId, resultType, sample) => dispatch => {
+  console.log("edited");
 }
 // Remove a sample for the given lot and result
-export const removeRawSample = (lotId, resultType) => dispatch => {
+export const removeRawSample = (lotId, resultType, sample) => dispatch => {
   const config = { headers: {"Content-type": "application/json"} };
-  const sample = JSON.stringify({lotId, resultType});
-  axios.post(`${server}/api/lots/remove_raw_sample`, sample, config)
+  axios.delete(`/api/lots/sample/${resultType}/${lotId}/${sample.sample_date}`, config)
   .then(res => { dispatch({type: LOT_UNSAMPLED, payload: res.data}) })
-  .catch(err => {
-    const errmsg = err.response ?
-                   {error: err.response.data ? err.response.data.msg : "Error encountered"} :
-                   {error: "Error encountered"};
-    const errstatus = err.response ? err.response.status : null;
-    dispatch(returnMessages(errmsg, errstatus));
-  })
+  .catch(err => { dispatch(handleError(err)) });
 }
 
 export const testRawSample = (lotId, resultType, lab, date) => dispatch => {
@@ -125,24 +115,12 @@ export const testRawSample = (lotId, resultType, lab, date) => dispatch => {
   const sample = JSON.stringify({lotId, resultType, lab, date});
   axios.post(`${server}/api/lots/test_raw_sample`, sample, config)
   .then(res => { dispatch({type: LOT_TESTED, payload: res.data}) })
-  .catch(err => {
-    const errmsg = err.response ?
-                   {error: err.response.data ? err.response.data.msg : "Error encountered"} :
-                   {error: "Error encountered"};
-    const errstatus = err.response ? err.response.status : null;
-    dispatch(returnMessages(errmsg, errstatus));
-  })
+  .catch(err => { dispatch(handleError(err)) });
 }
 export const removeRawTest = (lotId, resultType) => dispatch => {
   const config = { headers: {"Content-type": "application/json"} };
   const sample = JSON.stringify({lotId, resultType});
   axios.post(`${server}/api/lots/remove_raw_test`, sample, config)
   .then(res => { dispatch({type: LOT_UNTESTED, payload: res.data}) })
-  .catch(err => {
-    const errmsg = err.response ?
-                   {error: err.response.data ? err.response.data.msg : "Error encountered"} :
-                   {error: "Error encountered"};
-    const errstatus = err.response ? err.response.status : null;
-    dispatch(returnMessages(errmsg, errstatus));
-  })
+  .catch(err => { dispatch(handleError(err)) });
 }

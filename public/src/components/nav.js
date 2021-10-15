@@ -26,7 +26,7 @@ const Nav = () => {
   return (
     <nav className="flex flex-row 2xl:flex-col">
       <Logo onClick={() => changeActive('home')}/>
-      <div className="grid grid-cols-3 sm:grid-cols-5 2xl:grid-cols-1   ml-1">
+      <div className="grid grid-cols-3 sm:grid-cols-5 2xl:grid-cols-1 ml-1 h-full content-start">
         <NavLink target="/raws" text="Raws"
                  icon=<GiPowder size="40px" />
                  extraClasses={page === 'raws' ? "border-green-600" : "border-blue-400"}
@@ -35,22 +35,23 @@ const Nav = () => {
                  icon=<GiPowderBag size="40px" />
                  extraClasses={page === 'blends' ? "border-green-600" : "border-blue-400"}
                  onClick={ () => changeActive('blends') } />
-       <NavLink target="/bulks" text="Bulks"
-                icon=<GiBarrel size="40px" />
-                extraClasses={page === 'bulks' ? "border-green-600" : "border-blue-400"}
-                onClick={ () => changeActive('bulks') } />
-       <NavLink target="/fgs" text="FGs"
-                icon=<GiMedicinePills size="40px" />
-                extraClasses={page === 'fgs' ? "border-green-600" : "border-blue-400"}
-                onClick={ () => changeActive('fgs') } />
-      <NavLink target="/samples" text="Samples"
-               icon=<IoDocuments size="40px" />
-               extraClasses={page === 'samples' ? "border-green-600" : "border-blue-400"}
-               onClick={ () => changeActive('samples') } />
-      <NavLink target="/labs" text="Labs"
-               icon=<ImLab size="40px" />
-               extraClasses={page === 'labs' ? "border-green-600" : "border-blue-400"}
-               onClick={ () => changeActive('labs') } />
+        <NavLink target="/bulks" text="Bulks"
+                 icon=<GiBarrel size="40px" />
+                 extraClasses={page === 'bulks' ? "border-green-600" : "border-blue-400"}
+                 onClick={ () => changeActive('bulks') } />
+        <NavLink target="/fgs" text="FGs"
+                 icon=<GiMedicinePills size="40px" />
+                 extraClasses={page === 'fgs' ? "border-green-600" : "border-blue-400"}
+                 onClick={ () => changeActive('fgs') } />
+        <NavLink target="/samples" text="Samples"
+                 icon=<IoDocuments size="40px" />
+                 extraClasses={page === 'samples' ? "border-green-600" : "border-blue-400"}
+                 onClick={ () => changeActive('samples') } />
+        <NavLink target="/labs" text="Labs"
+                 icon=<ImLab size="40px" />
+                 extraClasses={page === 'labs' ? "border-green-600" : "border-blue-400"}
+                 onClick={ () => changeActive('labs') } />
+        
         {/*If not logged in, show the login button*/}
         {!isAuthenticated &&
           <NavLink target="/login" text="Login"

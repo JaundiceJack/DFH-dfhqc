@@ -8,20 +8,20 @@ const AddBasic = ({ vals, onEntry, ifEditing }) => {
       <div className="mb-2 h-px w-full bg-gradient-to-r from-blue-300 to-transparent" />
       <div className="grid grid-cols-3">
         <label className={labelCs}>Item #:</label>
-        <input className={inputCs+" w-full col-span-2 disabled:opacity-50"}
+        <input type="text"
                name="number"
-               type="text"
                value={vals.number}
                onChange={onEntry}
-               disabled={ifEditing} />
+               disabled={ifEditing}
+               className={inputCs+" w-full col-span-2 disabled:opacity-50"} />
       </div>
       <div className="grid grid-cols-3">
         <label className={labelCs}>Name:</label>
-        <input className={inputCs+" w-full col-span-2"}
+        <input type="text"
                name="name"
-               type="text"
                value={vals.name}
-               onChange={onEntry} />
+               onChange={onEntry}
+               className={inputCs+" w-full col-span-2"} />
       </div>
 
     </div>

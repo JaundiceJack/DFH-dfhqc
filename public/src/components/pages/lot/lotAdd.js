@@ -1,31 +1,42 @@
+// Import basics
 import { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+// Import server actions
 import { addLot } from '../../../actions/lotActions';
+import { clearMessages } from '../../../actions/msgActions.js';
+// Import components
 import AddLotInfo from '../add/addLotInfo';
+import Button       from '../../button.js';
+import Message      from '../../message.js';
 
 const LotAdd = ({toggleAdd}) => {
   // Get the materials from the redux state for initial IDs
-  const raws = useSelector(state => state.raw.raws);
+  const raws = useSelector(state => state.raw.raws).sort((a,b)=>b.number<a.number);
   const blends = useSelector(state => state.blend.blends);
   const bulks = useSelector(state => state.bulk.bulks);
   const fgs = useSelector(state => state.fg.fgs);
+  const vendors = useSelector(state => state.vendor.vendors);
+  const manufacturers = useSelector(state => state.manufacturer.manufacturers);
+  const errorMsg = useSelector(state => state.msg.error);
 
   // Set internal state variables for the form
   const [lotVals, setLotVals] = useState({
-    lot: "",
-    purchaseOrder: "",
-    rawItemId: raws.length > 0 ? raws[0]._id : "",
-    blendItemId: blends.length > 0 ? blends[0]._id : "",
-    bulkItemId: bulks.length > 0 ? bulks[0]._id : "",
-    fgItemId: fgs.length > 0 ? fgs[0]._id : "",
-    itemType: "raw",
-    amount: 0,
-    amountUnits: "kg",
-    facilityLocation: "MT",
-    warehouseLocation: "A1",
-    vendor: "Charles Bowman",
-    manufacturer: "Wuhan Grand",
-    makerLot: "",
+    lot:            "",
+    purchase_order: "",
+    department:     "Quality Control",
+    rawId:   (!raws.loading   && raws.length   > 0) ? raws[0]._id   : "",
+    blendId: (!blends.loading && blends.length > 0) ? blends[0]._id : "",
+    bulkId:  (!bulks.loading  && bulks.length  > 0) ? bulks[0]._id  : "",
+    fgId:    (!fgs.loading    && fgs.length    > 0) ? fgs[0]._id    : "",
+    item_type: "raw",
+    status:    "Q",
+    amount:    0,
+    units:     "kg",
+    facility:  "MT",
+    location: "A1",
+    vendorId: (!vendors.loading && vendors.length > 0) ? vendors[0]._id : "",
+    manufacturerId: (!manufacturers.loading && manufacturers.length > 0) ? manufacturers[0]._id : "",
+    manufacturer_lot: "",
     otherNumber: "",
     otherName: ""
   })
@@ -37,6 +48,7 @@ const LotAdd = ({toggleAdd}) => {
   const setClear = () => {
     clearTimer.current = setTimeout(() => {
       setBadEntries([]);
+      dispatch(clearMessages());
       clearTimer.current = null;
     }, 5000);
   }
@@ -50,14 +62,12 @@ const LotAdd = ({toggleAdd}) => {
     e.preventDefault();
     // Validate Entries
     let errs = []
-    if (lotVals.number === "" || lotVals.number === null)
-      errs.push("Please enter an item number.");
-
+    if (lotVals.lot === "" || lotVals.lot === null ) errs.push("Please enter a lot number.");
     setBadEntries(errs);
     // Create a new lot
-    if (errs.length === 0 && !clearTimer.current) { dispatch(addLot(lotVals)); }
+    if (errs.length === 0 && errorMsg === "") { dispatch(addLot(lotVals)); }
     // Hide the form on submission
-    errs.length !== 0 && !clearTimer.current ? setClear() : toggleAdd();
+    (errs.length !== 0 || errorMsg !== "") ? setClear() : toggleAdd();
   }
 
   // Handle events
@@ -65,23 +75,15 @@ const LotAdd = ({toggleAdd}) => {
   //const onClick = (e) => { setLotVals({...lotVals, [e.target.name]: !lotVals[e.target.name] })}
 
 
-  // Compose classes
-  const buttonCs = " rounded py-1 px-2 mx-1 font-semibold transform duration-75" +
-                   " ease-in-out hover:scale-105 hover:opacity-75 opacity-50 " +
-                   " bg-green-300 col-span-2 mt-4 mx-auto ";
-  const errorMsgCs = " px-3 py-2 mb-2 font-semibold text-white rounded-xl" +
-                          " border-l border-gray-500 bg-gradient-to-tl" +
-                          " from-red-900 to-gray-900 fadeError ";
-
   return (
     <div className="mx-4 my-2">
       <form className="flex flex-col" onSubmit={onSubmit}>
         <AddLotInfo vals={lotVals} onEntry={onEntry} />
 
-        { badEntries.map(err => <div className={errorMsgCs}>{err}</div> )  }
-        <button type="submit" className={buttonCs}>
-          Add New Lot
-        </button>
+        <div className="h-6" />
+        { badEntries.map(err => <Message error={err} /> )  }
+        { errorMsg && <Message error={errorMsg} /> }
+        <Button type="submit" color="bg-green-300" text="Add New Lot" extraClasses="h-10" />
       </form>
     </div>
   )

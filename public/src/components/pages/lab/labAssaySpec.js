@@ -1,9 +1,13 @@
+// Import basics
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+// Import server actions
+import { addLabAssay } from '../../../actions/labActions.js';
+// Import Components
 import Button from '../../button.js';
 import { FaPlus, FaMinus } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5'
-import { addLabAssay } from '../../../actions/labActions.js';
+
 
 const LabAssaySpec = ({lab}) => {
   // Get the assays and methods from the state

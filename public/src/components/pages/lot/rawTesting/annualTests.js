@@ -1,6 +1,6 @@
 import { BiPlus } from 'react-icons/bi';
 import Button from '../../../button.js';
-import Sampling from './sampling.js';
+import AddSample from './addSample.js';
 import TestLine from './testLine.js';
 import { useState } from 'react';
 
@@ -15,73 +15,73 @@ const AnnualTests = ({lot}) => {
       <div className="flex flex-row px-2 py-1">
         <h3 className="text-lg text-left px-2 text-blue-200">Annual Testing</h3>
         <div className="flex-grow"></div>
-        
+
       </div>
       <div className="h-px bg-gradient-to-r from-blue-200 to-transparent"/>
       <div className=" p-2">
         {!showPestSampling && !showSolventSampling && !showRanciditySampling &&
           <div>
             <TestLine
-              text="Pesticides"
+              testName="Pesticides"
               type='pesticide'
-              id={lot._id}
-              tested={lot.item.pesticide_tested}
-              results={lot.pesticide_results}
+              lotId={lot._id}
+              isTested={lot.item.pesticide.tested}
+              results={lot.testing.pesticide}
               toggle={showPestSampling}
-              onSample={setShowPestSampling} />
+              showSampling={() => setShowPestSampling(true)} />
             <TestLine
-              text="Solvents"
+              testName="Solvents"
               type='solvent'
-              id={lot._id}
-              tested={lot.item.solvent_tested}
-              results={lot.solvent_results}
+              lotId={lot._id}
+              isTested={lot.item.solvent.tested}
+              results={lot.testing.solvent}
               toggle={showSolventSampling}
-              onSample={setShowSolventSampling} />
+              showSampling={() => setShowSolventSampling(true)} />
             <TestLine
-              text="Peroxide"
+              testName="Peroxide"
               type='rancidity'
-              id={lot._id}
-              tested={lot.item.rancidity_tested}
-              results={lot.rancidity_results}
+              lotId={lot._id}
+              isTested={lot.item.rancidity.tested}
+              results={lot.testing.rancidity}
               toggle={showRanciditySampling}
-              onSample={setShowRanciditySampling} />
+              showSampling={() => setShowRanciditySampling(true)} />
             <TestLine
-              text="p-Anisidine"
+              testName="p-Anisidine"
               type='rancidity'
-              id={lot._id}
-              tested={lot.item.rancidity_tested}
-              results={lot.rancidity_results}
+              lotId={lot._id}
+              isTested={lot.item.rancidity.tested}
+              results={lot.testing.rancidity}
               toggle={showRanciditySampling}
-              onSample={setShowRanciditySampling}
+              showSampling={() => setShowRanciditySampling(true)}
               hideButton={true} />
             <TestLine
-              text="TOTOX"
+              testName="TOTOX"
               type='rancidity'
-              id={lot._id}
-              tested={lot.item.rancidity_tested}
-              results={lot.rancidity_results}
+              lotId={lot._id}
+              isTested={lot.item.rancidity.tested}
+              results={lot.testing.rancidity}
               toggle={showRanciditySampling}
-              onSample={setShowRanciditySampling}
+              showSampling={() => setShowRanciditySampling(true)}
               hideButton={true} />
           </div>
         }
         {showPestSampling &&
-          <Sampling
-            id={lot._id}
+          <AddSample
+            lotId={lot._id}
             type='pesticide'
-            onToggle={setShowPestSampling} />
+            onToggle={() => setShowPestSampling(false)} />
         }
         {showSolventSampling &&
-          <Sampling
-            id={lot._id}
+          <AddSample
+            lotId={lot._id}
             type='solvent'
-            onToggle={setShowSolventSampling} />
+            onToggle={() => setShowSolventSampling(false)} />
         }
         {showRanciditySampling &&
-          <Sampling
-            id={lot._id}
+          <AddSample
+            lotId={lot._id}
             type='rancidity'
-            onToggle={setShowRanciditySampling} />
+            onToggle={() => setShowRanciditySampling(false)} />
         }
       </div>
     </div>

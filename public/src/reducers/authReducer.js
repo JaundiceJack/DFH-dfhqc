@@ -23,6 +23,7 @@ const initialState = {
 
 const authReducer = (state = initialState, action) => {
   switch(action.type) {
+    case USER_LOADING: return { ...state, isLoading: true };
     case USER_LOADED:
       return {
         ...state,
@@ -30,16 +31,10 @@ const authReducer = (state = initialState, action) => {
         isAuthenticated: true,
         user: action.payload
       };
-    case USER_LOADING:
-      return {
-        ...state,
-        isLoading: true,
-      };
     case LOGIN_SUCCESS:
     case REGISTER_SUCCESS:
       window.localStorage.setItem('token', action.payload.token);
-      return {
-        ...state,
+      return { ...state,
         ...action.payload,
         isAuthenticated: true,
         isLoading: false,
@@ -57,24 +52,10 @@ const authReducer = (state = initialState, action) => {
         isAuthenticated: false,
         isLoading: false
       };
-    case CHANGE_PAGE:
-      return {
-        ...state,
-        currentPage: action.payload
-      }
-    case RESET_VERIFIED:
-      return {
-        ...state,
-        genuineReset: true
-      }
-    case RESET_FAIL:
-      return {
-        ...state,
-        genuineReset: false,
-        currenPage: 'login'
-      }
-    default:
-      return state;
+    case CHANGE_PAGE:    return { ...state, currentPage: action.payload }
+    case RESET_VERIFIED: return { ...state, genuineReset: true }
+    case RESET_FAIL:     return { ...state, genuineReset: false, currentPage: 'login' }
+    default: return state;
   }
 };
 

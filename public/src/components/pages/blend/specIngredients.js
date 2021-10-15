@@ -1,23 +1,22 @@
 import { useState } from 'react';
 
-const SpecIngredients = ({ ingredients, serving, batchSize, servingUnits, fillWeight }) => {
-
+const SpecIngredients = ({ blend, fillWeight, servingSize }) => {
 
   //
   const mapIngredients = () => {
-    if (ingredients) {
+    if (blend.ingredients) {
       // Sort them beforehand
-      return ingredients
-      .sort((a, b) => a.ingredient_type[0] > b.ingredient_type[0] )
+      return blend.ingredients
+      .sort((a, b) => a.type[0] > b.type[0] )
       .map((ingredient, index) => {
 
         const basicClaim = ingredient.potency ? (ingredient.claim / (ingredient.potency * 0.01)) : ingredient.claim;
         const overClaim  = ingredient.overage ? (ingredient.overage * 0.01) + 1 : 1;
         const servingInput = basicClaim * overClaim;
-        const unitInput = servingInput / servingUnits;
+        const unitInput = servingInput / blend.units_per_serving;
 
-        const percentOfFormula = ((servingInput / serving) * 100).toFixed(2);
-        const perBatchOfFormula = (percentOfFormula * 0.01 * batchSize).toFixed(3);
+        const percentOfFormula = ((servingInput / servingSize) * 100).toFixed(2);
+        const perBatchOfFormula = (percentOfFormula * 0.01 * blend.batch_size).toFixed(3);
 
         // Make even/odd row classes
         const rc = "p-2 mx-2 grid grid-cols-1 md:grid-cols-12 rounded hover:text-yellow-200";
@@ -28,12 +27,12 @@ const SpecIngredients = ({ ingredients, serving, batchSize, servingUnits, fillWe
             <div className="grid grid-cols-2 gap-2 md:gap-0 col-span-1">
               <p className="md:hidden mr-2 sm:mr-0 text-right">Item#:</p>
               <p className="capitalize">
-                {`${ingredient.raw_number}`}</p>
+                {`${ingredient.raw.number}`}</p>
             </div>
             <div className="grid grid-cols-2 gap-2 md:gap-0 md:col-span-2">
               <p className="md:hidden mr-2 sm:mr-0 text-right">Name:</p>
-              <a href="#" className="capitalize cursor-default truncate whitespace-nowrap md:col-span-2" title={ingredient.raw_name}>
-                {`${ingredient.raw_name}`}</a>
+              <a href="#" className="capitalize cursor-default truncate whitespace-nowrap md:col-span-2" title={ingredient.raw.name}>
+                {`${ingredient.raw.name}`}</a>
             </div>
             <div className="grid grid-cols-2 gap-2 md:gap-0 col-span-1 truncate">
               <p className="md:hidden mr-2 sm:mr-0 text-right">Label Claim:</p>
@@ -95,7 +94,7 @@ const SpecIngredients = ({ ingredients, serving, batchSize, servingUnits, fillWe
         <p className="col-span-1"></p>
         <p className="col-span-1"></p>
         <p className="col-span-1">100%</p>
-        <p className="col-span-4">{batchSize}kg</p>
+        <p className="col-span-4">{blend.batch_size}kg</p>
       </div>
     </div>
   )

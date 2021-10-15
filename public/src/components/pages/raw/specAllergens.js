@@ -1,4 +1,4 @@
-const SpecAllergens = ({allergens}) => {
+const SpecAllergens = ({ allergens }) => {
   return (
     <div className="bg-gray-600 rounded text-blue-100 font-semibold">
       <h2 className="text-lg text-left px-2 py-1 text-blue-200">Allergens</h2>

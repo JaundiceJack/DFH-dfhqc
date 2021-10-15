@@ -1,9 +1,12 @@
+// Import basics
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+// Import server actions
 import { getFgs, toggleAdding, toggleDeleting, toggleEditing } from '../../../actions/fgActions';
-import { getOptions, getRaws } from '../../../actions/rawActions';
+import { getRaws } from '../../../actions/rawActions';
 import { getBulks } from '../../../actions/bulkActions';
 import { getBlends } from '../../../actions/blendActions';
+import { loadUser } from '../../../actions/authActions.js';
 import { Redirect } from 'react-router-dom';
 // Import Components
 import FgList   from './fgList';
@@ -11,22 +14,24 @@ import FgSpec   from './fgSpec';
 import FgAdd    from './fgAdd';
 import FgEdit   from './fgEdit';
 import FgDelete from './fgDelete';
+import Button    from '../../button.js';
+import Message    from '../../message.js';
 
 const FgSummary = () => {
-  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
-  const selectedId = useSelector(state => state.fg.selectedFg._id);
-  const adding   = useSelector(state => state.fg.adding);
-  const deleting = useSelector(state => state.fg.deleting);
-  const editing  = useSelector(state => state.fg.editing);
+  const user       = useSelector(state => state.auth);
+  const selected = useSelector(state => state.fg.selectedFg);
+  const adding     = useSelector(state => state.fg.adding);
+  const deleting   = useSelector(state => state.fg.deleting);
+  const editing    = useSelector(state => state.fg.editing);
 
   // Load the items when the component loads
   const dispatch = useDispatch();
   useEffect(() => {
+    dispatch(loadUser());
     dispatch(getFgs());
     dispatch(getRaws());
     dispatch(getBulks());
     dispatch(getBlends());
-    dispatch(getOptions());
     return () => { cleanup() };
   }, []);
   const cleanup = () => { setTimeout(() => { return }, 5000); }
@@ -34,12 +39,11 @@ const FgSummary = () => {
   const onAddClick = () => { dispatch(toggleAdding()); }
   const onRemoveClick = () => { dispatch(toggleDeleting()); }
   const onEditClick = () => { dispatch(toggleEditing()); }
-  const buttonCs = " rounded py-1/2 px-2 mx-1 my-1 2xl:my-0 font-semibold transform duration-75" +
-                   " ease-in-out hover:scale-105 disabled:opacity-25 hover:opacity-100 opacity-75  ";
 
-  return !isAuthenticated ?
-    (<Redirect to="/login" />) :
-    (<div className="h-full p-4 w-full rounded border-l border-gray-800 bg-gradient-to-br from-gray-800 via-transparent to-gray-800">
+  if (!user.token) return (<Redirect to='/login' />)
+  else if (!user.isAuthenticated) return (<Message info="Authenticating..." extraClasses="w-1/2 self-center mx-auto" />)
+  else return (
+    <div className="h-full p-4 w-full rounded border-l border-gray-800 bg-gradient-to-br from-gray-800 via-transparent to-gray-800">
       <div className="flex flex-col h-full mb-4 2xl:mb-0">
         <h1 className="mb-4 ml-2 text-xl font-bold text-blue-200"> Finished Goods </h1>
         <div className="grid grid-cols-5 h-full">
@@ -49,22 +53,22 @@ const FgSummary = () => {
               <h2 className="text-center font-semibold text-blue-100 text-xl">Items</h2>
               <div className="flex-grow" />
               {!deleting && !editing &&
-                <button className={!adding ? buttonCs+"bg-green-300" : buttonCs+"bg-red-400"}
-                        onClick={onAddClick}>
-                  {adding ? "X" : "Add"}
-                </button>}
+                <Button
+                  color={!adding ? "bg-green-300" : "bg-red-400"}
+                  text={adding ? "X" : "Add"}
+                  onClick={onAddClick} /> }
               {!adding && !deleting &&
-                <button className={!editing ? buttonCs + "bg-blue-300" : buttonCs+"bg-red-400"}
-                        onClick={onEditClick}
-                        disabled={selectedId === undefined ? true : false}>
-                  {editing ? "X" : "Edit"}
-                </button>}
+                <Button
+                  color={!editing ? "bg-blue-300" : "bg-red-400"}
+                  text={editing ? "X" : "Edit"}
+                  onClick={onEditClick}
+                  disabled={Object.entries(selected).length === 0 ? true : false} /> }
               {!adding && !editing &&
-                <button className={buttonCs + "bg-red-400"}
-                        onClick={onRemoveClick}
-                        disabled={selectedId === undefined ? true : false}>
-                  {deleting ? "X" : "Remove"}
-                </button>}
+                <Button
+                  color="bg-red-400"
+                  text={deleting ? "X" : "Remove"}
+                  onClick={onRemoveClick}
+                  disabled={Object.entries(selected).length === 0 ? true : false} /> }
             </div>
             <div className="bg-gray-500 h-px w-full mb-3" />
 

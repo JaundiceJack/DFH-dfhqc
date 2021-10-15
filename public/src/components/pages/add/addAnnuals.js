@@ -1,4 +1,4 @@
-const AddAnnuals = ({vals, onEntry, onClick}) => {
+const AddAnnuals = ({ vals, onEntry, onClick }) => {
   const labelCs = "mr-2 text-right text-blue-100 font-semibold whitespace-nowrap self-center";
 
   return (
@@ -8,35 +8,38 @@ const AddAnnuals = ({vals, onEntry, onClick}) => {
       <div className="grid grid-cols-4 mb-4">
 
         <p className={labelCs+" col-span-3"}>Pesticides Tested?</p>
-        <input className="col-span-1 justify-self-start mt-1"
-               name="pesticideTested"
-               type="checkbox"
-               value={vals.pesticideTested}
-               defaultChecked={vals.pesticideTested}
-               onClick={onClick} />
-        {vals.pesticideTested && <p className={labelCs+" col-span-2"}>Pesticide Standard:</p>}
-        {vals.pesticideTested &&
-          <select className="col-span-2 rounded my-1 py-1 pl-2 bg-gray-200"
-                  name="pesticideStandard"
-                  value={vals.pesticideStandard}
-                  onChange={onEntry} >
+        <input type="checkbox"
+               name="pesticide_tested"
+               value={vals.pesticide_tested}
+               defaultChecked={vals.pesticide_tested}
+               onClick={onClick}
+               className="col-span-1 justify-self-start mt-1" />
+        {vals.pesticide_tested && <p className={labelCs+" col-span-2"}>Pesticide Standard:</p>}
+        {vals.pesticide_tested &&
+          <select name="pesticide_standard"
+                  value={vals.pesticide_standard}
+                  onChange={onEntry}
+                  className="col-span-2 rounded my-1 py-1 pl-2 bg-gray-200" >
             <option value="USP <561>">{"USP <561>"}</option>
             <option value="FDA PAM">FDA PAM</option>
           </select>
         }
-        {(vals.pesticideTested || vals.solventTested) && <div className="mx-auto mt-1 mb-4 h-px col-span-4 w-full bg-gradient-to-l from-transparent via-blue-300 to-transparent" />}
+        {(vals.pesticide_tested || vals.solvent_tested) &&
+          <div className={"mx-auto mt-1 mb-4 h-px col-span-4 w-full " +
+            "bg-gradient-to-l from-transparent via-blue-300 to-transparent"} />}
+
         <p className={labelCs+" col-span-3"}>Residual Solvents Tested?</p>
-        <input className="col-span-1 justify-self-start mt-1"
-               name="solventTested"
-               type="checkbox"
-               value={vals.solventTested}
-               defaultChecked={vals.solventTested}
-               onClick={onClick} />
-        {vals.solventTested && <p className={labelCs+" col-span-2"}>Solvent Classes:</p>}
-        {vals.solventTested &&
+        <input type="checkbox"
+               name="solvent_tested"
+               value={vals.solvent_tested}
+               defaultChecked={vals.solvent_tested}
+               onClick={onClick}
+               className="col-span-1 justify-self-start mt-1" />
+        {vals.solvent_tested && <p className={labelCs+" col-span-2"}>Solvent Classes:</p>}
+        {vals.solvent_tested &&
           <select className="col-span-2 rounded my-1 py-1 pl-2 bg-gray-200"
-                  name="solventStandard"
-                  value={vals.solventStandard}
+                  name="solvent_standard"
+                  value={vals.solvent_standard}
                   onChange={onEntry} >
             <option value="Class I">Class I</option>
             <option value="Class II">Class II</option>
@@ -47,37 +50,41 @@ const AddAnnuals = ({vals, onEntry, onClick}) => {
             <option value="Class I, II, & III">Class I, II, & III</option>
           </select>
         }
-        {vals.solventTested && <div className="mx-auto mt-1 mb-4 h-px col-span-4 w-full bg-gradient-to-l from-transparent via-blue-300 to-transparent" />}
+        {vals.solvent_tested &&
+          <div className={"mx-auto mt-1 mb-4 h-px col-span-4 w-full " +
+            "bg-gradient-to-l from-transparent via-blue-300 to-transparent"} />}
+
+
         <p className={labelCs+" col-span-3"}>Rancidity Tested?</p>
-        <input className="col-span-1 justify-self-start mt-1"
-               name="rancidityTested"
-               type="checkbox"
-               value={vals.rancidityTested}
-               defaultChecked={vals.rancidityTested}
-               onClick={onClick} />
-        {vals.rancidityTested && <p className={labelCs+" col-span-2"}>Peroxide Value:</p>}
-        {vals.rancidityTested &&
-          <input className="rounded my-1 py-1 pl-2 bg-gray-200"
-                 name="peroxideMax"
-                 type="text"
-                 value={vals.peroxideMax || ""}
-                 onChange={onEntry} />
+        <input type="checkbox"
+               name="rancidity_tested"
+               value={vals.rancidity_tested}
+               defaultChecked={vals.rancidity_tested}
+               onClick={onClick}
+               className="col-span-1 justify-self-start mt-1" />
+        {vals.rancidity_tested && <p className={labelCs+" col-span-2"}>Peroxide Value:</p>}
+        {vals.rancidity_tested &&
+          <input type="text"
+                 name="peroxide"
+                 value={vals.peroxide || ""}
+                 onChange={onEntry}
+                 className="rounded my-1 py-1 pl-2 bg-gray-200" />
         }
-        {vals.rancidityTested && <p className={labelCs+" col-span-2"}>P-Anisidine Value:</p>}
-        {vals.rancidityTested &&
-          <input className="rounded my-1 py-1 pl-2 bg-gray-200"
-                 name="pAnisidineMax"
-                 type="text"
-                 value={vals.pAnisidineMax || ""}
-                 onChange={onEntry} />
+        {vals.rancidity_tested && <p className={labelCs+" col-span-2"}>P-Anisidine Value:</p>}
+        {vals.rancidity_tested &&
+          <input type="text"
+                 name="anisidine"
+                 value={vals.anisidine || ""}
+                 onChange={onEntry}
+                 className="rounded my-1 py-1 pl-2 bg-gray-200" />
         }
-        {vals.rancidityTested && <p className={labelCs+" col-span-2"}>TOTOX Value:</p>}
-        {vals.rancidityTested &&
-          <input className="rounded my-1 py-1 pl-2 bg-gray-200"
-                 name="totoxMax"
-                 type="text"
-                 value={vals.totoxMax}
-                 onChange={onEntry} />
+        {vals.rancidity_tested && <p className={labelCs+" col-span-2"}>TOTOX Value:</p>}
+        {vals.rancidity_tested &&
+          <input type="text"
+                 name="totox"
+                 value={vals.totox}
+                 onChange={onEntry}
+                 className="rounded my-1 py-1 pl-2 bg-gray-200"/>
         }
       </div>
     </div>

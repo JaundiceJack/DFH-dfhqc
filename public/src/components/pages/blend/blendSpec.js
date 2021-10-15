@@ -13,7 +13,7 @@ const BlendSpec = () => {
       const basicClaim = current.potency ? (current.claim / (current.potency * 0.01)) : current.claim;
       const overClaim  = current.overage ? (current.overage * 0.01) + 1 : 1;
       return (basicClaim * overClaim) + total;
-    }, 0).toFixed(3) : "N/A";
+    }, 0).toFixed(3) : "";
 
   const fillWeight = selected.ingredients !== undefined ?
     selected.ingredients.reduce((total, current) => {
@@ -21,7 +21,7 @@ const BlendSpec = () => {
       const overClaim  = current.overage ? (current.overage * 0.01) + 1 : 1;
       const perUnit = (basicClaim * overClaim) / selected.units_per_serving;
       return perUnit + total;
-    }, 0).toFixed(3) : "N/A";
+    }, 0).toFixed(3) : "";
 
   return (
     <div className="sm:mr-4 h-full col-span-5 2xl:col-span-4 rounded bg-gradient-to-br from-gray-600 via-transparent to-gray-600">
@@ -31,19 +31,10 @@ const BlendSpec = () => {
 
       <div className="flex flex-col py-2 px-4 ">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-gray-700 mb-4 rounded-lg">
-          <SpecBasics name={selected.name}
-                      number={selected.number}
-                      serving={servingSize}
-                      batchSize={selected.batch_size}
-                      servingUnits={selected.units_per_serving}
-                      fillWeight={fillWeight} />
+          <SpecBasics blend={selected} fillWeight={fillWeight} servingSize={servingSize} />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-gray-700 mb-4 rounded-lg">
-          <SpecIngredients ingredients={selected.ingredients}
-                           serving={servingSize}
-                           batchSize={selected.batch_size}
-                           fillWeight={fillWeight}
-                           servingUnits={selected.units_per_serving} />
+          <SpecIngredients blend={selected} fillWeight={fillWeight} servingSize={servingSize} />
         </div>
       </div>
     </div>

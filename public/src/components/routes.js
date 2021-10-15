@@ -12,7 +12,9 @@ import BulkSummary  from './pages/bulk/bulkSummary.js';
 import FgSummary    from './pages/fg/fgSummary.js';
 import Login        from './account/login.js';
 import LabSummary   from './pages/lab/labSummary.js';
-import Forgot        from './account/forgot';
+import Forgot        from './account/forgot.js';
+import VendorSummary from './pages/vendor/vendorSummary.js';
+import ManufacturerSummary from './pages/manufacturer/manuSummary.js';
 //import Reset         from './account/reset';
 import CreateAccount from './account/create';
 
@@ -33,6 +35,8 @@ const Routes = () => {
       <Route exact path="/create"   component={CreateAccount} />
       <Route exact path="/labs"   component={LabSummary} />
       <Route exact path="/forgot"   component={Forgot} />
+      <Route exact path="/vendors" component={VendorSummary} />
+      <Route exact path="/manufacturers" component={ManufacturerSummary} />
     </Switch>
   )
 }

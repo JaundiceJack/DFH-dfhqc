@@ -16,7 +16,7 @@ const LabSchema = new Schema({
     {
       assay: { type: Schema.Types.ObjectId, ref: 'assays' },
       price: { type: Number },
-      method: { type: Schema.Types.ObjectId, ref: 'assaymethods' }
+      method: { type: Schema.Types.ObjectId, ref: 'methods' }
     }
   ]
 });

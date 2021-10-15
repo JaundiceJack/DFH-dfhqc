@@ -1,15 +1,14 @@
-const SpecAssays = ({assays}) => {
+const SpecAssays = ({ assays }) => {
   // Display the assays in the format Name: Range by Method
   const mapAssays = () => {
     if (assays) {
       return assays.map((assay, index) => {
         return (
-          <div className="grid grid-cols-3 p-2" key={index} >
-            <p className="text-center capitalize">{assay.assay_name}:</p>
+          <div className="grid grid-cols-3 gap-x-2 p-2" key={index} >
+            <p className="justify-self-end capitalize">{assay.assay.name}:</p>
             <p className="col-span-2 capitalize">
-              {`${rangeString(assay.assay_min, assay.assay_max, assay.assay_units)} by ${assay.assay_method}`}
+              {`${rangeString(assay.min, assay.max, assay.units.name)} by ${assay.method.name}`}
             </p>
-
           </div>
         )
       })

@@ -1,25 +1,30 @@
+// Import basics
 import { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addRaw } from '../../../actions/rawActions';
-import AddBasic from '../add/addBasic';
-import AddOrgano from '../add/addOrgano';
-import AddAssays from '../add/addAssays';
-import AddIds from '../add/addIds';
-import AddPhysical from '../add/addPhysical';
-import AddHms from '../add/addHms';
-import AddMicros from '../add/addMicros';
+// Import server actions
+import { addRaw }   from '../../../actions/rawActions';
+import { clearMessages } from '../../../actions/msgActions.js';
+// Import components
+import AddBasic     from '../add/addBasic';
+import AddOrgano    from '../add/addOrgano';
+import AddAssays    from '../add/addAssays';
+import AddIds       from '../add/addIds';
+import AddPhysical  from '../add/addPhysical';
+import AddHms       from '../add/addHms';
+import AddMicros    from '../add/addMicros';
 import AddAllergens from '../add/addAllergens';
-import AddAnnuals from '../add/addAnnuals';
-import Button from '../../button.js';
-import Message from '../../message.js';
+import AddAnnuals   from '../add/addAnnuals';
+import Button       from '../../button.js';
+import Message      from '../../message.js';
 
 const RawAdd = ({toggleAdd}) => {
   // Get id and assay names from the redux state/server
-  const ids = useSelector(state => state.identity.identities);
-  const assays = useSelector(state => state.assay.assays.sort((a, b) => b.name < a.name));
-  const units = useSelector(state => state.unit.units);
-  const methods = useSelector(state => state.method.methods.sort((a, b) => b.name < a.name));
+  const ids      = useSelector(state => state.identity.identities);
+  const assays   = useSelector(state => state.assay.assays.sort((a, b) => b.name < a.name));
+  const units    = useSelector(state => state.unit.units);
+  const methods  = useSelector(state => state.method.methods.sort((a, b) => b.name < a.name));
   const textures = useSelector(state => state.texture.textures.sort((a, b) => b.name < a.name));
+  const errorMsg = useSelector(state => state.msg.error);
 
   // Set internal state variables for the form
   const [rawVals, setRawVals] = useState({
@@ -30,38 +35,38 @@ const RawAdd = ({toggleAdd}) => {
     taste: "",
     textureId: (!textures.loading && textures.length > 0) ? textures[0]._id : "",
     newTexture: "",
-    arsenicMax: "5",
-    cadmiumMax: "0.3",
-    leadMax: "10",
-    mercuryMax: "0.2",
-    nickelMax: "10",
-    hmUnits: "ppm",
-    moistureMax: "",
-    moistureMin: "",
-    densityMax: "",
-    densityMin: "",
-    tpcMax: 1000,
-    tpcUnits: "CFU/g",
-    ymMax: 100,
-    ymUnits: "CFU/g",
-    enteroMax: 100,
-    enteroUnits: "MPN/g",
+    arsenic: "5",
+    cadmium: "0.3",
+    lead: "10",
+    mercury: "0.2",
+    nickel_tested: false,
+    nickel: "10",
+    hm_units: "ppm",
+    moisture_max: "",
+    moisture_min: "",
+    density_max: "",
+    density_min: "",
+    tpc: 1000,
+    tpc_units: "CFU/g",
+    ym: 100,
+    ym_units: "CFU/g",
+    entero: 100,
+    entero_units: "MPN/g",
     salmonella: "Negative",
     staph: "Negative",
     ecoli: "Negative",
+    paeruTested: false,
     paeru: "Negative",
-    pesticideStandard: "USP <561>",
-    solventStandard: "Class I",
-    peroxideMax: "",
-    pAnisidineMax: "",
-    totoxMax: "",
+    pesticideTested: false,
+    pesticide_standard: "USP <561>",
+    solventTested: false,
+    solvent_standard: "Class I",
+    rancidity_tested: false,
+    peroxide: "",
+    anisidine: "",
+    totox: "",
     assays: [],
     ids: [],
-    rancidityTested: false,
-    nickelTested: false,
-    paeruTested: false,
-    pesticideTested: false,
-    solventTested: false,
     soy: false,
     egg: false,
     milk: false,
@@ -76,8 +81,9 @@ const RawAdd = ({toggleAdd}) => {
   const dispatch = useDispatch();
   const [badEntries, setBadEntries] = useState([]);
   const clearTimer = useRef(null);
-  const setClear   = () => { clearTimer.current = setTimeout(() => {
+  const setClear = () => { clearTimer.current = setTimeout(() => {
       setBadEntries([]);
+      dispatch(clearMessages());
       clearTimer.current = null;
     }, 5000);
   }
@@ -103,7 +109,6 @@ const RawAdd = ({toggleAdd}) => {
     // Hide the form on submission
     errs.length !== 0 && !clearTimer.current ? setClear() : toggleAdd();
   }
-
   // Handle events
   const onEntry = (e) => { setRawVals({...rawVals, [e.target.name]: e.target.value })}
   const onClick = (e) => { setRawVals({...rawVals, [e.target.name]: !rawVals[e.target.name] })}
@@ -113,13 +118,10 @@ const RawAdd = ({toggleAdd}) => {
       {
         min: "",
         max: "",
-        name:     (!assays.loading && assays.length > 0) ? assays[0].name : "",
         assayId:  (!assays.loading && assays.length > 0) ? assays[0]._id : "",
         newName: "",
-        units:    (!units.loading && units.length > 0) ? units[0].name : "",
         unitId:   (!units.loading && units.length > 0) ? units[0]._id : "",
         newUnit: "",
-        method:   (!methods.loading && methods.length > 0) ? methods[0].name : "",
         methodId: (!methods.loading && methods.length > 0) ? methods[0]._id : "",
         newMethod: ""
       }
@@ -129,17 +131,15 @@ const RawAdd = ({toggleAdd}) => {
     setRawVals({...rawVals, ids: [...rawVals.ids,
       {
         posneg: "Positive",
-        isBotanical: (!ids.loading && ids.length > 0) ? ids[0].is_botanical : "",
-        genus:       (!ids.loading && ids.length > 0) ? ids[0].genus : "",
-        species:     (!ids.loading && ids.length > 0) ? ids[0].species : "",
-        part:        (!ids.loading && ids.length > 0) ? ids[0].part : "",
-        ratio:       (!ids.loading && ids.length > 0) ? ids[0].ratio : "",
-        solvent:     (!ids.loading && ids.length > 0) ? ids[0].solvent : "",
-        name:        (!ids.loading && ids.length > 0) ? ids[0].name : "",
-        identityId:  (!ids.loading && ids.length > 0) ? ids[0]._id : "",
+        is_botanical: (!ids.loading && ids.length > 0) ? ids[0].is_botanical : "",
+        genus:        (!ids.loading && ids.length > 0) ? ids[0].genus : "",
+        species:      (!ids.loading && ids.length > 0) ? ids[0].species : "",
+        part:         (!ids.loading && ids.length > 0) ? ids[0].part : "",
+        ratio:        (!ids.loading && ids.length > 0) ? ids[0].ratio : "",
+        solvent:      (!ids.loading && ids.length > 0) ? ids[0].solvent : "",
+        identityId:   (!ids.loading && ids.length > 0) ? ids[0]._id : "",
         newName: "",
-        method:      (!methods.loading && methods.length > 0) ? methods[0].name : "",
-        methodId:    (!methods.loading && methods.length > 0) ? methods[0]._id : "",
+        methodId:     (!methods.loading && methods.length > 0) ? methods[0]._id : "",
         newMethod: ""
       }
     ]})
@@ -165,6 +165,30 @@ const RawAdd = ({toggleAdd}) => {
       edited[index][e.target.name] = !edited[index][e.target.name];
     else
       edited[index][e.target.name] = e.target.value;
+    setRawVals({...rawVals, ids: edited});
+  }
+  const onIdChange = (e, index) => {
+    const idProps = ids.find(id => id._id === e.target.value);
+    let edited = [...rawVals.ids];
+    const hptlcId = methods.find(method => method.name === "HPTLC");
+    edited[index].identityId = e.target.value;
+    if (idProps) {
+      edited[index].is_botanical = idProps.is_botanical === true;
+      edited[index].genus = idProps.genus;
+      edited[index].species = idProps.species;
+      edited[index].part = idProps.part;
+      edited[index].ratio = idProps.ratio;
+      edited[index].solvent = idProps.solvent;
+      edited[index].methodId = (idProps.is_botanical === true && hptlcId._id) || ((!methods.loading && methods.length > 0) ? methods[0]._id : "");
+    } else {
+      edited[index].is_botanical = false;
+      edited[index].genus = "";
+      edited[index].species = "";
+      edited[index].part = "";
+      edited[index].ratio = "";
+      edited[index].solvent = "";
+      edited[index].methodId = (!methods.loading && methods.length > 0) ? methods[0]._id : "";
+    }
     setRawVals({...rawVals, ids: edited});
   }
 
@@ -193,6 +217,7 @@ const RawAdd = ({toggleAdd}) => {
           onEdit={onEditId}
           onAdd={onAddId}
           onRemove={onRemoveId}
+          onIdChange={onIdChange}
           nameOptions={ids}
           methodOptions={methods} />
         <AddPhysical
@@ -214,8 +239,10 @@ const RawAdd = ({toggleAdd}) => {
           vals={rawVals}
           onClick={onClick} />
 
+        <div className="h-6" />
         { badEntries.map(err => <Message error={err} /> )  }
-        <Button type="submit" color="bg-green-300" text="Add New Raw" />
+        { errorMsg && <Message error={errorMsg} /> }
+        <Button type="submit" color="bg-green-300" text="Add New Raw" extraClasses="h-10" />
       </form>
     </div>
   )

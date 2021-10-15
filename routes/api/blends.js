@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const trycatch = require('express-async-handler');
 // Import route access protection
 const auth = require('../../middleware/auth');
 // Import schemas and make models
@@ -10,92 +11,69 @@ const Raw   = mongoose.connection.model('raws',   require('../../schemas/Raw'));
 const Unit  = mongoose.connection.model('units',  require('../../schemas/Unit'));
 
 // GET: api/blends/ | Get a list of all blend specifications | Private
-router.get('/',  (req, res) => {
-  Blend.find().then( blends => {
-    res.json(blends.sort((a, b) => {
-      return a.number < b.number ? -1 :
-             a.number > b.number ?  1 : 0
-    }));
-  });
-});
+router.get('/', auth, trycatch( async (req, res) => {
+  const blends = await Blend.find().populate('ingredients.raw').exec();
+  if (blends) res.status(201).json(blends);
+  else { res.status(404); throw new Error("Unable to find blends.") };
+}));
 
 // POST: api/blends/ | Create a new blend | Private
-router.post('/', async (req, res) => {
-  console.log("Saving new blend...");
-  // Validate entries
+router.post('/', auth, trycatch( async (req, res) => {
   const entries = await formatEntries(req.body);
-  // Create a new blend
   const newBlend = new Blend(entries);
-  newBlend.save()
-  .then(blend => {
-    console.log("New Blend:", blend);
-    if (blend) res.status(201).json(newBlend);
-    else res.status(401).json({error: "Failed to save new blend."});
-  })
-  .catch(err => {
-    console.log(err);
-    res.status(401).json({error: "Failed to save new blend"});
-  });
-});
+  const savedBlend = await newBlend.save();
+  if (savedBlend) {
+    await savedBlend.populate('ingredients.raw').execPopulate();
+    res.status(201).json(savedBlend);
+  }
+  else { res.status(401); throw new Error("Failed to save the new blend."); };
+}));
 
 // POST: api/blends/blend_id | Edit the blend with the given ID | Private
-router.post('/:id', async (req, res) => {
-  console.log("Editing selected blend...");
-  // Get the blend by it's id
-  const current = await Blend.findOne({ _id: req.params.id });
+router.post('/:id', auth, trycatch( async (req, res) => {
+  const current = await Blend.findById(req.params.id);
   if (current) {
-    // Format the new entries
     const entries = await formatEntries(req.body);
-    // Set the current blend's new properties
-    current.name =             entries.name,
-    current.batch_size =       entries.batch_size,
-    current.units_per_serving = entries.units_per_serving,
-    current.customer =         entries.customer,
-    current.ingredients =      entries.ingredients
-    // Save the modified blend
-    current.save()
-    .then(blend => res.json(blend))
-    .catch(err => res.status(400).json({error: "Unable to edit the selected blend."}));
+    Object.assign(current, entries);
+    const savedBlend = await current.save();
+    if (savedBlend) {
+      await savedBlend.populate('ingredients.raw').execPopulate();
+      res.status(201).json(savedBlend);
+    }
+    else { res.status(401); throw new Error("Unable to edit the selected blend."); };
   }
-  else res.status(401).json({error: "Could not locate selected blend item."});
-});
+  else { res.status(401); throw new Error("Could not locate selected blend."); };
+}));
 
 // DELETE: api/blends/blend_id | Remove the blend with the given ID | Private
-router.delete('/:id', (req, res) => {
-  Blend
-  .findById(req.params.id)
-  .then(blend => blend.remove().then(() => res.json({success: true})))
-  .catch(err => res.status(404).json({success: false}));
-})
+router.delete('/:id', auth, trycatch(async (req, res) => {
+  const blend = await Blend.findById(req.params.id);
+  if (blend) blend.remove().then(() => res.json({success: true})).catch(e => { return new Error(e) })
+  else { res.status(404); throw new Error("Could not find the blend to delete."); };
+}));
 
 // Return an array of objects with the id references and specs from the given info
 const makeIngredients = ingredients => {
   return Promise.all(ingredients.map(ingredient => {
     return new Promise(async (resolve, reject) => {
-      // Check the new ingredient for an existing entry in the database
-      const current = await Raw.findOne({ _id: ingredient.rawId });
-      const unitName = ingredient.claimUnits === "New Units" ? ingredient.newUnits : ingredient.claimUnits;
-      const unit = await Unit.findOne({ name: unitName });
-      // If there's an existing entry, set the id to it
-      if (current) {
-        let formatted = {
-          raw_id:             current._id,
-          raw_name:           current.name,
-          raw_number:         current.number,
-          claim:              ingredient.claim,
-          claim_units:        unitName,
-          potency:            ingredient.potency,
-          overage:            ingredient.overage,
-          ingredient_type:    ingredient.ingredientType.toLowerCase(),
-        };
-        // Save the unit type if it was new
-        if(!unit) {
-          const newUnit = new Unit({ name: unitName });
-          newUnit.save().catch(err => reject(err));
-        }
-        resolve(formatted);
-      }
-      else {reject("Selected raw material not found.")}
+      // Format the entries to have proper data-types
+      let formatted = {
+        claim:   Number(ingredient.claim),
+        units:   ingredient.units,
+        potency: Number(ingredient.potency),
+        overage: Number(ingredient.overage),
+        type:    ingredient.type.toLowerCase(),
+      };
+
+      // Save the raw's id to the ingredient
+      if (ingredient.raw) {
+        const currentRaw = await Raw.findById(ingredient.raw);
+        if (currentRaw) formatted.raw = currentRaw._id;
+        else reject("Unable to locate selected raw.");
+      } else reject("No raw selected.");
+
+      // Return one of the completed ingredients and go to the next Promise
+      resolve(formatted);
     });
   }));
 };
@@ -105,8 +83,8 @@ const formatEntries = async body => {
   return {
     number:      Number(body.number),
     name:        body.name.toLowerCase(),
-    batch_size:  Number(body.batchSize),
-    units_per_serving: Number(body.unitsPerServing),
+    batch_size:  Number(body.batch_size),
+    units_per_serving: Number(body.units_per_serving),
     customer:    body.customer.toLowerCase(),
     ingredients: await makeIngredients(body.ingredients),
   }

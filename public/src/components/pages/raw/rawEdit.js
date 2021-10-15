@@ -1,6 +1,9 @@
+// Import basics
 import { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+// Import server actions
 import { editRaw } from '../../../actions/rawActions';
+// Import components
 import AddBasic from '../add/addBasic';
 import AddOrgano from '../add/addOrgano';
 import AddAssays from '../add/addAssays';
@@ -24,57 +27,66 @@ const RawEdit = ({toggleEdit}) => {
 
   // Set internal state variables for the form
   const [rawVals, setRawVals] = useState({
-    _id: selected._id,
-    number: selected.number,
-    name: selected.name,
-    color: selected.color,
-    odor: selected.odor,
-    taste: selected.taste,
-    arsenicMax: selected.arsenic_max,
-    cadmiumMax: selected.cadmium_max,
-    leadMax: selected.lead_max,
-    mercuryMax: selected.mercury_max,
-    nickelMax: selected.nickel_max,
-    hmUnits: selected.hm_units,
-    moistureMax: selected.moisture_max,
-    moistureMin: selected.moisture_min,
-    densityMax: selected.density_max,
-    densityMin: selected.density_min,
-    tpcMax: selected.tpc_max,
-    tpcUnits: selected.tpc_units,
-    ymMax: selected.ym_max,
-    ymUnits: selected.ym_units,
-    enteroMax: selected.entero_max,
-    enteroUnits: selected.entero_units,
-    salmonella: selected.salmonella,
-    staph: selected.staph,
-    ecoli: selected.ecoli,
-    paeru: selected.paeru,
-    pesticideStandard: selected.pesticide_standard,
-    solventStandard: selected.solvent_standard,
-    peroxideMax: selected.peroxide_max,
-    pAnisidineMax: selected.p_anisidine_max,
-    totoxMax: selected.totox_max,
+    _id:       selected._id,
+    number:    selected.number,
+    name:      selected.name,
+    color:     selected.color,
+    odor:      selected.odor,
+    taste:     selected.taste,
     textureId: selected.texture._id,
-    assays: selected.assays,
-    ids: selected.ids.map(id => {
+    newTexture: "",
+    arsenic: selected.hm.arsenic,
+    cadmium: selected.hm.cadmium,
+    lead: selected.hm.lead,
+    mercury: selected.hm.mercury,
+    nickel_tested: selected.hm.nickel_tested,
+    nickel: selected.hm.nickel,
+    hm_units: selected.hm.units,
+    moisture_max: selected.moisture.max,
+    moisture_min: selected.moisture.min,
+    density_max: selected.density.max,
+    density_min: selected.density.min,
+    tpc: selected.micro.tpc,
+    tpc_units: selected.micro.tpc_units,
+    ym: selected.micro.ym,
+    ym_units: selected.micro.ym_units,
+    entero: selected.micro.entero,
+    entero_units: selected.micro.entero_units,
+    salmonella: selected.micro.salmonella,
+    staph: selected.micro.staph,
+    ecoli: selected.micro.ecoli,
+    paeru_tested: selected.micro.paeru_tested,
+    paeru: selected.micro.paeru,
+    pesticide_tested: selected.pesticide.tested,
+    pesticide_standard: selected.pesticide.standard,
+    solvent_tested: selected.solvent.tested,
+    solvent_standard: selected.solvent.standard,
+    rancidity_tested: selected.rancidity.tested,
+    peroxide: selected.rancidity.peroxide,
+    anisidine: selected.rancidity.anisidine,
+    totox: selected.rancidity.totox,
+    assays: selected.assays.map(as => {
       return {
-        identity: id.identity,
-        posneg: id.posneg,
-        isBotanical: id.is_botanical,
-        genus: id.genus,
-        species: id.species,
-        part: id.part,
-        ratio: id.ratio,
-        solvent: id.solvent,
-        method: id.method
+        min: as.min,
+        max: as.max,
+        assayId: as.assay._id,
+        unitId: as.units._id,
+        methodId: as.method._id,
       }
     }),
-    rancidityTested: selected.rancidity_tested,
-    nickelTested: selected.nickel_tested,
-    paeruTested: selected.paeru_tested,
-    pesticideTested: selected.pesticide_tested,
-    solventTested: selected.solvent_tested,
+    ids: selected.ids.map(id => {
+      return {
+        posneg: id.posneg,
+        is_botanical: id.identity.is_botanical,
+        genus: id.identity.genus,
+        species: id.identity.species,
+        part: id.identity.part,
+        ratio: id.identity.ratio,
+        solvent: id.identity.solvent,
+        identityId: id.identity._id,
+        methodId: id.method._id
+      }
+    }),
     soy: selected.allergens.soy,
     egg: selected.allergens.egg,
     milk: selected.allergens.milk,
@@ -89,7 +101,8 @@ const RawEdit = ({toggleEdit}) => {
   const dispatch = useDispatch();
   const [badEntries, setBadEntries] = useState([]);
   const clearTimer = useRef(null);
-  const setClear   = () => { clearTimer.current = setTimeout(() => {
+  const setClear   = () => {
+    clearTimer.current = setTimeout(() => {
       setBadEntries([]);
       clearTimer.current = null;
     }, 5000);
@@ -114,7 +127,6 @@ const RawEdit = ({toggleEdit}) => {
     // Hide the form on submission
     errs.length !== 0 && !clearTimer.current ? setClear() : toggleEdit();
   }
-
   // Handle events
   const onEntry = (e) => { setRawVals({...rawVals, [e.target.name]: e.target.value })}
   const onClick = (e) => { setRawVals({...rawVals, [e.target.name]: !rawVals[e.target.name] })}
@@ -124,13 +136,10 @@ const RawEdit = ({toggleEdit}) => {
       {
         min: "",
         max: "",
-        name:     (!assays.loading && assays.length > 0) ? assays[0].name : "",
         assayId:  (!assays.loading && assays.length > 0) ? assays[0]._id : "",
         newName: "",
-        units:    (!units.loading && units.length > 0) ? units[0].name : "",
         unitId:   (!units.loading && units.length > 0) ? units[0]._id : "",
         newUnit: "",
-        method:   (!methods.loading && methods.length > 0) ? methods[0].name : "",
         methodId: (!methods.loading && methods.length > 0) ? methods[0]._id : "",
         newMethod: ""
       }
@@ -140,16 +149,14 @@ const RawEdit = ({toggleEdit}) => {
     setRawVals({...rawVals, ids: [...rawVals.ids,
       {
         posneg: "Positive",
-        isBotanical: (!ids.loading && ids.length > 0) ? ids[0].is_botanical : "",
+        is_botanical: (!ids.loading && ids.length > 0) ? ids[0].is_botanical : "",
         genus:       (!ids.loading && ids.length > 0) ? ids[0].genus : "",
         species:     (!ids.loading && ids.length > 0) ? ids[0].species : "",
         part:        (!ids.loading && ids.length > 0) ? ids[0].part : "",
         ratio:       (!ids.loading && ids.length > 0) ? ids[0].ratio : "",
         solvent:     (!ids.loading && ids.length > 0) ? ids[0].solvent : "",
-        name:        (!ids.loading && ids.length > 0) ? ids[0].name : "",
         identityId:  (!ids.loading && ids.length > 0) ? ids[0]._id : "",
         newName: "",
-        method:      (!methods.loading && methods.length > 0) ? methods[0].name : "",
         methodId:    (!methods.loading && methods.length > 0) ? methods[0]._id : "",
         newMethod: ""
       }
@@ -178,6 +185,31 @@ const RawEdit = ({toggleEdit}) => {
       edited[index][e.target.name] = e.target.value;
     setRawVals({...rawVals, ids: edited});
   }
+  const onIdChange = (e, index) => {
+    const idProps = ids.find(id => id._id === e.target.value);
+    let edited = [...rawVals.ids];
+    const hptlcId = methods.find(method => method.name === "HPTLC");
+    edited[index].identityId = e.target.value;
+    if (idProps) {
+      edited[index].is_botanical = idProps.is_botanical === true;
+      edited[index].genus = idProps.genus;
+      edited[index].species = idProps.species;
+      edited[index].part = idProps.part;
+      edited[index].ratio = idProps.ratio;
+      edited[index].solvent = idProps.solvent;
+      edited[index].methodId = hptlcId._id || ((!methods.loading && methods.length > 0) ? methods[0]._id : "");
+    } else {
+      edited[index].is_botanical = false;
+      edited[index].genus = "";
+      edited[index].species = "";
+      edited[index].part = "";
+      edited[index].ratio = "";
+      edited[index].solvent = "";
+      edited[index].methodId = (!methods.loading && methods.length > 0) ? methods[0]._id : "";
+    }
+    setRawVals({...rawVals, ids: edited});
+  }
+
   return (
     <div className="mx-4 my-2">
       <form className="flex flex-col" onSubmit={onSubmit}>
@@ -203,6 +235,7 @@ const RawEdit = ({toggleEdit}) => {
           onEdit={onEditId}
           onAdd={onAddId}
           onRemove={onRemoveId}
+          onIdChange={onIdChange}
           nameOptions={ids}
           methodOptions={methods} />
         <AddPhysical
@@ -224,8 +257,9 @@ const RawEdit = ({toggleEdit}) => {
           vals={rawVals}
           onClick={onClick} />
 
+        <div className="h-6" />
         { badEntries.map(err => <Message error={err} /> )  }
-        <Button type="submit" color="bg-green-300" text="Apply Changes" />
+        <Button type="submit" color="bg-green-300" text="Apply Changes" extraClasses="h-10" />
       </form>
     </div>
   )

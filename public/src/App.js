@@ -18,7 +18,7 @@ class App extends Component {
           <main className={"flex flex-col 2xl:flex-row min-h-screen " +
                            " bg-gradient-to-br from-black via-gray-900 to-blue-900"}>
             <Nav />
-            <div className="p-4 w-full  min-h-screen">
+            <div className="p-4 w-full flex min-h-screen">
               <Routes />
             </div>
 

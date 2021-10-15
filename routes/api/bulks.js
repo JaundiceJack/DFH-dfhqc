@@ -12,7 +12,7 @@ const Unit  = mongoose.connection.model('units',  require('../../schemas/Unit'))
 
 // GET -> api/bulks/
 // Get a list of all bulk specification
-router.get('/',  (req, res) => {
+router.get('/', auth, (req, res) => {
   Bulk.find().then( bulks => {
     res.json(bulks.sort((a, b) => {
       return a.number < b.number ? -1 : a.number > b.number ? 1 : 0 }));
@@ -21,7 +21,7 @@ router.get('/',  (req, res) => {
 
 // POST -> api/bulks/
 // Create a new bulk material with the given specifications
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
   console.log("Saving new bulk...");
   // Validate entries
   const entries = await formatEntries(req.body);
@@ -41,7 +41,7 @@ router.post('/', async (req, res) => {
 
 // POST -> api/bulks/bulk_id
 // Edit the bulk with the given ID
-router.post('/:id', async (req, res) => {
+router.post('/:id', auth, async (req, res) => {
   console.log("Editing selected bulk...");
   // Get the bulk by it's id
   const current = await Bulk.findOne({ _id: req.params.id });
@@ -71,7 +71,7 @@ router.post('/:id', async (req, res) => {
 
 // DELETE -> api/bulks/
 // Remove the bulk with the given ID from the database
-router.delete('/:id', (req, res) => {
+router.delete('/:id', auth, (req, res) => {
   Bulk
   .findById(req.params.id)
   .then(bulk => bulk.remove().then(() => res.json({success: true})))

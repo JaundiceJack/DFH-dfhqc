@@ -3,23 +3,44 @@ const Schema = mongoose.Schema;
 
 const RawSchema = mongoose.connection.model('raw', require('./Raw.js'));
 
-const AssayResultSchema = new Schema({
+
+// So, i'm trying to simplify the results interaction
+// i was thinking instead of separate result objects for each one, modifying them would be simpler if there was just one
+// but to do that i'd need to sequester the other info
+// so, to have the lab and sent dates connected, i need them kind of how i'm doing it now, except the change for assay and id
+// i'd like to change the interaction though
+// to clicking a button at the top to show the sampling screen
+// then for the basic ones, its just entering the date and sample amount,
+// the amount should be subtracted from the lot's total amount,
+// for the assay/id ones, it's selecting the one to sample first then date/amount
+
+const AssaySampleSchema = new Schema({
   assay: { type: Schema.Types.ObjectId, ref: 'assays' },
-  result: { type: Number },
-  sent_to: { type: Schema.Types.ObjectId, ref: 'labs' },
-  sample_date: { type: Date },
-  sent_date: { type: Date },
-  result_date: { type: Date },
+  samples: [{
+    amount: { type: Number },
+    units: { type: String },
+    result: { type: Number },
+    sent_to: { type: Schema.Types.ObjectId, ref: 'labs' },
+    sample_date: { type: Date },
+    sent_date: { type: Date },
+    result_date: { type: Date }
+  }]
 });
-const IdentityResultSchema = new Schema({
+const IdentitySampleSchema = new Schema({
   identity: { type: Schema.Types.ObjectId, ref: 'ids' },
-  result: { type: Boolean },
-  sent_to: { type: Schema.Types.ObjectId, ref: 'labs' },
-  sample_date: { type: Date },
-  sent_date: { type: Date },
-  result_date: { type: Date },
+  samples: [{
+    amount: { type: Number },
+    units: { type: String },
+    result: { type: Boolean },
+    sent_to: { type: Schema.Types.ObjectId, ref: 'labs' },
+    sample_date: { type: Date },
+    sent_date: { type: Date },
+    result_date: { type: Date },
+  }]
 });
-const HmResultSchema = new Schema({
+const HmSampleSchema = new Schema({
+  amount: { type: Number },
+  units:  { type: String },
   arsenic: { type: Number },
   cadmium: { type: Number },
   lead:    { type: Number },
@@ -30,9 +51,11 @@ const HmResultSchema = new Schema({
   sent_date: { type: Date },
   result_date: { type: Date },
 });
-const MicroResultSchema = new Schema({
+const MicroSampleSchema = new Schema({
+  amount: { type: Number },
+  units:  { type: String },
   tpc: { type: Number },
-  ym: { type: Number },
+  ym:  { type: Number },
   entero: { type: Number },
   salmonella: { type: Boolean },
   ecoli:      { type: Boolean },
@@ -43,44 +66,56 @@ const MicroResultSchema = new Schema({
   sent_date: { type: Date },
   result_date: { type: Date },
 });
-const PesticideResultSchema = new Schema({
+const PesticideSampleSchema = new Schema({
+  amount: { type: Number },
+  units:  { type: String },
   result: { type: Boolean },
   sent_to: { type: Schema.Types.ObjectId, ref: 'labs' },
   sample_date: { type: Date },
   sent_date: { type: Date },
   result_date: { type: Date },
 });
-const MoistureResultSchema = new Schema({
+const MoistureSampleSchema = new Schema({
+  amount: { type: Number },
+  units:  { type: String },
   result: { type: Number },
   sent_to: { type: Schema.Types.ObjectId, ref: 'labs' },
   sample_date: { type: Date },
   sent_date: { type: Date },
   result_date: { type: Date },
 });
-const DensityResultSchema = new Schema({
+const DensitySampleSchema = new Schema({
+  amount: { type: Number },
+  units:  { type: String },
   result: { type: Number },
   sent_to: { type: Schema.Types.ObjectId, ref: 'labs' },
   sample_date: { type: Date },
   sent_date: { type: Date },
   result_date: { type: Date },
 });
-const SolventResultSchema = new Schema({
+const SolventSampleSchema = new Schema({
+  amount: { type: Number },
+  units:  { type: String },
   result: { type: Boolean },
   sent_to: { type: Schema.Types.ObjectId, ref: 'labs' },
   sample_date: { type: Date },
   sent_date: { type: Date },
   result_date: { type: Date },
 });
-const AllergenResultSchema = new Schema({
+const AllergenSampleSchema = new Schema({
+  amount: { type: Number },
+  units:  { type: String },
   allergen: { type: String },
   sent_to: { type: Schema.Types.ObjectId, ref: 'labs' },
   sample_date: { type: Date },
   sent_date: { type: Date },
   result_date: { type: Date },
 });
-const RancidityResultSchema = new Schema({
+const RanciditySampleSchema = new Schema({
+  amount: { type: Number },
+  units:  { type: String },
   peroxide: { type: Number },
-  p_anisidine: { type: Number },
+  anisidine: { type: Number },
   sent_to: { type: Schema.Types.ObjectId, ref: 'labs' },
   sample_date: { type: Date },
   sent_date: { type: Date },
@@ -88,29 +123,38 @@ const RancidityResultSchema = new Schema({
 });
 
 const RawLotSchema = new Schema({
-  lot:                { type: String, required: true },
-  item:               { type: Schema.Types.ObjectId, ref: 'raws', required: true},
-  item_type:          { type: String, default: 'raw' },
-  facility_location:  { type: String, required: true },
-  warehouse_location: { type: String },
-  purchase_order:     { type: Number },
-  amount:             { type: Number },
-  amount_units:       { type: String },
-  manufacturer_id:    { type: Schema.Types.ObjectId, ref: 'manufacturers' },
-  vendor_id:          { type: Schema.Types.ObjectId, ref: 'vendors' },
-  maker_lot:          { type: String },
-  date_created:       { type: Date, default: Date.now },
-  assay_results:      [AssayResultSchema],
-  identity_results:   [IdentityResultSchema],
-  hm_results:         [HmResultSchema],
-  micro_results:      [MicroResultSchema],
-  pesticide_results:  [PesticideResultSchema],
-  moisture_results:   [MoistureResultSchema],
-  density_results:    [DensityResultSchema],
-  solvent_results:    [SolventResultSchema],
-  allergen_results:   [AllergenResultSchema],
-  rancidity_results:  [RancidityResultSchema],
-  passes_all_testing: { type: Boolean }
+  lot:          { type: String, required: true },
+  item:         { type: Schema.Types.ObjectId, ref: 'raws', required: true},
+  item_type:    { type: String, default: 'raw' },
+  date_created: { type: Date,   default: Date.now },
+  department:   { type: String, default: 'Quality Control'},
+  inventory: {
+    amount:     { type: Number },
+    units:      { type: String },
+    status:     { type: String },
+    expiration: { type: Date },
+  },
+  receiving: {
+    facility:         { type: String, required: true },
+    location:         { type: String },
+    purchase_order:   { type: Number },
+    manufacturer:     { type: Schema.Types.ObjectId, ref: 'manufacturers' },
+    manufacturer_lot: { type: String },
+    vendor:           { type: Schema.Types.ObjectId, ref: 'vendors' },
+  },
+  testing: {
+    assay:      [AssaySampleSchema],
+    identity:   [IdentitySampleSchema],
+    hm:         [HmSampleSchema],
+    micro:      [MicroSampleSchema],
+    pesticide:  [PesticideSampleSchema],
+    moisture:   [MoistureSampleSchema],
+    density:    [DensitySampleSchema],
+    solvent:    [SolventSampleSchema],
+    allergen:   [AllergenSampleSchema],
+    rancidity:  [RanciditySampleSchema],
+    passes_all_testing: { type: Boolean }
+  },
 });
 
 module.exports = RawLotSchema;

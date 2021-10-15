@@ -1,12 +1,14 @@
 import { useSelector } from 'react-redux';
 import InfoBasic from './infoBasic.js';
+import InfoInventory from './infoInventory.js';
+import InfoReceiving from './infoReceiving.js';
 import InfoRawTesting from './infoRawTesting.js';
 import InfoBlendTesting from './infoBlendTesting.js';
-import MicroTests from './rawTesting/microTests.js';
+import MicroTests from './rawTesting/micros/microTests.js';
 import HmTests from './rawTesting/hmTests.js';
 import AnnualTests from './rawTesting/annualTests.js';
 import AssayTests from './rawTesting/assayTests.js';
-import IdTests from './rawTesting/idTests.js';
+import IdentityTests from './rawTesting/idTests.js';
 
 const LotInfo = () => {
   // Get the current selection from the redux state
@@ -21,6 +23,8 @@ const LotInfo = () => {
       <div className="flex flex-col py-2 px-4 ">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-gray-700 mb-4 rounded-lg">
           <InfoBasic lot={selected} />
+          <InfoReceiving lot={selected} />
+          <InfoInventory lot={selected} />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-gray-700 mb-4 rounded-lg">
           {selected.item_type === 'raw' && <MicroTests lot={selected} />}
@@ -30,7 +34,7 @@ const LotInfo = () => {
         </div>
         <div className="grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-gray-700 mb-4 rounded-lg">
           {selected.item_type === 'raw' && <AssayTests lot={selected} />}
-          {selected.item_type === 'raw' && <IdTests lot={selected} />}
+          {selected.item_type === 'raw' && <IdentityTests lot={selected} />}
         </div>
       </div>
     </div>

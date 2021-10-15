@@ -1,3 +1,5 @@
+import Button from '../../button.js';
+
 const AddIngredient = ({ vals, onAdd, onRemove, onEdit, rawOptions, unitOptions }) => {
   const labelCs = "mr-2 text-right text-blue-100 font-semibold whitespace-nowrap self-center";
   const inputCs = "rounded my-1 py-1 pl-2 bg-gray-200 w-1/2";
@@ -8,15 +10,15 @@ const AddIngredient = ({ vals, onAdd, onRemove, onEdit, rawOptions, unitOptions 
     <div className="flex flex-col">
       <h3 className="font-semibold text-blue-100 text-lg">Raw Ingredients</h3>
       <div className="mb-2 h-px w-full bg-gradient-to-r from-blue-300 to-transparent" />
-      <div className="grid grid-cols-4 mb-4">
+      <div className="grid grid-cols-4 gap-x-4 mb-4">
         {vals.ingredients.map((raw, index) => {
           return (
             <div key={index} className={"col-span-4 grid grid-cols-6 rounded-lg " +
                                         "border border-gray-400 p-2 mb-2"}>
 {/* Ingredient Name/Number */}
               <p className="col-span-2 text-blue-100 font-semibold ml-2">Raw:</p>
-              <select name="rawId"
-                      value={raw.rawId}
+              <select name="raw"
+                      value={raw.raw}
                       className="col-span-4 rounded my-1 py-1 pl-2 bg-gray-200"
                       onChange={e => onEdit(e, index)} >
                 {rawOptions.length > 0 ?
@@ -51,8 +53,8 @@ const AddIngredient = ({ vals, onAdd, onRemove, onEdit, rawOptions, unitOptions 
               <p className={labelCs+" col-span-2 justify-self-start ml-2"}>%</p>
 
               <p className="col-span-2 text-blue-100 font-semibold ml-2">Ingredient Type:</p>
-              <select name="ingredientType"
-                      value={raw.ingredientType}
+              <select name="type"
+                      value={raw.type}
                       className={inputCs+" col-span-4 w-full"}
                       onChange={e => onEdit(e, index)}>
                 <option value="vitamin">Vitamin</option>
@@ -64,12 +66,8 @@ const AddIngredient = ({ vals, onAdd, onRemove, onEdit, rawOptions, unitOptions 
             </div>
           )
         })}
-        <button type="button"
-                className={buttonCs+"bg-blue-300 col-start-1 col-end-3 whitespace-nowrap"}
-                onClick={onAdd}>+ Ingredient</button>
-        <button type="button"
-                className={buttonCs+"bg-red-400 col-start-3 col-end-5 whitespace-nowrap"}
-                onClick={onRemove}>- Ingredient</button>
+        <Button color="bg-blue-300" text="+ Ingredient" onClick={onAdd} extraClasses="w-full h-8 col-span-2"/>
+        <Button color="bg-red-400"  text="- Ingredient" onClick={onRemove} extraClasses="w-full h-8 col-span-2"/>
       </div>
     </div>
   )

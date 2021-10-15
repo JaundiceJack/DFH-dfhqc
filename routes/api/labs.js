@@ -12,7 +12,7 @@ const Method = mongoose.connection.model('methods', require('../../schemas/Metho
 
 // GET: api/labs/ | Get a list of all labs | Private
 router.get('/', trycatch( async (req, res) => {
-  const labs = await Lab.find().populate('assays');
+  const labs = await Lab.find().populate('assays.assay').populate('assays.method').exec();
   if (labs) res.status(201).json(labs);
   else { res.status(404); throw new Error("Labs not found."); };
 }));
@@ -24,7 +24,10 @@ router.post('/', trycatch( async (req, res) => {
   if (!existing) {
     const newLab = new Lab(entries);
     const lab = await newLab.save();
-    if (lab) res.status(201).json(newLab);
+    if (lab) {
+      await lab.populate('assays.assay').populate('assays.method').execPopulate();
+      res.status(201).json(lab);
+    }
     else { res.status(401); throw new Error("Failed to save new lab."); };
   }
   else { res.status(401); throw new Error("This lab already exists."); };
@@ -55,9 +58,12 @@ router.post('/:id', trycatch( async (req, res) => {
   const current = await Lab.findById(req.params.id);
   if (current) {
     const entries = await formatEntries(req.body);
-    current.name = entries.name;
+    Object.assign(current, entries);
     const savedEdits = await current.save();
-    if (savedEdits) res.status(201).json(savedEdits);
+    if (savedEdits) {
+      await savedEdits.populate('assays.assay').populate('assays.method').execPopulate();
+      res.status(201).json(savedEdits);
+    }
     else { res.status(401); throw new Error("Unable to edit the selected lab."); };
   }
   else { res.status(401); throw new Error("Could not locate selected lab."); };
@@ -66,7 +72,7 @@ router.post('/:id', trycatch( async (req, res) => {
 // DELETE: api/labs/ | Remove the lab with the given ID from the database | Private
 router.delete('/:id', trycatch( async (req, res) => {
   const lab = await Lab.findById(req.params.id);
-  if (lab) lab.remove().then(() => res.json({success: true}));
+  if (lab) lab.remove().then(() => res.json({success: true})).catch(e => { return new Error(e) });
   else { res.status(404); throw new Error("Unable to locate the lab to delete."); };
 }));
 
