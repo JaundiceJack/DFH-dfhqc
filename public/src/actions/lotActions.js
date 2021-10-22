@@ -21,7 +21,15 @@ import {
   LOT_SAMPLED,
   LOT_UNSAMPLED,
   LOT_TESTED,
-  LOT_UNTESTED
+  LOT_UNTESTED,
+  TESTING_INDEX_SELECTED,
+  TESTING_TOGGLE_TESTING,
+  TESTING_TOGGLE_SAMPLING,
+  TESTING_TOGGLE_DELETING,
+  SHOW_ASSAY_SAMPLING,
+  SHOW_ASSAY_TESTING,
+  SHOW_ASSAY_DELETING,
+  ASSAY_INDEX_SELECTED
    } from './types';
 // Import axios to handle http requests
 import axios from 'axios';
@@ -40,7 +48,6 @@ export const getLots = () => dispatch => {
   .catch(err => { dispatch(handleError(err)) });
 }
 
-// TODO: add authentication
 // Take entries and add a new lot to the database
 export const addLot = (lot) => dispatch => {
   // Set Headers
@@ -69,10 +76,10 @@ export const deleteLot = (lot) => dispatch => {
   .catch(err => { dispatch(handleError(err)) });
 }
 
+// Basic state manipulation functions
 export const selectLot = (lot) => dispatch => {
   dispatch({ type: SELECT_LOT, payload: lot });
 }
-
 export const toggleAdding = () => dispatch => dispatch({ type: TOGGLE_ADDING_LOT });
 export const toggleDeleting = () => dispatch => dispatch({ type: TOGGLE_DELETING_LOT });
 export const toggleEditing = () => dispatch => dispatch({ type: TOGGLE_EDITING_LOT });
@@ -86,41 +93,50 @@ export const toggleNV = () => dispatch => dispatch({ type: TOGGLE_NV_LOTS });
 export const toggleCT = () => dispatch => dispatch({ type: TOGGLE_CT_LOTS });
 export const incrementYear = () => dispatch => dispatch({ type: INCREMENT_YEAR });
 export const decrementYear = () => dispatch => dispatch({ type: DECREMENT_YEAR });
-
-// So, our testing results are arrays of result objects,
-// with the general ones, its just the dates and result and the test is implicit,
-// with the assay ones, i'll need to pass in an assayId
+export const setTestingIndex = (index, type) => dispatch => {
+  dispatch({ type: TESTING_INDEX_SELECTED, payload: {index, type}}) }
+export const setShowTesting = (type) => dispatch => {
+  dispatch({ type: TESTING_TOGGLE_TESTING, payload: {type}}) }
+export const setShowSampling = (type) => dispatch => {
+  dispatch({ type: TESTING_TOGGLE_SAMPLING, payload: {type}}) }
+export const setShowDeleting = (type) => dispatch => {
+  dispatch({ type: TESTING_TOGGLE_DELETING, payload: {type}}) }
 
 // Create a sample for the given lot and result
 export const takeRawSample = (lotId, resultType, sample) => dispatch => {
   const config = { headers: {"Content-type": "application/json"} };
   const body = JSON.stringify({lotId, resultType, sample});
-  axios.post(`${server}/api/lots/take_raw_sample`, body, config)
+  axios.post(`/api/lots/sample_raw`, body, config)
   .then(res => { dispatch({type: LOT_SAMPLED, payload: res.data}) })
   .catch(err => { dispatch(handleError(err)) });
 }
 export const editRawSample = (lotId, resultType, sample) => dispatch => {
-  console.log("edited");
+  const config = { headers: {"Content-type": "application/json"} };
+  const body = JSON.stringify({lotId, resultType, sample});
+  axios.post(`/api/lots/test_raw`, body, config)
+  .then(res => { dispatch({type: LOT_SAMPLED, payload: res.data}) })
+  .catch(err => { dispatch(handleError(err)) });
 }
 // Remove a sample for the given lot and result
-export const removeRawSample = (lotId, resultType, sample) => dispatch => {
+export const removeRawSample = (lotId, resultType, sampleNumber, testId=null) => dispatch => {
   const config = { headers: {"Content-type": "application/json"} };
-  axios.delete(`/api/lots/sample/${resultType}/${lotId}/${sample.sample_date}`, config)
+  axios.delete(`/api/lots/${lotId}/unsample_raw/${resultType}/${sampleNumber}${testId !== null && "/"+testId}`, config)
   .then(res => { dispatch({type: LOT_UNSAMPLED, payload: res.data}) })
   .catch(err => { dispatch(handleError(err)) });
 }
 
-export const testRawSample = (lotId, resultType, lab, date) => dispatch => {
-  const config = { headers: {"Content-type": "application/json"} };
-  const sample = JSON.stringify({lotId, resultType, lab, date});
-  axios.post(`${server}/api/lots/test_raw_sample`, sample, config)
-  .then(res => { dispatch({type: LOT_TESTED, payload: res.data}) })
-  .catch(err => { dispatch(handleError(err)) });
+export const setShowSamplingAssay = (showSampling, currentAssay) => dispatch => {
+  dispatch({ type: SHOW_ASSAY_SAMPLING, payload: {showSampling, currentAssay} });
 }
-export const removeRawTest = (lotId, resultType) => dispatch => {
-  const config = { headers: {"Content-type": "application/json"} };
-  const sample = JSON.stringify({lotId, resultType});
-  axios.post(`${server}/api/lots/remove_raw_test`, sample, config)
-  .then(res => { dispatch({type: LOT_UNTESTED, payload: res.data}) })
-  .catch(err => { dispatch(handleError(err)) });
+
+export const setShowTestingAssay = (showTesting, currentAssay) => dispatch => {
+  dispatch({ type: SHOW_ASSAY_TESTING, payload: {showTesting, currentAssay} });
+}
+
+export const setShowDeletingAssay = (showDeleting, currentAssay) => dispatch => {
+  dispatch({ type: SHOW_ASSAY_DELETING, payload: {showDeleting, currentAssay} });
+}
+
+export const setAssayTestingIndex = (index, currentAssay) => dispatch => {
+  dispatch({ type: ASSAY_INDEX_SELECTED, payload: {index, currentAssay} })
 }

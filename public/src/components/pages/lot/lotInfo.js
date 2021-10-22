@@ -5,9 +5,9 @@ import InfoReceiving from './infoReceiving.js';
 import InfoRawTesting from './infoRawTesting.js';
 import InfoBlendTesting from './infoBlendTesting.js';
 import MicroTests from './rawTesting/micros/microTests.js';
-import HmTests from './rawTesting/hmTests.js';
+import HmTests from './rawTesting/hms/hmTests.js';
 import AnnualTests from './rawTesting/annualTests.js';
-import AssayTests from './rawTesting/assayTests.js';
+import AssayTests from './rawTesting/assays/assayTests.js';
 import IdentityTests from './rawTesting/idTests.js';
 
 const LotInfo = () => {
@@ -30,11 +30,9 @@ const LotInfo = () => {
           {selected.item_type === 'raw' && <MicroTests lot={selected} />}
           {selected.item_type === 'raw' && <HmTests lot={selected} />}
           {selected.item_type === 'raw' && <AnnualTests lot={selected} />}
-          {selected.item_type === 'blend' && <InfoBlendTesting lot={selected} />}
-        </div>
-        <div className="grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-gray-700 mb-4 rounded-lg">
           {selected.item_type === 'raw' && <AssayTests lot={selected} />}
           {selected.item_type === 'raw' && <IdentityTests lot={selected} />}
+          {selected.item_type === 'blend' && <InfoBlendTesting lot={selected} />}
         </div>
       </div>
     </div>

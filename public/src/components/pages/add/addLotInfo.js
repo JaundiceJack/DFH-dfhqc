@@ -15,14 +15,6 @@ const AddLotInfo = ({vals, onEntry}) => {
   const facilities = ['MT', 'NV', 'CT'];
   const locations = ['A1', 'A2', 'I1', 'I2', 'H1', 'H2'];
 
-/*
-lot
-purchaseOrder
-itemId
-item_type
-amount
-amountUnits
-*/
   return (
     <div className="flex flex-col mb-3">
       <h3 className="font-semibold text-blue-100 text-lg">Basic Info</h3>

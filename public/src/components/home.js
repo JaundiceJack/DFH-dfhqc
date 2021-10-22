@@ -75,7 +75,7 @@ const Home = () => {
           {isAuthenticated &&
             <Button color="bg-red-300"
                     text="Logout"
-                    onClick={onLogout} extraClasses="px-6" /> }
+                    onClick={onLogout} extraClasses="px-6 h-8 self-center" /> }
           {!isAuthenticated && (
             <div className="flex flex-row w-full">
               <div className="grid gap-y-2 mr-1">
@@ -90,7 +90,7 @@ const Home = () => {
               {badEntries.length === 0 && errorMsg === "" && <Button color="bg-green-300"
                       text="Login"
                       type="submit"
-                      extraClasses="justify-self-end w-full" />}
+                      extraClasses="justify-self-end w-20 h-8 self-center" />}
               { badEntries.map(err => <Message error={err} /> )  }
               { errorMsg && <Message error={errorMsg} /> }
             </div>) }

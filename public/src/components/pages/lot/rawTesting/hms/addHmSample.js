@@ -6,7 +6,7 @@ import { takeRawSample } from '../../../../../actions/lotActions';
 // Import components
 import Button from '../../../../button.js';
 
-const AddMicroSample = ({ lotId, close }) => {
+const AddHmSample = ({ lotId, close }) => {
   // Declare internal state variables
   const [sample, setSample] = useState({
     sample_date: new Date().toISOString().split('T')[0],
@@ -18,7 +18,7 @@ const AddMicroSample = ({ lotId, close }) => {
   const dispatch = useDispatch();
   const takeSample = (e) => {
     e.preventDefault();
-    dispatch(takeRawSample(lotId, 'micro', sample));
+    dispatch(takeRawSample(lotId, 'hm', sample));
     close();
   }
 
@@ -61,4 +61,4 @@ const AddMicroSample = ({ lotId, close }) => {
   )
 }
 
-export default AddMicroSample;
+export default AddHmSample;

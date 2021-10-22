@@ -1,4 +1,4 @@
-const MicroTestLine = ({ testName, sample, result, spec, unit="" }) => {
+const HmTestLine = ({ testName, sample, result, spec, unit="" }) => {
   // Convert the date to mm/dd/yyyy format
   const formatDate = (rawDate) => {
     const date = new Date(rawDate);
@@ -31,18 +31,11 @@ const MicroTestLine = ({ testName, sample, result, spec, unit="" }) => {
     else if (spec !== null && sample !== null && sample.sent_to === null)
       return "text-yellow-100"
     // Indigo if sent out but no results
-    else if (spec !== null && sample !== null &&
-             sample.sent_to !== null && result === null)
+    else if (spec !== null && sample !== null && sample.sent_to !== null && result === null)
       return "text-indigo-200"
     // Green if results passing, red if results failing
-    else if (spec !== null && sample !== null && sample.sent_to !== null && result !== null) {
-      if (testName !== "Salmonella" && testName !== "E. Coli" && testName !== "Staph")
-        return result <= spec ? "text-green-200" : "text-red-400";
-      else
-        return result === "Negative"   ? "text-green-200" :
-               result === "Not Tested" ? "text-yellow-100" :
-                                         "text-red-400";
-    }
+    else if (spec !== null && sample !== null && sample.sent_to !== null && result !== null)
+      return result <= spec ? "text-green-200" : "text-red-400";
     else
       return "text-white"
   };
@@ -79,4 +72,4 @@ const MicroTestLine = ({ testName, sample, result, spec, unit="" }) => {
   )
 }
 
-export default MicroTestLine;
+export default HmTestLine;

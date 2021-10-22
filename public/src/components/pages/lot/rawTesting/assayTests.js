@@ -34,7 +34,7 @@ const AssayTests = ({ lot }) => {
   console.log(lot.testing.assay)
 */
   return (
-    <div className="bg-gray-600 rounded text-blue-100 font-semibold">
+    <div className="bg-gray-600 rounded text-blue-100 font-semibold min-h-200">
       <div className="flex flex-row px-2 py-1">
         <h3 className="text-lg text-left px-2 text-blue-200">Assays</h3>
         <div className="flex-grow"></div>

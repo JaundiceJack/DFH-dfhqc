@@ -10,22 +10,22 @@ app.use(express.json());
 connect();
 
 // Define Routes //
-app.use('/api/raws',   require('./routes/api/raws'));
-app.use('/api/blends', require('./routes/api/blends'));
-app.use('/api/bulks',  require('./routes/api/bulks'));
-app.use('/api/fgs',    require('./routes/api/fgs'));
-app.use('/api/lots',   require('./routes/api/lots'));
-app.use('/api/assays', require('./routes/api/assays'));
-app.use('/api/lots',   require('./routes/api/lots'));
-app.use('/api/labs',   require('./routes/api/labs'));
-app.use('/api/auth',   require('./routes/api/auth'));
-app.use('/api/users',  require('./routes/api/users'));
-app.use('/api/methods',  require('./routes/api/methods'));
-app.use('/api/units',  require('./routes/api/units'));
-app.use('/api/textures',  require('./routes/api/textures'));
-app.use('/api/identities', require('./routes/api/identities'));
-app.use('/api/vendors', require('./routes/api/vendors'));
-app.use('/api/manufacturers', require('./routes/api/manufacturers'));
+app.use('/api/raws',   require('./routes/paths/raws'));
+app.use('/api/blends', require('./routes/paths/blends'));
+app.use('/api/bulks',  require('./routes/paths/bulks'));
+app.use('/api/fgs',    require('./routes/paths/fgs'));
+app.use('/api/lots',   require('./routes/paths/lots'));
+app.use('/api/assays', require('./routes/paths/assays'));
+app.use('/api/lots',   require('./routes/paths/lots'));
+app.use('/api/labs',   require('./routes/paths/labs'));
+app.use('/api/auth',   require('./routes/paths/auth'));
+app.use('/api/users',  require('./routes/paths/users'));
+app.use('/api/methods',  require('./routes/paths/methods'));
+app.use('/api/units',  require('./routes/paths/units'));
+app.use('/api/textures',  require('./routes/paths/textures'));
+app.use('/api/identities', require('./routes/paths/identities'));
+app.use('/api/vendors', require('./routes/paths/vendors'));
+app.use('/api/manufacturers', require('./routes/paths/manufacturers'));
 app.get('/ping', (req, res) => { return res.send('pong'); });
 
 app.use(notFound);

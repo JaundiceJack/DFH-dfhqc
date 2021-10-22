@@ -6,25 +6,32 @@ import { takeRawSample } from '../../../../../actions/lotActions';
 // Import components
 import Button from '../../../../button.js';
 
-const AddMicroSample = ({ lotId, close }) => {
+const AddAssaySample = ({ lotId, assay, close }) => {
   // Declare internal state variables
   const [sample, setSample] = useState({
+    assayId: assay ? assay.assay._id : null,
     sample_date: new Date().toISOString().split('T')[0],
     amount: 30,
     units: "g"
   })
 
+  console.log("assay:", assay.assay._id)
+
   // Dispatch a change to the sampled state of the raw category
   const dispatch = useDispatch();
   const takeSample = (e) => {
     e.preventDefault();
-    dispatch(takeRawSample(lotId, 'micro', sample));
+    dispatch(takeRawSample(lotId, 'assay', sample));
     close();
   }
 
   return (
     <form className="flex flex-col" onSubmit={takeSample}>
-      <p className="text-center mb-2">Sampling...</p>
+      <div className="flex flex-row justify-center mb-2">
+        <p>Sampling...</p>
+        <p className="ml-1 capitalize">{assay ? assay.assay.name : ""}</p>
+      </div>
+
       <div className="grid grid-cols-3 gap-x-2 my-2">
         <p className="text-right">Date:</p>
         <input type="date"
@@ -61,4 +68,4 @@ const AddMicroSample = ({ lotId, close }) => {
   )
 }
 
-export default AddMicroSample;
+export default AddAssaySample;

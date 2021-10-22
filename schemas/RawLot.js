@@ -3,20 +3,10 @@ const Schema = mongoose.Schema;
 
 const RawSchema = mongoose.connection.model('raw', require('./Raw.js'));
 
-
-// So, i'm trying to simplify the results interaction
-// i was thinking instead of separate result objects for each one, modifying them would be simpler if there was just one
-// but to do that i'd need to sequester the other info
-// so, to have the lab and sent dates connected, i need them kind of how i'm doing it now, except the change for assay and id
-// i'd like to change the interaction though
-// to clicking a button at the top to show the sampling screen
-// then for the basic ones, its just entering the date and sample amount,
-// the amount should be subtracted from the lot's total amount,
-// for the assay/id ones, it's selecting the one to sample first then date/amount
-
 const AssaySampleSchema = new Schema({
   assay: { type: Schema.Types.ObjectId, ref: 'assays' },
   samples: [{
+    sample_number: { type: Number },
     amount: { type: Number },
     units: { type: String },
     result: { type: Number },
@@ -29,6 +19,7 @@ const AssaySampleSchema = new Schema({
 const IdentitySampleSchema = new Schema({
   identity: { type: Schema.Types.ObjectId, ref: 'ids' },
   samples: [{
+    sample_number: { type: Number },
     amount: { type: Number },
     units: { type: String },
     result: { type: Boolean },
@@ -39,6 +30,7 @@ const IdentitySampleSchema = new Schema({
   }]
 });
 const HmSampleSchema = new Schema({
+  sample_number: { type: Number },
   amount: { type: Number },
   units:  { type: String },
   arsenic: { type: Number },
@@ -48,25 +40,27 @@ const HmSampleSchema = new Schema({
   nickel:  { type: Number },
   sent_to: { type: Schema.Types.ObjectId, ref: 'labs' },
   sample_date: { type: Date },
-  sent_date: { type: Date },
+  sent_date:   { type: Date },
   result_date: { type: Date },
 });
 const MicroSampleSchema = new Schema({
+  sample_number: { type: Number },
   amount: { type: Number },
   units:  { type: String },
   tpc: { type: Number },
   ym:  { type: Number },
   entero: { type: Number },
-  salmonella: { type: Boolean },
-  ecoli:      { type: Boolean },
-  staph:      { type: Boolean },
-  paeru:      { type: Boolean },
+  salmonella: { type: String },
+  ecoli:      { type: String },
+  staph:      { type: String },
+  paeru:      { type: String },
   sent_to: { type: Schema.Types.ObjectId, ref: 'labs' },
   sample_date: { type: Date },
   sent_date: { type: Date },
   result_date: { type: Date },
 });
 const PesticideSampleSchema = new Schema({
+  sample_number: { type: Number },
   amount: { type: Number },
   units:  { type: String },
   result: { type: Boolean },
@@ -76,6 +70,7 @@ const PesticideSampleSchema = new Schema({
   result_date: { type: Date },
 });
 const MoistureSampleSchema = new Schema({
+  sample_number: { type: Number },
   amount: { type: Number },
   units:  { type: String },
   result: { type: Number },
@@ -85,6 +80,7 @@ const MoistureSampleSchema = new Schema({
   result_date: { type: Date },
 });
 const DensitySampleSchema = new Schema({
+  sample_number: { type: Number },
   amount: { type: Number },
   units:  { type: String },
   result: { type: Number },
@@ -94,6 +90,7 @@ const DensitySampleSchema = new Schema({
   result_date: { type: Date },
 });
 const SolventSampleSchema = new Schema({
+  sample_number: { type: Number },
   amount: { type: Number },
   units:  { type: String },
   result: { type: Boolean },
@@ -103,6 +100,7 @@ const SolventSampleSchema = new Schema({
   result_date: { type: Date },
 });
 const AllergenSampleSchema = new Schema({
+  sample_number: { type: Number },
   amount: { type: Number },
   units:  { type: String },
   allergen: { type: String },
@@ -112,6 +110,7 @@ const AllergenSampleSchema = new Schema({
   result_date: { type: Date },
 });
 const RanciditySampleSchema = new Schema({
+  sample_number: { type: Number },
   amount: { type: Number },
   units:  { type: String },
   peroxide: { type: Number },

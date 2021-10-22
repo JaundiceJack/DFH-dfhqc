@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 // Import server actions
 import { removeRawSample } from '../../../../../actions/lotActions'
 
-const DeleteMicro = ({ lotId, test, close }) => {
+const DeleteAssay = ({ lotId, testId, sampleNumber, close }) => {
   // Convert the date to mm/dd/yyyy format
   const formatDate = (rawDate) => {
     const date = new Date(rawDate);
@@ -13,14 +13,14 @@ const DeleteMicro = ({ lotId, test, close }) => {
   // Dispatch the delete sample action
   const dispatch = useDispatch();
   const onDelete = () => {
-    dispatch(removeRawSample(lotId, 'micro', test.sample_number));
+    dispatch(removeRawSample(lotId, 'assay', testId, sampleNumber));
     close();
   }
 
   return (
     <div className="mx-4 my-2">
       <h3 className="text-blue-100 font-semibold text-center">
-        Remove the sample taken on {formatDate(test.sample_date)}?
+        Remove sample {sampleNumber}?
       </h3>
       <div className="w-full flex flex-row justify-center">
         <button
@@ -38,4 +38,4 @@ const DeleteMicro = ({ lotId, test, close }) => {
   )
 }
 
-export default DeleteMicro;
+export default DeleteAssay;

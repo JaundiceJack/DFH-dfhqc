@@ -6,7 +6,7 @@ import { takeRawSample } from '../../../../../actions/lotActions';
 // Import components
 import Button from '../../../../button.js';
 
-const AddMicroSample = ({ lotId, close }) => {
+const AddHmSample = ({ lotId, close }) => {
   // Declare internal state variables
   const [sample, setSample] = useState({
     sample_date: new Date().toISOString().split('T')[0],
@@ -18,7 +18,7 @@ const AddMicroSample = ({ lotId, close }) => {
   const dispatch = useDispatch();
   const takeSample = (e) => {
     e.preventDefault();
-    dispatch(takeRawSample(lotId, 'micro', sample));
+    dispatch(takeRawSample(lotId, 'hm', sample));
     close();
   }
 
@@ -35,11 +35,11 @@ const AddMicroSample = ({ lotId, close }) => {
       </div>
       <div className="grid grid-cols-6 gap-x-2 my-2">
         <p className="text-right col-span-2">Amount:</p>
-        <input type="number"
+        <input type="text"
           name="amount"
           value={sample.amount}
           onChange={e => setSample({...sample, amount: e.target.value})}
-          className="rounded text-black px-1 col-span-1 w-full" />
+          className="rounded text-black px-1" />
         <select
           name="units"
           value={sample.units}
@@ -61,4 +61,4 @@ const AddMicroSample = ({ lotId, close }) => {
   )
 }
 
-export default AddMicroSample;
+export default AddHmSample;
