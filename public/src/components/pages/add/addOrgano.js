@@ -1,60 +1,26 @@
-const AddOrgano = ({ vals, onEntry, textures }) => {
-  const labelCs = "mr-2 text-right text-blue-100 font-semibold whitespace-nowrap self-center";
-  const inputCs = "rounded my-1 py-1 pl-2 bg-gray-200 w-1/2";
+import Entry from '../../inputs/entry.js';
+import Selection from '../../inputs/selection.js';
+import Divider from '../../divider.js';
 
+const AddOrgano = ({ vals, onEntry, textures }) => {
 
   return (
     <div className="flex flex-col" >
       <h3 className="font-semibold text-blue-100 text-lg">Organoleptics</h3>
-      <div className="mb-2 h-px w-full bg-gradient-to-r from-blue-300 to-transparent" />
-      <div className="grid grid-cols-3">
-        <label className={labelCs}>Color:</label>
-        <input type="text"
-               name="color"
-               value={vals.color}
-               onChange={onEntry}
-               className={inputCs+" w-full col-span-2"} />
-      </div>
-      <div className="grid grid-cols-3">
-        <label className={labelCs}>Odor:</label>
-        <input type="text"
-               name="odor"
-               value={vals.odor}
-               onChange={onEntry}
-               className={inputCs+" w-full col-span-2"} />
-      </div>
-      <div className="grid grid-cols-3">
-        <label className={labelCs+" col-span-1"}>Texture:</label>
-        <select name="textureId"
-                value={vals.textureId}
-                onChange={onEntry}
-                className="rounded my-1 py-1 pl-2 bg-gray-200 col-span-2" >
-          {textures.map((tex, index) => {
-            return (<option key={index} value={tex._id}>{tex.name}</option>)
-          })}
-          <option value="New Texture">New Texture</option>
-        </select>
-      </div>
+      <Divider />
 
+      <Entry label="Color:" name="color" value={vals.color} onChange={onEntry} />
+      <Entry label="Odor:" name="odor" value={vals.odor} onChange={onEntry} />
+      <Selection label="Texture:" name="textureId" value={vals.textureId} onChange={onEntry}
+        options={[
+          ...textures.map(texture => { return { name: texture.name, value: texture._id } } ),
+          { name: "New Texture", value: "New Texture" }
+        ]} />
       {vals.textureId === "New Texture" &&
-        <div className="grid grid-cols-3">
-          <p className={labelCs+" col-span-1"}>New Texture:</p>
-          <input type="text"
-                 name="newTexture"
-                 value={vals.newTexture}
-                 onChange={onEntry}
-                 className={inputCs+' w-full col-span-2'} />
-        </div>}
+        <Entry label="New Texture:" name="newTexture" value={vals.newTexture} onChange={onEntry} />
+      }
+      <Entry label="Taste:" name="taste" value={vals.taste} onChange={onEntry} />
 
-
-      <div className="grid grid-cols-3 mb-4">
-        <label className={labelCs}>Taste:</label>
-        <input type="text"
-               name="taste"
-               value={vals.taste}
-               onChange={onEntry}
-               className={inputCs+" w-full col-span-2"} />
-      </div>
     </div>
   )
 }

@@ -1,14 +1,14 @@
 import { useSelector } from 'react-redux';
-import InfoBasic from './infoBasic.js';
-import InfoInventory from './infoInventory.js';
-import InfoReceiving from './infoReceiving.js';
-import InfoRawTesting from './infoRawTesting.js';
-import InfoBlendTesting from './infoBlendTesting.js';
-import MicroTests from './rawTesting/micros/microTests.js';
-import HmTests from './rawTesting/hms/hmTests.js';
-import AnnualTests from './rawTesting/annualTests.js';
-import AssayTests from './rawTesting/assays/assayTests.js';
-import IdentityTests from './rawTesting/idTests.js';
+import InfoBasic from './info/infoBasic.js';
+import InfoInventory from './info/infoInventory.js';
+import InfoReceiving from './info/infoReceiving.js';
+import InfoBlendTesting from './info/infoBlendTesting.js';
+
+import MicroTests from './rawTesting/micros/_microTests.js';
+import HmTests from './rawTesting/hms/_hmTests.js';
+import AnnualTests from './rawTesting/annuals/_annualTests.js';
+import AssayTests from './rawTesting/assays/_assayTests.js';
+import IdentityTests from './rawTesting/ids/_idTests.js';
 
 const LotInfo = () => {
   // Get the current selection from the redux state

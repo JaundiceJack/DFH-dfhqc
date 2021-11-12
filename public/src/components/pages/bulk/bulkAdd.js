@@ -10,22 +10,21 @@ const BulkAdd = ({ toggleAdd }) => {
   const raws = useSelector(state => state.raw.raws);
   const blends = useSelector(state => state.blend.blends);
   const units = useSelector(state => state.raw.units);
+  const caps = raws.filter(raw => raw.texture.name === 'empty capsule');
   // Set internal state variables for the form
   const [bulkVals, setBulkVals] = useState(
     {
-      number: "",
-      name:   "",
-      blendId: blends.length > 0 ? blends[0]._id : "",
-      capId: raws.length > 0 ? raws.filter(raw => raw.texture === 'Empty Capsule')[0]._id : "",
-      dosageType: 'capsule',
-      servingUnits: 'mg',
-      batchSize: "",
-      fillWeight: "",
-      capsuleWeight: "",
-      netWeight: "",
-      capsPerBatch: "",
-      capsPerServing: "",
-      capsPerBottle: "",
+      number:         "",
+      name:           "",
+      blendId:        blends.length > 0 ? blends[0]._id : "",
+      capId:          caps.length > 0   ? caps[0]._id   : "",
+      dosageType:     'capsule',
+      servingUnits:   'mg',
+      batchSize:      "",
+      capsuleWeight:  "",
+      netWeight:      "",
+      capsPerBatch:   "",
+      capsPerBottle:  "",
     }
   );
 
@@ -52,7 +51,7 @@ const BulkAdd = ({ toggleAdd }) => {
     if (typeof bulkVals.number === 'number' )
       errs.push("Item number must be a number.");
     if (bulkVals.name === "" || bulkVals.name === null )
-      errs.push("Please enter an item name.")
+      errs.push("Please enter an item name.");
     setBadEntries(errs);
     // Create a new bulk
     if (errs.length === 0 && !clearTimer.current) { dispatch(addBulk(bulkVals)); }
@@ -85,7 +84,7 @@ const BulkAdd = ({ toggleAdd }) => {
                        blendOptions={blends} />
         <AddBulkInfo  vals={bulkVals}
                        onEntry={onEntry}
-                       capOptions={raws.filter(raw => raw.texture === 'Empty Capsule')}
+                       capOptions={caps}
                        ifEditing={false} />
 
         { badEntries.map(err => <div className={errorMsgCs}>{err}</div> )  }

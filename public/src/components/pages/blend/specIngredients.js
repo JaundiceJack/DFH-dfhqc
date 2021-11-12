@@ -74,7 +74,7 @@ const SpecIngredients = ({ blend, fillWeight, servingSize }) => {
   return (
     <div className="bg-gray-600 rounded text-blue-100 font-semibold sm:col-span-3">
       <h2 className="text-lg text-left px-2 py-1 text-blue-200">Ingredients</h2>
-      <div className="h-px bg-gradient-to-r from-blue-200 to-transparent"/>
+      <div className="h-px bg-gradient-to-r from-blue-200 to-transparent mb-2 md:mb-0"/>
       <div className="hidden md:grid grid-cols-12 py-2 rounded bg-gray-700 mb-1 mt-2 mx-2 p-2">
         <p className="col-span-1">Item#</p>
         <p className="col-span-2">Name</p>
@@ -96,6 +96,7 @@ const SpecIngredients = ({ blend, fillWeight, servingSize }) => {
         <p className="col-span-1">100%</p>
         <p className="col-span-4">{blend.batch_size}kg</p>
       </div>
+      <div className="mt-2 md:mt-0" />
     </div>
   )
 }

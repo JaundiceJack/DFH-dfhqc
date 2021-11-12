@@ -3,7 +3,7 @@ const SpecAnnuals = ({ pesticide, solvent, rancidity }) => {
     <div className="bg-gray-600 rounded text-blue-100 font-semibold">
       <h2 className="text-lg text-left px-2 py-1 text-blue-200">Annual Tests</h2>
       <div className="h-px bg-gradient-to-r from-blue-200 to-transparent"/>
-      <div className="grid grid-cols-3 p-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 p-2">
 
         <p className="text-right mr-2">Pesticides?</p>
         <p className="col-span-2">{pesticide && pesticide.tested ? "Yes" : "No" || ""}</p>

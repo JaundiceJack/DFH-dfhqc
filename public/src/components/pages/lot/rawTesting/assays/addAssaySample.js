@@ -15,8 +15,6 @@ const AddAssaySample = ({ lotId, assay, close }) => {
     units: "g"
   })
 
-  console.log("assay:", assay.assay._id)
-
   // Dispatch a change to the sampled state of the raw category
   const dispatch = useDispatch();
   const takeSample = (e) => {

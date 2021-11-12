@@ -45,7 +45,7 @@ export const getLots = () => dispatch => {
   // Make request for lot info
   axios.get(`${server}/api/lots`, config)
   .then(res => { dispatch({ type: GET_LOTS, payload: res.data }) })
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 
 // Take entries and add a new lot to the database
@@ -57,7 +57,7 @@ export const addLot = (lot) => dispatch => {
   // Submit a post with the new lot
   axios.post(`${server}/api/lots/`, newLot, config)
   .then(res => { dispatch({type: LOT_ADDED, payload: res.data}) })
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 export const editLot = (lot) => dispatch => {
   // Set Headers
@@ -67,32 +67,30 @@ export const editLot = (lot) => dispatch => {
   // Submit a post with the new lot
   axios.post(`${server}/api/lots/${lot._id}`, editedLot, config)
   .then(res => { dispatch({type: LOT_EDITED, payload: res.data}) })
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 export const deleteLot = (lot) => dispatch => {
   const config = { headers: {"Content-type": "application/json"} };
   axios.delete(`${server}/api/lots/${lot.item_type}/${lot._id}`, config)
   .then(res => { dispatch({ type: LOT_DELETED, payload: lot })})
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 
 // Basic state manipulation functions
-export const selectLot = (lot) => dispatch => {
-  dispatch({ type: SELECT_LOT, payload: lot });
-}
-export const toggleAdding = () => dispatch => dispatch({ type: TOGGLE_ADDING_LOT });
+export const selectLot =     lot => dispatch => dispatch({ type: SELECT_LOT, payload: lot });
+export const toggleAdding =   () => dispatch => dispatch({ type: TOGGLE_ADDING_LOT });
 export const toggleDeleting = () => dispatch => dispatch({ type: TOGGLE_DELETING_LOT });
-export const toggleEditing = () => dispatch => dispatch({ type: TOGGLE_EDITING_LOT });
-export const toggleRaws = () => dispatch => dispatch({ type: TOGGLE_RAW_LOTS });
-export const toggleBlends = () => dispatch => dispatch({ type: TOGGLE_BLEND_LOTS });
-export const toggleBulks = () => dispatch => dispatch({ type: TOGGLE_BULK_LOTS });
-export const toggleFgs = () => dispatch => dispatch({ type: TOGGLE_FG_LOTS });
-export const toggleOthers = () => dispatch => dispatch({ type: TOGGLE_OTHER_LOTS });
-export const toggleMT = () => dispatch => dispatch({ type: TOGGLE_MT_LOTS });
-export const toggleNV = () => dispatch => dispatch({ type: TOGGLE_NV_LOTS });
-export const toggleCT = () => dispatch => dispatch({ type: TOGGLE_CT_LOTS });
-export const incrementYear = () => dispatch => dispatch({ type: INCREMENT_YEAR });
-export const decrementYear = () => dispatch => dispatch({ type: DECREMENT_YEAR });
+export const toggleEditing =  () => dispatch => dispatch({ type: TOGGLE_EDITING_LOT });
+export const toggleRaws =     () => dispatch => dispatch({ type: TOGGLE_RAW_LOTS });
+export const toggleBlends =   () => dispatch => dispatch({ type: TOGGLE_BLEND_LOTS });
+export const toggleBulks =    () => dispatch => dispatch({ type: TOGGLE_BULK_LOTS });
+export const toggleFgs =      () => dispatch => dispatch({ type: TOGGLE_FG_LOTS });
+export const toggleOthers =   () => dispatch => dispatch({ type: TOGGLE_OTHER_LOTS });
+export const toggleMT =       () => dispatch => dispatch({ type: TOGGLE_MT_LOTS });
+export const toggleNV =       () => dispatch => dispatch({ type: TOGGLE_NV_LOTS });
+export const toggleCT =       () => dispatch => dispatch({ type: TOGGLE_CT_LOTS });
+export const incrementYear =  () => dispatch => dispatch({ type: INCREMENT_YEAR });
+export const decrementYear =  () => dispatch => dispatch({ type: DECREMENT_YEAR });
 export const setTestingIndex = (index, type) => dispatch => {
   dispatch({ type: TESTING_INDEX_SELECTED, payload: {index, type}}) }
 export const setShowTesting = (type) => dispatch => {
@@ -108,21 +106,21 @@ export const takeRawSample = (lotId, resultType, sample) => dispatch => {
   const body = JSON.stringify({lotId, resultType, sample});
   axios.post(`/api/lots/sample_raw`, body, config)
   .then(res => { dispatch({type: LOT_SAMPLED, payload: res.data}) })
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 export const editRawSample = (lotId, resultType, sample) => dispatch => {
   const config = { headers: {"Content-type": "application/json"} };
   const body = JSON.stringify({lotId, resultType, sample});
   axios.post(`/api/lots/test_raw`, body, config)
   .then(res => { dispatch({type: LOT_SAMPLED, payload: res.data}) })
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 // Remove a sample for the given lot and result
 export const removeRawSample = (lotId, resultType, sampleNumber, testId=null) => dispatch => {
   const config = { headers: {"Content-type": "application/json"} };
-  axios.delete(`/api/lots/${lotId}/unsample_raw/${resultType}/${sampleNumber}${testId !== null && "/"+testId}`, config)
+  axios.delete(`/api/lots/${lotId}/unsample_raw/${resultType}/${sampleNumber}/${testId !== null && "/"+testId}`, config)
   .then(res => { dispatch({type: LOT_UNSAMPLED, payload: res.data}) })
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 
 export const setShowSamplingAssay = (showSampling, currentAssay) => dispatch => {

@@ -1,13 +1,9 @@
 // Import action types
-import {LOADING_UNITS,
-        GET_UNITS,
-        UNIT_ADDED,
-        UNIT_EDITED,
-        UNIT_DELETED,
-        TOGGLE_ADDING_UNIT,
-        TOGGLE_EDITING_UNIT,
-        TOGGLE_DELETING_UNIT,
-        SELECT_UNIT } from './types';
+import {
+  LOADING_UNITS, GET_UNITS, UNIT_ADDED, UNIT_EDITED, UNIT_DELETED,
+  TOGGLE_ADDING_UNIT, TOGGLE_EDITING_UNIT, TOGGLE_DELETING_UNIT,
+  SELECT_UNIT
+} from './types';
 // Import axios to handle http requests
 import axios from 'axios';
 // Import server actions: to report errors
@@ -22,7 +18,7 @@ export const getUnits = () => dispatch => {
   dispatch({ type: LOADING_UNITS });
   axios.get(`${server}/api/units`, config)
   .then(res => { dispatch({type: GET_UNITS, payload: res.data}) })
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 
 // Submit a request to add a new unit
@@ -30,7 +26,7 @@ export const addUnit = unit => dispatch => {
   const newUnit = JSON.stringify(unit);
   axios.post(`${server}/api/units`, newUnit, config)
   .then(res => { dispatch({type: UNIT_ADDED, payload: res.data}) })
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 
 // Submit a request to edit the given unit
@@ -38,14 +34,14 @@ export const editUnit = unit => dispatch => {
   const editedUnit = JSON.stringify(unit);
   axios.post(`${server}/api/units/${unit._id}`, editedUnit, config)
   .then(res => { dispatch({type: UNIT_EDITED, payload: res.data}) })
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 
 // Submit a request to delete the unit by ID
 export const deleteUnit = id => dispatch => {
   axios.delete(`${server}/api/units/${id}`, config)
   .then(res => { dispatch({ type: UNIT_DELETED, payload: id })})
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 
 // Select unit and toggle states

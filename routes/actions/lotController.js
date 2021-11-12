@@ -1,16 +1,15 @@
 // Import libraries
-const mongoose = require('mongoose');
 const trycatch = require('express-async-handler');
 // Create models
-const Unit     = mongoose.connection.model('units',     require('../../schemas/Unit'));
-const Raw      = mongoose.connection.model('raws',      require('../../schemas/Raw'));
-const RawLot   = mongoose.connection.model('rawlots',   require('../../schemas/RawLot'));
-const Blend    = mongoose.connection.model('blends',    require('../../schemas/Blend'));
-const BlendLot = mongoose.connection.model('blendlots', require('../../schemas/BlendLot'));
-const Bulk     = mongoose.connection.model('bulks',     require('../../schemas/Bulk'));
-const BulkLot  = mongoose.connection.model('bulklots',  require('../../schemas/BulkLot'));
-const FinishedGood = mongoose.connection.model('finishedgoods', require('../../schemas/FinishedGood'));
-const FinishedGoodLot = mongoose.connection.model('finishedgoodlots', require('../../schemas/FinishedGoodLot'));
+const Unit     = require('../../models/Unit');
+const Raw      = require('../../models/Raw');
+const RawLot   = require('../../models/RawLot');
+const Blend    = require('../../models/Blend');
+const BlendLot = require('../../models/BlendLot');
+const Bulk     = require('../../models/Bulk');
+const BulkLot  = require('../../models/BulkLot');
+const FinishedGood = require('../../models/FinishedGood');
+const FinishedGoodLot = require('../../models/FinishedGoodLot');
 
 const rawPopPaths = [
   'receiving.manufacturer',
@@ -21,6 +20,7 @@ const rawPopPaths = [
     populate: ['assays.method', 'assays.assay', 'assays.units', 'ids.identity', 'ids.method'] }
 ];
 
+// TODO: Add error checking here
 // GET: api/lots/ | return all raw, blend, bulk, & fg lots | Private
 const getLots = trycatch( async (req, res) => {
   const raws = await RawLot.find().populate(rawPopPaths).exec();

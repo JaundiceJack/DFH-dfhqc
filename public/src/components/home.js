@@ -90,7 +90,7 @@ const Home = () => {
               {badEntries.length === 0 && errorMsg === "" && <Button color="bg-green-300"
                       text="Login"
                       type="submit"
-                      extraClasses="justify-self-end w-20 h-8 self-center" />}
+                      extraClasses="justify-self-end w-20 h-8" />}
               { badEntries.map(err => <Message error={err} /> )  }
               { errorMsg && <Message error={errorMsg} /> }
             </div>) }

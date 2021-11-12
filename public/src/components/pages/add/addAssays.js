@@ -1,98 +1,85 @@
-import Button from '../../button.js';
+import Button    from '../../button.js';
+import Checkbox  from '../../inputs/checkbox.js';
+import Entry     from '../../inputs/entry.js';
+import Selection from '../../inputs/selection.js';
+import Divider from '../../divider.js';
 
 const AddAssays = ({
-  vals, onAdd, onRemove, onEdit, assayOptions, unitOptions, methodOptions
-  }) => {
-
-  const inputCs = "rounded my-1 py-1 pl-2 bg-gray-200 w-1/2";
-
+  vals,
+  onAdd,
+  onRemove,
+  onEdit,
+  assayOptions,
+  unitOptions,
+  methodOptions
+}) => {
   return (
     <div className="flex flex-col">
       <h3 className="font-semibold text-blue-100 text-lg">Assays</h3>
-      <div className="mb-2 h-px w-full bg-gradient-to-r from-blue-300 to-transparent" />
+      <Divider />
       <div className="grid grid-cols-4 gap-x-4 mb-4">
         {vals.assays.map((assay, index) => {
           return (
             <div key={index}
-                 className="col-span-4 grid grid-cols-6 rounded-lg border border-gray-400 p-2 mb-2">
-{/* Assay Name */}
-              <p className="col-span-2 text-blue-100 font-semibold ml-2">Name:</p>
-              <select name="assayId"
-                      value={assay.assayId}
-                      onChange={e => onEdit(e, index)}
-                      className="capitalize col-span-4 rounded my-1 py-1 pl-2 bg-gray-200" >
-                {assayOptions.length > 0 ? assayOptions.map((a, index) =>
-                  ( <option key={index} value={a._id}>{a.name}</option> ) )
-                  : <option value=""></option> }
-                  <option value="New Assay">New Assay</option>
-              </select>
+                 className="col-span-4 flex flex-col rounded-lg border border-gray-400 p-2 mb-2">
+              {/* Assay Name Selection/Entry */}
+              <Selection label="Name:" name="assayId" value={assay.assayId}
+                onChange={e => onEdit(e, index)}
+                options={[
+                  ...(
+                    assayOptions.length > 0 ?
+                      assayOptions.map(assay => { return { name: assay.name, value: assay._id } } ) :
+                      [{name: "", value: ""}]
+                  ),
+                  { name: "New Assay", value: "New Assay" }
+                ]} />
               {assay.assayId === "New Assay" &&
-                <div className="grid grid-cols-6 col-span-6">
-                  <p className="col-span-2 text-blue-100 font-semibold ml-2">New Name:</p>
-                  <input type="text"
-                         name="newName"
-                         value={assay.newName}
-                         onChange={e => onEdit(e, index)}
-                         className={inputCs+'w-full col-span-4'} />
-                </div>
-              }
-{/* Potency Min and Max */}
-              <p className="col-span-2 text-blue-100 font-semibold ml-2">Potency:</p>
-              <div className="col-span-4 grid grid-cols-5">
-                <input type="text"
-                       name="min"
-                       value={assay.min || ""}
-                       onChange={e => onEdit(e, index)}
-                       className={inputCs+"w-full"} />
-                <p className="font-bold text-blue-100 mx-auto self-center">-</p>
-                <input type="text"
-                       name="max"
-                       value={assay.max || ""}
-                       onChange={e => onEdit(e, index)}
-                       className={inputCs+"w-full"}  />
-                {/* Assay Units */}
-                <select name="unitId"
-                        value={assay.unitId}
-                        onChange={e => onEdit(e, index)}
-                        className="rounded my-1 py-1 pl-2 bg-gray-200 ml-2 col-span-2" >
-                  {unitOptions.length > 0 ? unitOptions.map((unit, index) =>
-                    ( <option key={index} value={unit._id}>{unit.name}</option> ) )
-                    : <option value=""></option>}
-                    <option value="New Units">New Units</option>
-                </select>
-              </div>
-              {assay.unitId === "New Units" &&
-                <div className="grid grid-cols-6 col-span-6">
-                  <p className="col-span-2 text-blue-100 font-semibold ml-2">New Unit:</p>
-                  <input type="text"
-                         name="newUnit"
-                         value={assay.newUnit}
-                         onChange={e => onEdit(e, index)}
-                         className={inputCs+'w-full col-span-4'} />
-                </div>
+                <Entry label="New Assay:" name="newName" value={assay.newName}
+                  onChange={e => onEdit(e, index)} />
               }
 
-{/* Assay Method */}
-              <p className="col-span-2 text-blue-100 font-semibold ml-2">Method:</p>
-              <select name="methodId"
-                      value={assay.methodId}
-                      onChange={e => onEdit(e, index)}
-                      className="col-span-4 rounded my-1 py-1 pl-2 bg-gray-200" >
-                {methodOptions.length > 0 ? methodOptions.map((method, index) =>
-                  ( <option key={index} value={method._id}>{method.name}</option> ) )
-                  : <option value=""></option>}
-                  <option value="New Method">New Method</option>
-              </select>
-              {assay.methodId === "New Method" &&
-                <div className="grid grid-cols-6 col-span-6">
-                  <p className="col-span-2 text-blue-100 font-semibold ml-2">New Method:</p>
-                  <input type="text"
-                         name="newMethod"
-                         value={assay.newMethod}
-                         className={inputCs+'w-full col-span-4'}
-                         onChange={e => onEdit(e, index)}  />
+              {/* Potency Min, Max, & Units */}
+              <div className="grid grid-cols-3 items-center">
+                <p className="text-blue-100 font-semibold text-right mr-2">Potency:</p>
+                <div className="flex flex-row col-span-2">
+                  <Entry label="" name="min" value={assay.min || ""}
+                    onChange={e => onEdit(e, index)} extraClasses="w-32 mr-2" />
+                  <p className="text-blue-100 mx-auto self-center">to</p>
+                  <Entry label="" name="max" value={assay.max || ""}
+                    onChange={e => onEdit(e, index)} extraClasses="w-32 mx-2" />
+                  <Selection label="" name="unitId" value={assay.unitId}
+                    onChange={e => onEdit(e, index)} extraClasses="w-32"
+                    options={[
+                      ...(
+                        unitOptions.length > 0 ?
+                          unitOptions.map(unit => { return { name: unit.name, value: unit._id } } ) :
+                          [{name: "", value: ""}]
+                      ),
+                      { name: "New Units", value: "New Units" }
+                    ]} />
                 </div>
+              </div>
+              {assay.unitId === "New Units" &&
+                <Entry label="New Unit:" name="newUnit" value={assay.newUnit}
+                   onChange={e => onEdit(e, index)} />
               }
+
+              {/* Assay Method */}
+              <Selection label="Method:" name="methodId" value={assay.methodId}
+                onChange={e => onEdit(e, index)}
+                options={[
+                  ...(
+                    methodOptions.length > 0 ?
+                      methodOptions.map(method => { return { name: method.name, value: method._id } } ) :
+                      [{name: "", value: ""}]
+                  ),
+                  { name: "New Method", value: "New Method" }
+                ]} />
+              {assay.methodId === "New Method" &&
+                <Entry label="New Method:" name="newmethod" value={assay.newmethod}
+                  onChange={e => onEdit(e, index)} />
+              }
+
             </div>
           )
         })}

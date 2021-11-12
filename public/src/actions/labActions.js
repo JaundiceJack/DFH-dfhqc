@@ -12,7 +12,7 @@ import {
 // Import axios to handle http requests
 import axios from 'axios';
 // Import server actions: to report errors
-import { returnMessages } from './msgActions';
+import { handleError } from './msgActions';
 // Import the server route
 import server from './route';
 
@@ -22,12 +22,8 @@ export const getLabs = () => dispatch => {
   const config = { headers: {"Content-type": "application/json"} };
   // Make request for lab info
   axios.get(`${server}/api/labs`, config)
-  .then(res => {
-    dispatch({ type: GET_LABS, payload: res.data });
-  })
-  .catch(err => {
-    dispatch(returnMessages(err.response.data, err.response.status));
-  })
+  .then(res => { dispatch({ type: GET_LABS, payload: res.data }); })
+  .catch(err => { handleError(err); });
 }
 
 // TODO: add authentication
@@ -40,14 +36,9 @@ export const addLab = (lab) => dispatch => {
   // Submit a post with the new lab
   axios.post(`${server}/api/labs/`, newLab, config)
   .then(res => { dispatch({type: LAB_ADDED, payload: res.data}) })
-  .catch(err => {
-    const errmsg = err.response ?
-                   {error: err.response.data ? err.response.data.msg : "Error encountered"} :
-                   {error: "Error encountered"};
-    const errstatus = err.response ? err.response.status : null;
-    dispatch(returnMessages(errmsg, errstatus));
-  })
+  .catch(err => { handleError(err); });
 }
+
 export const editLab = (lab) => dispatch => {
   // Set Headers
   const config = { headers: {"Content-type": "application/json"} };
@@ -56,22 +47,20 @@ export const editLab = (lab) => dispatch => {
   // Submit a post with the new lab
   axios.post(`${server}/api/labs/${lab._id}`, editedLab, config)
   .then(res => { dispatch({type: LAB_EDITED, payload: res.data}) })
-  .catch(err => dispatch(returnMessages(err.response.data, err.response.status)))
+  .catch(err => { handleError(err); });
 }
+
 export const deleteLab = (id) => dispatch => {
   const config = { headers: {"Content-type": "application/json"} };
   axios.delete(`${server}/api/labs/${id}`, config)
   .then(res => { dispatch({ type: LAB_DELETED, payload: id })})
-  .catch(err => dispatch(returnMessages(err.response.data, err.response.status)))
+  .catch(err => { handleError(err); });
 }
 
-export const selectLab = (lab) => dispatch => {
-  dispatch({type: SELECT_LAB, payload: lab});
-}
-
-export const toggleAdding = () => dispatch => dispatch({ type: TOGGLE_ADDING_LAB });
+export const selectLab = (lab)   => dispatch => dispatch({ type: SELECT_LAB, payload: lab });
+export const toggleAdding = ()   => dispatch => dispatch({ type: TOGGLE_ADDING_LAB });
 export const toggleDeleting = () => dispatch => dispatch({ type: TOGGLE_DELETING_LAB });
-export const toggleEditing = () => dispatch => dispatch({ type: TOGGLE_EDITING_LAB });
+export const toggleEditing = ()  => dispatch => dispatch({ type: TOGGLE_EDITING_LAB });
 
 export const addLabAssay = (labId, addedAssays) => dispatch => {
   // Set Headers
@@ -81,5 +70,5 @@ export const addLabAssay = (labId, addedAssays) => dispatch => {
   // Submit a post with the new lab
   axios.post(`${server}/api/labs/${labId}/add_assays`, assays, config)
   .then(res => { dispatch({type: LAB_EDITED, payload: res.data}) })
-  .catch(err => dispatch(returnMessages(err.response.data, err.response.status)))
+  .catch(err => { handleError(err); });
 }

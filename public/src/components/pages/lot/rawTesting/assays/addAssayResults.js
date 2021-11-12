@@ -6,7 +6,7 @@ import { editRawSample } from '../../../../../actions/lotActions';
 // Import components
 import Button from '../../../../button.js';
 
-const AddHmResults = ({ lotId, test, spec, close}) => {
+const AddAssayResults = ({ lotId, test, spec, close}) => {
   // Get labs from global state
   const labs = useSelector(state => state.lab.labs);
 
@@ -108,4 +108,4 @@ const AddHmResults = ({ lotId, test, spec, close}) => {
   )
 }
 
-export default AddHmResults;
+export default AddAssayResults;

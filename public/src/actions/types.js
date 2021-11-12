@@ -155,6 +155,12 @@ export const SHOW_ASSAY_TESTING = "SHOW_ASSAY_TESTING";
 export const SHOW_ASSAY_DELETING = "SHOW_ASSAY_DELETING";
 export const ASSAY_INDEX_SELECTED = "ASSAY_INDEX_SELECTED";
 
+// Sampling/Testing Actions
+export const LOADING_SAMPLES = "LOADING_SAMPLES";
+export const GET_SAMPLES = "GET_SAMPLES";
+export const SAMPLE_ADDED = "SAMPLE_ADDED";
+export const SAMPLE_EDITED = "SAMPLE_EDITED";
+export const SAMPLE_DELETED = "SAMPLE_DELETED";
 
 // Lab Actions
 export const LOADING_LABS = "LOADING_LABS";

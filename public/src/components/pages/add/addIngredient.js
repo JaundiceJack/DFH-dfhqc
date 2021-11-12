@@ -1,67 +1,57 @@
 import Button from '../../button.js';
+import Divider from '../../divider.js';
+import Entry from '../../inputs/entry.js';
+import Selection from '../../inputs/selection.js';
 
-const AddIngredient = ({ vals, onAdd, onRemove, onEdit, rawOptions, unitOptions }) => {
-  const labelCs = "mr-2 text-right text-blue-100 font-semibold whitespace-nowrap self-center";
-  const inputCs = "rounded my-1 py-1 pl-2 bg-gray-200 w-1/2";
-  const buttonCs = " rounded py-1 px-2 mx-1 font-semibold transform duration-75" +
-                   " ease-in-out hover:scale-105 hover:opacity-75 opacity-50 ";
-
+const AddIngredient = ({
+  vals,
+  onAdd,
+  onRemove,
+  onEdit,
+  rawOptions,
+  unitOptions
+}) => {
   return (
     <div className="flex flex-col">
       <h3 className="font-semibold text-blue-100 text-lg">Raw Ingredients</h3>
-      <div className="mb-2 h-px w-full bg-gradient-to-r from-blue-300 to-transparent" />
+      <Divider />
       <div className="grid grid-cols-4 gap-x-4 mb-4">
         {vals.ingredients.map((raw, index) => {
           return (
-            <div key={index} className={"col-span-4 grid grid-cols-6 rounded-lg " +
-                                        "border border-gray-400 p-2 mb-2"}>
-{/* Ingredient Name/Number */}
-              <p className="col-span-2 text-blue-100 font-semibold ml-2">Raw:</p>
-              <select name="raw"
-                      value={raw.raw}
-                      className="col-span-4 rounded my-1 py-1 pl-2 bg-gray-200"
-                      onChange={e => onEdit(e, index)} >
-                {rawOptions.length > 0 ?
-                  rawOptions.map((option, index) => (
-                    <option key={index} value={option._id}>
-                      {option.number} - {option.name}</option> )) :
-                <option value=""></option> }
-              </select>
-{/* Claim, Potency, Percent & Type */}
-              <p className="col-span-2 text-blue-100 font-semibold ml-2">Claim:</p>
-              <input name="claim"
-                     value={raw.claim || ""}
-                     className={inputCs+" w-full col-span-2"}
-                     onChange={e => onEdit(e, index)}
-                     type="text" />
-              <p className={labelCs+" col-span-2 justify-self-start ml-2"}>mg/serving</p>
+            <div key={index} className={
+              "col-span-4 flex flex-col rounded-lg " +
+              "border border-gray-400 p-2 mb-2"
+            }>
+              {/* Ingredient Name/Number */}
+              <Selection label="Raw:" name="raw" value={raw.raw}
+                onChange={e => onEdit(e, index)} extraClasses="col-span-6"
+                options={[
+                  ...(rawOptions.length > 0 ?
+                    rawOptions.map(option => {
+                      return {
+                        name: `${option.number} - ${option.name}`,
+                        value: option.value
+                      }
+                    }) :
+                    [{ name: "", value: "" }]
+                  )
+                ]} />
 
-              <p className="col-span-2 text-blue-100 font-semibold ml-2">Potency:</p>
-              <input name="potency"
-                     value={raw.potency || ""}
-                     className={inputCs+" col-span-2 w-full"}
-                     onChange={e => onEdit(e, index)}
-                     type="text" />
-              <p className={labelCs+" col-span-2 justify-self-start ml-2"}>%</p>
-
-              <p className="col-span-2 text-blue-100 font-semibold ml-2">Overage:</p>
-              <input name="overage"
-                     value={raw.overage || ""}
-                     className={inputCs+" col-span-2 w-full"}
-                     onChange={e => onEdit(e, index)}
-                     type="text" />
-              <p className={labelCs+" col-span-2 justify-self-start ml-2"}>%</p>
-
-              <p className="col-span-2 text-blue-100 font-semibold ml-2">Ingredient Type:</p>
-              <select name="type"
-                      value={raw.type}
-                      className={inputCs+" col-span-4 w-full"}
-                      onChange={e => onEdit(e, index)}>
-                <option value="vitamin">Vitamin</option>
-                <option value="mineral">Mineral</option>
-                <option value="other/active">Other/Active</option>
-                <option value="excipient">Excipient</option>
-              </select>
+              {/* Claim, Potency, Percent & Type */}
+              <Entry label="Claim:" name="claim" value={raw.claim || ""}
+                onChange={e => onEdit(e, index)} append="mg/serving" />
+              <Entry label="Potency:" name="potency" value={raw.potency || ""}
+                onChange={e => onEdit(e, index)} append="%" />
+              <Entry label="Overage:" name="overage" value={raw.overage || ""}
+                onChange={e => onEdit(e, index)} append="%" />
+              <Selection label="Ingredient Type:" name="type" value={raw.type}
+                onChange={e => onEdit(e, index)}
+                options={[
+                  { value: "vitamin", name: "Vitamin" },
+                  { value: "mineral", name: "Mineral" },
+                  { value: "other/active", name: "Other/Active" },
+                  { value: "excipient", name: "Excipient" },
+                ]} />
 
             </div>
           )

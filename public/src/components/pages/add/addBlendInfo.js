@@ -1,42 +1,26 @@
-const AddBlendInfo = ({vals, onEntry, ifEditing}) => {
-  const labelCs = "mr-2 text-right text-blue-100 font-semibold self-center";
-  const inputCs = "rounded my-1 py-1 pl-2 bg-gray-200 w-1/2";
+import Entry from '../../inputs/entry.js';
+import Selection from '../../inputs/selection.js';
+import Divider from '../../divider.js';
 
+const AddBlendInfo = ({vals, onEntry, ifEditing}) => {
   return (
     <div className="flex flex-col mb-3">
       <h3 className="font-semibold text-blue-100 text-lg">Additional Info</h3>
-      <div className="mb-2 h-px w-full bg-gradient-to-r from-blue-300 to-transparent" />
+      <Divider />
 
-      <div className="grid grid-cols-3 gap-2">
-        <label className={labelCs}>Batch Size:</label>
-        <input type="text"
-               name="batch_size"
-               value={vals.batch_size}
-               onChange={onEntry}
-               className={inputCs+" w-full col-span-1"} />
-        <p className="col-span-1 text-blue-100 font-semibold self-center">kg</p>
-      </div>
+      <Entry label="Batch Size:" name="batch_size" value={vals.batch_size}
+        onChange={onEntry} append="kg" />
 
-      <div className="grid grid-cols-3 gap-2">
-        <label className={labelCs+" col-span-1"}>Units per Serving:</label>
-        <input type="text"
-               name="units_per_serving"
-               value={vals.units_per_serving}
-               onChange={onEntry}
-               className={inputCs+" w-full col-span-1"} />
-      </div>
+      <Entry label="Units per Serving:" name="units_per_serving" value={vals.units_per_serving}
+        onChange={onEntry} append=" " />
 
-      <div className="grid grid-cols-3 gap-2">
-        <label className={labelCs}>Customer:</label>
-        <select name="customer"
-                value={vals.customer}
-                onChange={onEntry}
-                className={inputCs+" w-full col-span-1"}>
-          <option value="dfh">DFH</option>
-          <option value="dfh-canada">DFH-CANADA</option>
-          <option value="new customer">New Customer</option>
-        </select>
-      </div>
+      <Selection label="Customer:" name="customer" value={vals.customer}
+        onChange={onEntry} options={[
+          {name: "DFH", value: "dfh"},
+          {name: "DFH-CANADA", value: "dfh-canada"},
+          {name: "New Customer", value: "new customer"}
+        ]} />
+
     </div>
   )
 }

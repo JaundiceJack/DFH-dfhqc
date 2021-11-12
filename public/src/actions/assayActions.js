@@ -30,7 +30,7 @@ export const addAssay = assay => dispatch => {
   const newAssay = JSON.stringify(assay);
   axios.post(`${server}/api/assays`, newAssay, config)
   .then(res => { dispatch({type: ASSAY_ADDED, payload: res.data}) })
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 
 // Submit a request to edit the given assay
@@ -38,14 +38,14 @@ export const editAssay = assay => dispatch => {
   const editedAssay = JSON.stringify(assay);
   axios.post(`${server}/api/assays/${assay._id}`, editedAssay, config)
   .then(res => { dispatch({type: ASSAY_EDITED, payload: res.data}) })
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 
 // Submit a request to delete the assay by ID
 export const deleteAssay = id => dispatch => {
   axios.delete(`${server}/api/assays/${id}`, config)
   .then(res => { dispatch({ type: ASSAY_DELETED, payload: id })})
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 
 // Select assay and toggle states

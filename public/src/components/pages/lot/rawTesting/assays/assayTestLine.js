@@ -65,9 +65,10 @@ const AssayTestLine = ({ testName, sample, result, min, max, unit="" }) => {
   };
 
   return (
-    <div className="grid grid-cols-3 border-b border-gray-600">
+    <div className="grid grid-cols-3">
       <p className="text-right mr-2 capitalize ">{testName}:</p>
       <p className={textColor()+" col-span-2 self-end"}> { testText() } </p>
+      <div className="h-px w-full col-span-3 bg-gradient-to-r via-blue-100 my-2"/>
     </div>
   )
 }

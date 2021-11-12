@@ -29,7 +29,7 @@ export const getBulks = () => (dispatch, getState) => {
   const config = tokenConfig(getState);
   axios.get(`${server}/api/bulks`, config)
   .then(res => { dispatch({ type: GET_BULKS, payload: res.data }) })
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 // Take entries and add a new bulk to the database
 export const addBulk = bulk => (dispatch, getState) => {
@@ -37,7 +37,7 @@ export const addBulk = bulk => (dispatch, getState) => {
   const newBulk = JSON.stringify(bulk);
   axios.post(`${server}/api/bulks/`, newBulk, config)
   .then(res => { dispatch({ type: BULK_ADDED, payload: res.data }) })
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 // Modify the selected bulk
 export const editBulk = bulk => (dispatch, getState) => {
@@ -45,18 +45,18 @@ export const editBulk = bulk => (dispatch, getState) => {
   const editedBulk = JSON.stringify(bulk);
   axios.post(`${server}/api/bulks/${bulk._id}`, editedBulk, config)
   .then(res => { dispatch({ type: BULK_EDITED, payload: res.data }) })
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 // Remove the selected bulk
 export const deleteBulk = id => (dispatch, getState) => {
   const config = tokenConfig(getState);
   axios.delete(`${server}/api/bulks/${id}`, config)
   .then(res => { dispatch({ type: BULK_DELETED, payload: id }) })
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 
 // Selection and toggles
-export const selectBulk = bulk => dispatch => { dispatch({ type: SELECT_BULK, payload: bulk }) }
+export const selectBulk = bulk   => dispatch => dispatch({ type: SELECT_BULK, payload: bulk }) 
 export const toggleAdding   = () => dispatch => dispatch({ type: TOGGLE_ADDING_BULK });
 export const toggleDeleting = () => dispatch => dispatch({ type: TOGGLE_DELETING_BULK });
 export const toggleEditing  = () => dispatch => dispatch({ type: TOGGLE_EDITING_BULK });

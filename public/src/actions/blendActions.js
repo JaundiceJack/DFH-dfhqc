@@ -29,7 +29,7 @@ export const getBlends = () => (dispatch, getState) => {
   const config = tokenConfig(getState);
   axios.get(`${server}/api/blends`, config)
   .then(res => { dispatch({ type: GET_BLENDS, payload: res.data }) })
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 // Take entries and add a new blend to the database
 export const addBlend = blend => (dispatch, getState) => {
@@ -37,7 +37,7 @@ export const addBlend = blend => (dispatch, getState) => {
   const newBlend = JSON.stringify(blend);
   axios.post(`${server}/api/blends/`, newBlend, config)
   .then(res => { dispatch({ type: BLEND_ADDED, payload: res.data }) })
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 // Modify the selected blend
 export const editBlend = blend => (dispatch, getState) => {
@@ -45,17 +45,17 @@ export const editBlend = blend => (dispatch, getState) => {
   const editedBlend = JSON.stringify(blend);
   axios.post(`${server}/api/blends/${blend._id}`, editedBlend, config)
   .then(res => { dispatch({ type: BLEND_EDITED, payload: res.data }) })
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 export const deleteBlend = id => (dispatch, getState) => {
   const config = tokenConfig(getState);
   axios.delete(`${server}/api/blends/${id}`, config)
   .then(res => { dispatch({ type: BLEND_DELETED, payload: id })})
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 
 // Selection and toggles
-export const selectBlend = blend => dispatch => { dispatch({ type: SELECT_BLEND, payload: blend }) }
+export const selectBlend = blend => dispatch => dispatch({ type: SELECT_BLEND, payload: blend });
 export const toggleAdding   = () => dispatch => dispatch({ type: TOGGLE_ADDING_BLEND });
 export const toggleDeleting = () => dispatch => dispatch({ type: TOGGLE_DELETING_BLEND });
 export const toggleEditing  = () => dispatch => dispatch({ type: TOGGLE_EDITING_BLEND });

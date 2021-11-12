@@ -15,15 +15,27 @@ const LabAdd = ({toggleAdd}) => {
   // Set internal state variables for the form
   const [labVals, setLabVals] = useState({
     name:               "",
-    tat_emergency:      "",
-    upcharge_emergency: "",
-    tat_rush:           "",
-    upcharge_rush:      "",
-    tat_standard:       "",
-    address_testing:    "",
-    address_billiing:   "",
-    contact_emails:     "",
-    contact_phones:     "",
+    shipping: {
+      address: "",
+      city: "",
+      zip: ""
+    },
+    billing: {
+      address: "",
+      city: "",
+      zip: ""
+    },
+    tat: {
+      standard: 10,
+      rush: 5,
+      emergency: 3,
+      rush_upcharge: 0.5,
+      emergency_upcharge: 1
+    },
+    contact: {
+      emails: [],
+      phones: []
+    }
   });
 
   // Clear the badEntries warning after the timer runs out
@@ -58,6 +70,7 @@ const LabAdd = ({toggleAdd}) => {
 
   // Handle events
   const onEntry = (e) => { setLabVals({...labVals, [e.target.name]: e.target.value })}
+  const editShipping = e => setLabVals({ ...labVals, shipping: { ...labVals.shipping, [e.target.name]: e.target.value}});
   const onClick = (e) => { setLabVals({...labVals, [e.target.name]: !labVals[e.target.name] })}
 
   return (
@@ -67,6 +80,22 @@ const LabAdd = ({toggleAdd}) => {
           <label htmlFor="name" className="flex flex-row items-center font-semibold text-blue-100 whitespace-nowrap">Lab Name:
             <TextInput name="name" value={labVals.name} onEntry={e => onEntry(e)} extraClasses="w-full text-black ml-2 h-8" />
           </label>
+
+          <div className="h-px bg-gradient-to-r from-blue-200 to-transparent my-2"/>
+          <h3 className="font-semibold text-lg text-blue-100 mb-2">Shipping</h3>
+          <label htmlFor="name" className="flex flex-row items-center font-semibold text-blue-100 whitespace-nowrap mb-2">Address:
+            <TextInput name="address" value={labVals.shipping.address} onEntry={editShipping}
+              extraClasses="w-full text-black ml-2 h-8" />
+          </label>
+          <label htmlFor="name" className="flex flex-row items-center font-semibold text-blue-100 whitespace-nowrap mb-2">City:
+            <TextInput name="city" value={labVals.shipping.city} onEntry={editShipping}
+              extraClasses="w-full text-black ml-2 h-8" />
+          </label>
+          <label htmlFor="name" className="flex flex-row items-center font-semibold text-blue-100 whitespace-nowrap mb-2">Zip:
+            <TextInput name="zip" value={labVals.shipping.zip} onEntry={editShipping}
+              extraClasses="w-full text-black ml-2 h-8" />
+          </label>
+
         </div>
 
         <div className="h-6" />

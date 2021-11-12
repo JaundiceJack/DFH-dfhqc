@@ -7,8 +7,7 @@ const initialState = {
   error: "",
   warning: "",
   info: "",
-  status: null,
-  id:  null,
+  status: null
 }
 
 const msgReducer = (state = initialState, action) => {
@@ -18,16 +17,14 @@ const msgReducer = (state = initialState, action) => {
         error:   action.payload.error,
         warning: action.payload.warning,
         info:    action.payload.info,
-        status:  action.payload.status,
-        id:      action.payload.id
+        status:  action.payload.status
       }
     case CLEAR_MESSAGES:
       return {
         error: "",
         warning: "",
         info: "",
-        status: null,
-        id:     null
+        status: null
       }
     default:
       return state;

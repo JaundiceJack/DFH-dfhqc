@@ -1,14 +1,8 @@
 // Import action types
 import {
-  GET_VENDORS,
-  SELECT_VENDOR,
-  VENDOR_ADDED,
-  VENDOR_EDITED,
-  VENDOR_DELETED,
-  TOGGLE_ADDING_VENDOR,
-  TOGGLE_EDITING_VENDOR,
-  TOGGLE_DELETING_VENDOR,
-   } from './types';
+  GET_VENDORS, SELECT_VENDOR, VENDOR_ADDED, VENDOR_EDITED, VENDOR_DELETED,
+  TOGGLE_ADDING_VENDOR, TOGGLE_EDITING_VENDOR, TOGGLE_DELETING_VENDOR,
+} from './types';
 // Import axios to handle http requests
 import axios from 'axios';
 // Import server actions: to report errors
@@ -23,7 +17,7 @@ export const getVendors = () => dispatch => {
   // Make request for vendor info
   axios.get(`${server}/api/vendors`, config)
   .then(res => { dispatch({ type: GET_VENDORS, payload: res.data }) })
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 
 // TODO: add authentication
@@ -36,7 +30,7 @@ export const addVendor = (vendor) => dispatch => {
   // Submit a post with the new vendor
   axios.post(`${server}/api/vendors/`, newVendor, config)
   .then(res => { dispatch({type: VENDOR_ADDED, payload: res.data}) })
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 export const editVendor = (vendor) => dispatch => {
   // Set Headers
@@ -46,19 +40,16 @@ export const editVendor = (vendor) => dispatch => {
   // Submit a post with the new vendor
   axios.post(`${server}/api/vendors/${vendor._id}`, editedVendor, config)
   .then(res => { dispatch({type: VENDOR_EDITED, payload: res.data}) })
-  .catch(err => { dispatch(handleError(err)) })
+  .catch(err => { handleError(err) })
 }
 export const deleteVendor = (id) => dispatch => {
   const config = { headers: {"Content-type": "application/json"} };
   axios.delete(`${server}/api/vendors/${id}`, config)
   .then(res => { dispatch({ type: VENDOR_DELETED, payload: id })})
-  .catch(err => { dispatch(handleError(err)) })
+  .catch(err => { handleError(err) })
 }
 
-export const selectVendor = (vendor) => dispatch => {
-  dispatch({type: SELECT_VENDOR, payload: vendor});
-}
-
+export const selectVendor = (vendor) => dispatch => dispatch({type: SELECT_VENDOR, payload: vendor});
 export const toggleAdding = () => dispatch => dispatch({ type: TOGGLE_ADDING_VENDOR });
 export const toggleDeleting = () => dispatch => dispatch({ type: TOGGLE_DELETING_VENDOR });
 export const toggleEditing = () => dispatch => dispatch({ type: TOGGLE_EDITING_VENDOR });

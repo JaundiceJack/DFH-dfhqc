@@ -23,7 +23,7 @@ export const getManufacturers = () => dispatch => {
   // Make request for manufacturer info
   axios.get(`${server}/api/manufacturers`, config)
   .then(res => { dispatch({ type: GET_MANUFACTURERS, payload: res.data }) })
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 
 // TODO: add authentication
@@ -36,7 +36,7 @@ export const addManufacturer = (manufacturer) => dispatch => {
   // Submit a post with the new manufacturer
   axios.post(`${server}/api/manufacturers/`, newManufacturer, config)
   .then(res => { dispatch({type: MANUFACTURER_ADDED, payload: res.data}) })
-  .catch(err => { dispatch(handleError(err)) });
+  .catch(err => { handleError(err) });
 }
 export const editManufacturer = (manufacturer) => dispatch => {
   // Set Headers
@@ -46,19 +46,16 @@ export const editManufacturer = (manufacturer) => dispatch => {
   // Submit a post with the new manufacturer
   axios.post(`${server}/api/manufacturers/${manufacturer._id}`, editedManufacturer, config)
   .then(res => { dispatch({type: MANUFACTURER_EDITED, payload: res.data}) })
-  .catch(err => { dispatch(handleError(err)) })
+  .catch(err => { handleError(err) })
 }
 export const deleteManufacturer = (id) => dispatch => {
   const config = { headers: {"Content-type": "application/json"} };
   axios.delete(`${server}/api/manufacturers/${id}`, config)
   .then(res => { dispatch({ type: MANUFACTURER_DELETED, payload: id })})
-  .catch(err => { dispatch(handleError(err)) })
+  .catch(err => { handleError(err) })
 }
 
-export const selectManufacturer = (manufacturer) => dispatch => {
-  dispatch({type: SELECT_MANUFACTURER, payload: manufacturer});
-}
-
+export const selectManufacturer = manufacturer => dispatch => dispatch({type: SELECT_MANUFACTURER, payload: manufacturer});
 export const toggleAdding = () => dispatch => dispatch({ type: TOGGLE_ADDING_MANUFACTURER });
 export const toggleDeleting = () => dispatch => dispatch({ type: TOGGLE_DELETING_MANUFACTURER });
 export const toggleEditing = () => dispatch => dispatch({ type: TOGGLE_EDITING_MANUFACTURER });

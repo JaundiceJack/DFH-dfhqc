@@ -19,7 +19,7 @@ import Message      from '../../message.js';
 
 const RawAdd = ({toggleAdd}) => {
   // Get id and assay names from the redux state/server
-  const ids      = useSelector(state => state.identity.identities);
+  const ids      = useSelector(state => state.identity.identities.sort((a, b) => b.name < a.name));
   const assays   = useSelector(state => state.assay.assays.sort((a, b) => b.name < a.name));
   const units    = useSelector(state => state.unit.units);
   const methods  = useSelector(state => state.method.methods.sort((a, b) => b.name < a.name));

@@ -30,23 +30,15 @@ export const loadUser = () => (dispatch, getState) => {
   const config = tokenConfig(getState);
   axios.get(`${server}/api/auth/user`, config)
   .then(res => { dispatch({ type: USER_LOADED, payload: res.data }) })
-  .catch(err => {
-    dispatch(handleError(err));
-    dispatch({ type: AUTH_ERROR });
-  });
+  .catch(err => { handleError(err); dispatch({ type: AUTH_ERROR }); });
 }
 
 // Attempt to create a new user with the given email, & password
 export const register = ({ email, password }) => dispatch => {
   // Send the registry with the body and config
   axios.post(`${server}/api/users`, ...basicConfig({ email, password }))
-  .then(res => {
-    dispatch({ type: REGISTER_SUCCESS, payload: res.data });
-  }).catch(err => {
-    // If unsuccessful, put the errors in the current state
-    dispatch(returnMessages(err.response.data, err.response.status, 'REGISTER_FAIL'));
-    dispatch({ type: REGISTER_FAIL });
-  });
+  .then(res => { dispatch({ type: REGISTER_SUCCESS, payload: res.data });})
+  .catch(err => { handleError(err); dispatch({ type: REGISTER_FAIL }); });
 }
 
 // Attempt to log in with the given email and password
@@ -54,35 +46,27 @@ export const login = ({ email, password }) => dispatch => {
   // Send the registry with the body and config
   axios.post(`${server}/api/auth`, ...basicConfig({ email, password }))
   .then(res => { dispatch({ type: LOGIN_SUCCESS, payload: res.data }) })
-  .catch(err => { dispatch(handleError(err, 'LOGIN_FAIL')) });
+  .catch(err => { handleError(err); dispatch({ type: LOGIN_FAIL }) });
 }
 
 // Request a password reset link
 export const forgotPassword = email => dispatch => {
   // Send the email to send a reset link to
   axios.post(`${server}/api/auth/reset_password`, ...basicConfig({email}))
-  .then( res => {
-    dispatch(returnMessages( res.data ))
-    changePage('login');
-  })
-  .catch( err => { dispatch(returnMessages(err.response.data)); });
+  .then( res => { returnMessages( res.data ); changePage('login'); })
+  .catch( err => { handleError(err); });
 }
 
 // Check the password reset token
 export const changePassword = (password, token) => dispatch => {
   // Set headers
   axios.post(`${server}/api/auth/reset_password/${token}`, ...basicConfig({password}))
-  .then( res => {
-    dispatch({ type: LOGIN_SUCCESS, payload: res.data });
-    dispatch(changePage('manage'));
-  })
-  .catch( err => dispatch(returnMessages(err.response.data, err.response.status, 'LOGIN_FAIL')));
+  .then( res => { dispatch({ type: LOGIN_SUCCESS, payload: res.data }); changePage('home'); })
+  .catch( err => { handleError(err); dispatch({ type: LOGIN_FAIL }); });
 }
 
 // Issue the logout action type
-export const logout = ()  => {
-  return { type: LOGOUT_SUCCESS };
-}
+export const logout = () => { return { type: LOGOUT_SUCCESS }; }
 
 // Set basic headers and a payload for actions that don't require a token
 export const basicConfig = payload => {
