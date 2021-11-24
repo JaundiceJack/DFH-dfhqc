@@ -1,14 +1,16 @@
+// Import Basics
 import { useSelector } from 'react-redux';
-import InfoBasic from './info/infoBasic.js';
-import InfoInventory from './info/infoInventory.js';
-import InfoReceiving from './info/infoReceiving.js';
+// Import Lot Info Dialogs
+import InfoBasic        from './info/infoBasic.js';
+import InfoInventory    from './info/infoInventory.js';
+import InfoReceiving    from './info/infoReceiving.js';
 import InfoBlendTesting from './info/infoBlendTesting.js';
-
-import MicroTests from './rawTesting/micros/_microTests.js';
-import HmTests from './rawTesting/hms/_hmTests.js';
-import AnnualTests from './rawTesting/annuals/_annualTests.js';
-import AssayTests from './rawTesting/assays/_assayTests.js';
-import IdentityTests from './rawTesting/ids/_idTests.js';
+// Import Raw Testing Dialogs
+import MicroTests    from './rawTesting/micros/_micro.js';
+import HmTests       from './rawTesting/hms/_hm.js';
+import AnnualTests   from './rawTesting/annuals/_annual.js';
+import AssayTests    from './rawTesting/assays/_assays.js';
+import IdentityTests from './rawTesting/ids/_id.js';
 
 const LotInfo = () => {
   // Get the current selection from the redux state
@@ -32,7 +34,7 @@ const LotInfo = () => {
           {selected.item_type === 'raw' && <AnnualTests lot={selected} />}
           {selected.item_type === 'raw' && <AssayTests lot={selected} />}
           {selected.item_type === 'raw' && <IdentityTests lot={selected} />}
-          {selected.item_type === 'blend' && <InfoBlendTesting lot={selected} />}
+          {/*selected.item_type === 'blend' && <InfoBlendTesting lot={selected} />*/}
         </div>
       </div>
     </div>

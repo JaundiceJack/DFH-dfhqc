@@ -1,21 +1,18 @@
+import Detail from '../../detail.js';
+import Divider from '../../divider.js';
+
 const SpecBasics = ({ blend, fillWeight, servingSize }) => {
   return (
-    <div className="bg-gray-600 rounded text-blue-100 font-semibold">
-      <h2 className="text-lg text-left px-2 py-1 text-blue-200">Basics</h2>
-      <div className="h-px bg-gradient-to-r from-blue-200 to-transparent"/>
-      <div className="grid grid-cols-2 p-2">
-        <p className="text-right mr-2">Name:</p>
-        <p className="capitalize">{blend && blend.name}</p>
-        <p className="text-right mr-2">Item #:</p>
-        <p className="capitalize">{blend && blend.number}</p>
-        <p className="text-right mr-2">Serving Size:</p>
-        <p className="">{servingSize && servingSize} {servingSize && "mg"}</p>
-        <p className="text-right mr-2">Batch Size:</p>
-        <p className="">{blend && blend.batch_size} {blend && blend.batch_size && "kg"}</p>
-        <p className="text-right mr-2">Units per serving:</p>
-        <p className="">{blend && blend.units_per_serving}</p>
-        <p className="text-right mr-2">Fill Weight:</p>
-        <p className="">{fillWeight && fillWeight} {fillWeight && "mg"}</p>
+    <div className="bg-gray-600 rounded">
+      <h2 className="text-lg text-left px-2 py-1 text-blue-200 font-semibold">Blend Basics</h2>
+      <Divider />
+      <div className="flex flex-col p-2">
+        <Detail label="Name:" data={blend && blend.name} />
+        <Detail label="Item #:" data={blend && blend.number} />
+        <Detail label="Serving Size:" data={servingSize && `${servingSize} mg`} capData={false} />
+        <Detail label="Batch Size:" data={blend && `${blend.batch_size} kg`} capData={false}/>
+        <Detail label="Units per Serving:" data={blend && blend.units_per_serving} />
+        <Detail label="Fill Weight:" data={fillWeight && `${fillWeight} mg`} capData={false} />
       </div>
     </div>
   )

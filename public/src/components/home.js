@@ -59,8 +59,8 @@ const Home = () => {
   const linkTextCs = "ml-1 text-blue-100 text-lg font-semibold transform duration-75 ease-in-out hover:scale-105";
 
   return (
-    <div className={"w-full h-full flex flex-col rounded border-l "+
-                    "border-gray-800 bg-gradient-to-br from-gray-800 "+
+    <div className={"w-full h-full flex flex-col rounded "+
+                    "bg-gradient-to-br from-gray-800 "+
                     "via-transparent to-gray-800"}>
       <div className="flex flex-row items-baseline">
         <img className="rounded-lg mt-4 ml-4 p-2 bg-white"
@@ -98,7 +98,7 @@ const Home = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 mb-6 mr-4">
-        <div className="sm:mx-5 mx-2 mt-10 rounded border-l border-gray-800 bg-gray-700">
+        <div className="sm:mx-5 mx-2 mt-10 rounded-xl border-l border-gray-800 bg-gray-700">
           <h2 className="font-semibold text-blue-200 text-xl mx-4 my-2">Materials</h2>
           <div className="bg-blue-200 h-px w-full rounded-full mb-2" />
           <div className="mx-4 mb-4 flex flex-col justify-start items-start">
@@ -116,7 +116,7 @@ const Home = () => {
             </Link>
           </div>
         </div>
-        <div className="sm:mx-5 mx-2 mt-10 rounded border-l border-gray-800 bg-gray-700">
+        <div className="sm:mx-5 mx-2 mt-10 rounded-xl border-l border-gray-800 bg-gray-700">
           <h2 className="font-semibold text-blue-200 text-xl mx-4 my-2">Lots</h2>
           <div className="bg-blue-200 h-px w-full rounded-full mb-2" />
           <div className="mx-4 mb-4 flex flex-col justify-start items-start">
@@ -126,7 +126,7 @@ const Home = () => {
           </div>
         </div>
         <div />
-        <div className="sm:mx-5 mx-2 mt-10 rounded border-l border-gray-800 bg-gray-700">
+        <div className="sm:mx-5 mx-2 mt-10 rounded-xl border-l border-gray-800 bg-gray-700">
           <h2 className="font-semibold text-blue-200 text-xl mx-4 my-2">Documents</h2>
           <div className="bg-blue-200 h-px w-full rounded-full mb-2" />
           <div className="mx-4 mb-4 flex flex-col justify-start items-start">
@@ -138,12 +138,18 @@ const Home = () => {
             </Link>
           </div>
         </div>
-        <div className="sm:mx-5 mx-2 mt-10 rounded border-l border-gray-800 bg-gray-700">
+        <div className="sm:mx-5 mx-2 mt-10 rounded-xl border-l border-gray-800 bg-gray-700">
           <h2 className="font-semibold text-blue-200 text-xl mx-4 my-2">Other</h2>
           <div className="bg-blue-200 h-px w-full rounded-full mb-2" />
           <div className="mx-4 mb-4 flex flex-col justify-start items-start">
             <Link to="/labs" onClick={() => changeActive('labs')}>
               <p className={linkTextCs}>Testing Labs</p>
+            </Link>
+            <Link to="/vendors" onClick={() => changeActive('vendors')}>
+              <p className={linkTextCs}>Vendors</p>
+            </Link>
+            <Link to="/manufacturers" onClick={() => changeActive('manufacturers')}>
+              <p className={linkTextCs}>Manufacturers</p>
             </Link>
           </div>
         </div>

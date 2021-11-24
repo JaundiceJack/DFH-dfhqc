@@ -1,21 +1,18 @@
+import Detail from '../../detail.js';
+import Divider from '../../divider.js';
+
 const LabBasicSpec = ({lab}) => {
   return (
     <div className="bg-gray-600 rounded text-blue-100 font-semibold">
-      <h2 className="text-lg text-left px-2 py-1 text-blue-200">Basics</h2>
-      <div className="h-px bg-gradient-to-r from-blue-200 to-transparent"/>
-      <div className="grid grid-cols-3 gap-x-2 p-2">
-        <p className="text-right">Lab Name:</p>
-        <p className="capitalize col-span-2">{lab && lab.name}</p>
-        <p className="text-right">Shipping Address:</p>
-        <p className="capitalize col-span-2">...</p>
-        <p className="text-right">Billing Address:</p>
-        <p className="capitalize col-span-2">...</p>
-        <p className="text-right">Standard TAT:</p>
-        <p className="capitalize col-span-2">10 Days</p>
-        <p className="text-right">Rush TAT:</p>
-        <p className="capitalize col-span-2">5 Days (+ 50% of price)</p>
-        <p className="text-right">Emergency TAT:</p>
-        <p className="capitalize col-span-2">3 Days (+ 100% of price)</p>
+      <h2 className="text-lg text-left px-2 py-1 text-blue-200">Basic Lab Info</h2>
+      <Divider />
+      <div className="flex flex-col p-2">
+        <Detail label="Lab Name:" data={lab && lab.name} />
+        <Detail label="Shipping Address:" data={lab && lab.shipping && lab.shipping.address} />
+        <Detail label="Billing Address:" data={lab && lab.shipping && lab.billing.address} />
+        <Detail label="Standard TAT:" data={`${lab && lab.tat && lab.tat.standard} days`} />
+        <Detail label="Rush TAT:" data={`${lab && lab.tat && lab.tat.rush} days`} />
+        <Detail label="Emergency TAT:" data={`${lab && lab.tat && lab.tat.emergency} days`} />
       </div>
     </div>
   )

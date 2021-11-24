@@ -1,3 +1,6 @@
+import Detail from '../../detail.js';
+import Divider from '../../divider.js';
+
 const SpecPhysical = ({ density, moisture }) => {
   // Get a string representing the range with the given units
   const rangeString = (min, max, units) => {
@@ -8,16 +11,12 @@ const SpecPhysical = ({ density, moisture }) => {
   }
 
   return (
-    <div className="bg-gray-600 rounded text-blue-100 font-semibold">
-      <h2 className="text-lg text-left px-2 py-1 text-blue-200">Physical Tests</h2>
-      <div className="h-px bg-gradient-to-r from-blue-200 to-transparent"/>
-      <div className="grid grid-cols-2 sm:grid-cols-4 p-2">
-        <p className="text-right mr-2">Density:</p>
-        <p className="sm:col-span-3">
-          {density && rangeString(density.min, density.max, "g/mL")}</p>
-        <p className="text-right mr-2">Moisture:</p>
-        <p className="sm:col-span-3">
-          {moisture && rangeString(moisture.min, moisture.max, "%")}</p>
+    <div className="bg-gray-600 rounded">
+      <h2 className="text-lg text-left px-2 py-1 text-blue-200 font-semibold">Physical Tests</h2>
+      <Divider />
+      <div className="flex flex-col p-2">
+        <Detail label="Density:" data={density && rangeString(density.min, density.max, "g/mL")} capData={false} />
+        <Detail label="Moisture:" data={moisture && rangeString(moisture.min, moisture.max, "%")} capData={false} />
       </div>
     </div>
   )

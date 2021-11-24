@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const FinishedGoodLotSchema = new Schema({
   lot:          { type: String, required: true },
-  item:         { type: Schema.Types.ObjectId, ref: 'fgs', required: true },
+  item:         { type: Schema.Types.ObjectId, ref: 'finishedgoods', required: true },
   item_type:    { type: String, default: 'fg' },
   date_created: { type: Date,   default: Date.now },
   department:   { type: String, default: 'Quality Control'},

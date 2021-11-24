@@ -2,60 +2,45 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 // Import server actions
-import { takeRawSample } from '../../../../../actions/lotActions';
+import { takeRawSample } from '../../../../../actions/testingActions';
 // Import components
 import Button from '../../../../button.js';
+import Entry from '../../../../inputs/entry.js';
+import Selection from '../../../../inputs/selection.js';
 
-const AddMicroSample = ({ lotId, close }) => {
+const AddMicroSample = ({ lotId, takeSample }) => {
   // Declare internal state variables
   const [sample, setSample] = useState({
-    sample_date: new Date().toISOString().split('T')[0],
+    lab: null,
+    number: null,
     amount: 30,
-    units: "g"
-  })
-
-  // Dispatch a change to the sampled state of the raw category
-  const dispatch = useDispatch();
-  const takeSample = (e) => {
-    e.preventDefault();
-    dispatch(takeRawSample(lotId, 'micro', sample));
-    close();
-  }
+    units:  'g',
+    results: {},
+    date_sampled: new Date().toISOString().split('T')[0],
+    date_sent:      null,
+    date_of_result: null
+  });
 
   return (
-    <form className="flex flex-col" onSubmit={takeSample}>
+    <form className="flex flex-col" onSubmit={e => takeSample(e, sample)}>
       <p className="text-center mb-2">Sampling...</p>
-      <div className="grid grid-cols-3 gap-x-2 my-2">
-        <p className="text-right">Date:</p>
-        <input type="date"
-          name="sample_date"
-          value={sample.sample_date}
-          onChange={e => setSample({...sample, sample_date: e.target.value})}
-          className="rounded text-black px-1" />
-      </div>
-      <div className="grid grid-cols-6 gap-x-2 my-2">
-        <p className="text-right col-span-2">Amount:</p>
-        <input type="number"
-          name="amount"
-          value={sample.amount}
+      <div className="flex flex-col w-1/2 mb-4 mx-auto">
+        <Entry type="date" label="Date:" name="date_sampled" value={sample.date_sampled}
+          onChange={e => setSample({...sample, date_sampled: e.target.value})} />
+        <Entry type="number" label="Amount:" name="amount" value={sample.amount}
           onChange={e => setSample({...sample, amount: e.target.value})}
-          className="rounded text-black px-1 col-span-1 w-full" />
-        <select
-          name="units"
-          value={sample.units}
-          onChange={(e) => setSample({...sample, units: e.target.value})}
-          className="rounded text-black px-1">
-          <option value="g">g</option>
-          <option value="ths">ths</option>
-          <option value="mL">mL</option>
-        </select>
-      </div>
-      <div className="grid grid-cols-6 my-2">
-        <Button color="bg-green-300"
-          type="submit"
-          text="Submit Sample"
-          title="Submit Sample"
-          extraClasses="col-start-2 col-span-4" />
+          extraClasses="mb-2"
+          append={
+            <Selection name="units" value={sample.units} extraClasses="ml-2"
+              onChange={(e) => setSample({...sample, units: e.target.value})}
+              cap={false} options={[
+                {name: "g", value: "g"},
+                {name: "ths", value: "ths"},
+                {name: "mL", value: "mL"}
+              ]} />
+          } />
+        <Button type="submit" color="bg-green-300"
+          text="Submit Sample" title="Submit Sample" />
       </div>
     </form>
   )

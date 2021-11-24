@@ -10,10 +10,16 @@ const BulkLotSchema = new Schema({
   inventory: {
     amount: { type: Number },
     units:  { type: String },
+    status:     { type: String },
+    expiration: { type: Date },
   },
   receiving: {
-    facility: { type: String },
-    location: { type: String },
+    facility:         { type: String, required: true },
+    location:         { type: String },
+    purchase_order:   { type: Number },
+    manufacturer:     { type: Schema.Types.ObjectId, ref: 'manufacturers' },
+    manufacturer_lot: { type: String },
+    vendor:           { type: Schema.Types.ObjectId, ref: 'vendors' },
   }
 });
 

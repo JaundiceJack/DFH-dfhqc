@@ -1,4 +1,10 @@
-const MicroTestLine = ({ testName, sample, result, spec, unit="" }) => {
+const MicroTestLine = ({
+  label,
+  sample,
+  result,
+  spec,
+  unit=""
+}) => {
   // Convert the date to mm/dd/yyyy format
   const formatDate = (rawDate) => {
     const date = new Date(rawDate);
@@ -7,36 +13,27 @@ const MicroTestLine = ({ testName, sample, result, spec, unit="" }) => {
 
   // Capitalize the first word of each string
   const capitalize = (strang) => {
-    if (strang.length > 0) {
+    if (strang && strang.length > 0) {
       const words = strang.split(' ');
       let final = [];
-      words.forEach(word => {
-        final.push(word[0].toUpperCase()+word.substring(1))
-      })
+      words.forEach(word => final.push(word[0].toUpperCase()+word.substring(1)));
       return final.join(' ');
-    }
-    else return "";
-
+    } else return "";
   }
 
   // Assign a color to the testing string
   const textColor = () => {
     // Text is white if not tested
-    if (spec === null)
-      return "text-white"
+    if (!spec) return "text-white"
     // Red if is tested and not yet sampled
-    else if (spec !== null && sample === null)
-      return "text-red-300"
+    else if (spec && !sample) return "text-red-300"
     // Yellow if sampled but not yet on test
-    else if (spec !== null && sample !== null && sample.sent_to === null)
-      return "text-yellow-100"
+    else if (spec && sample && !sample.lab) return "text-yellow-100"
     // Indigo if sent out but no results
-    else if (spec !== null && sample !== null &&
-             sample.sent_to !== null && result === null)
-      return "text-indigo-200"
+    else if (spec && sample && sample.lab && !result) return "text-indigo-200"
     // Green if results passing, red if results failing
-    else if (spec !== null && sample !== null && sample.sent_to !== null && result !== null) {
-      if (testName !== "Salmonella" && testName !== "E. Coli" && testName !== "Staph")
+    else if (spec && sample && sample.lab && result) {
+      if (label !== "Salmonella:" && label !== "E. Coli:" && label !== "Staph:")
         return result <= spec ? "text-green-200" : "text-red-400";
       else
         return result === "Negative"   ? "text-green-200" :
@@ -57,23 +54,23 @@ const MicroTestLine = ({ testName, sample, result, spec, unit="" }) => {
       return "Needs test";
     // Text is "Sampled on Date" if sampled but not yet tested
     else if (spec !== null && sample !== null &&
-             sample.sample_date !== null && sample.sent_to === null)
-      return `Sampled on ${formatDate(sample.sample_date)}`
+             sample.date_sampled !== null && sample.lab === null)
+      return `Sampled on ${formatDate(sample.date_sampled)}`
     // Text is "Sent to Lab on Date" if on test
     else if (spec !== null && sample !== null &&
-             sample.sample_date !== null && sample.sent_to !== null &&
+             sample.date_sampled !== null && sample.lab !== null &&
              result === null || result === "")
-      return `Sent to ${capitalize(sample.sent_to.name)} on ${formatDate(sample.sent_date)}`
+      return `Sent to ${capitalize(sample.lab.name)} on ${formatDate(sample.date_sent)}`
     // Text is the result if off test
     else if (spec !== null && sample !== null &&
-             sample.sample_date !== null && sample.sent_to !== null &&
+             sample.date_sampled !== null && sample.lab !== null &&
              result !== null)
       return `${result} ${unit}`
   };
 
   return (
     <div className="grid grid-cols-3">
-      <p className="text-right mr-2 capitalize">{testName}:</p>
+      <p className="text-right mr-2 capitalize">{label}</p>
       <p className={textColor()+" col-span-2 "}> { testText() } </p>
     </div>
   )

@@ -30,7 +30,7 @@ const AddIngredient = ({
                     rawOptions.map(option => {
                       return {
                         name: `${option.number} - ${option.name}`,
-                        value: option.value
+                        value: option._id
                       }
                     }) :
                     [{ name: "", value: "" }]

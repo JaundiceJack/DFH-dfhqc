@@ -17,6 +17,7 @@ app.use('/api/fgs',    require('./routes/paths/fgs'));
 app.use('/api/lots',   require('./routes/paths/lots'));
 app.use('/api/assays', require('./routes/paths/assays'));
 app.use('/api/lots',   require('./routes/paths/lots'));
+app.use('/api/tests', require('./routes/paths/tests'));
 app.use('/api/labs',   require('./routes/paths/labs'));
 app.use('/api/auth',   require('./routes/paths/auth'));
 app.use('/api/users',  require('./routes/paths/users'));

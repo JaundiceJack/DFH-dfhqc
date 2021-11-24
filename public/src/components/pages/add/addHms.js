@@ -9,7 +9,7 @@ const AddHms = ({vals, onEntry, onClick}) => {
       <h3 className="font-semibold text-blue-100 text-lg">Heavy Metals</h3>
       <Divider />
       <Selection label="HM Units:" name="hm_units" value={vals.hm_units}
-        onChange={onEntry} extraClasses="col-span-2" append=" "
+        onChange={onEntry} extraClasses="col-span-2" append=" " cap={false}
         options={[
           {name: "ppm", value: "ppm"},
           {name: "μg/sg", value: "μg/sg"},

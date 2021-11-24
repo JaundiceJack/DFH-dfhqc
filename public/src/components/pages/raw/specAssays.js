@@ -1,15 +1,15 @@
+import Detail from '../../detail.js';
+import Divider from '../../divider.js';
+
 const SpecAssays = ({ assays }) => {
   // Display the assays in the format Name: Range by Method
   const mapAssays = () => {
     if (assays) {
       return assays.map((assay, index) => {
         return (
-          <div className="grid grid-cols-3 gap-x-2 p-2" key={index} >
-            <p className="text-right capitalize">{assay.assay.name}:</p>
-            <p className="col-span-2 capitalize self-end">
-              {`${rangeString(assay.min, assay.max, assay.units.name)} by ${assay.method.name}`}
-            </p>
-          </div>
+          <Detail key={index} extraClasses="mb-2"
+            label={`${assay.assay.name}:`}
+            data={`${rangeString(assay.min, assay.max, assay.units.name)} by ${assay.method.name}`} />
         )
       })
     }
@@ -24,9 +24,9 @@ const SpecAssays = ({ assays }) => {
   }
 
   return (
-    <div className="bg-gray-600 rounded text-blue-100 font-semibold">
-      <h2 className="text-lg text-left px-2 py-1 text-blue-200">Assays</h2>
-      <div className="h-px bg-gradient-to-r from-blue-200 to-transparent"/>
+    <div className="bg-gray-600 rounded">
+      <h2 className="text-lg text-left px-2 py-1 text-blue-200 font-semibold">Assays</h2>
+      <Divider />
       {mapAssays()}
     </div>
   )

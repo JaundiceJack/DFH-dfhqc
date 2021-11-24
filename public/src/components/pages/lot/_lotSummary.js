@@ -110,7 +110,7 @@ const LotSummary = () => {
   if (!user.token) return (<Redirect to='/login' />)
   else if (!user.isAuthenticated) return (<Message info="Authenticating..." extraClasses="w-1/2 self-center mx-auto" />)
   else return (
-    <div className={"h-full p-4 w-full rounded border-l border-gray-800 " +
+    <div className={"h-full p-4 w-full rounded " +
                     "bg-gradient-to-br from-gray-800 via-transparent to-gray-800"}>
       <div className="flex flex-col h-full mb-4 2xl:mb-0">
         <h1 className="mb-4 ml-2 text-xl font-bold text-blue-200"> Sample Log </h1>
@@ -130,20 +130,20 @@ const LotSummary = () => {
               {!deleting && !editing &&
                 <Button
                   color={!adding ? "bg-green-300" : "bg-red-400"}
-                  text={adding ? "X" : "Add"}
-                  onClick={onAddClick} /> }
+                  text={adding ? "X" : "Add"} onClick={onAddClick} />
+              }
               {!adding && !deleting &&
                 <Button
                   color={!editing ? "bg-blue-300" : "bg-red-400"}
-                  text={editing ? "X" : "Edit"}
-                  onClick={onEditClick}
-                  disabled={Object.entries(selected).length === 0 ? true : false} /> }
+                  text={editing ? "X" : "Edit"} onClick={onEditClick}
+                  disabled={Object.entries(selected).length === 0 ? true : false} />
+              }
               {!adding && !editing &&
                 <Button
                   color="bg-red-400"
-                  text={deleting ? "X" : "Remove"}
-                  onClick={onRemoveClick}
-                  disabled={Object.entries(selected).length === 0 ? true : false} /> }
+                  text={deleting ? "X" : "Remove"} onClick={onRemoveClick}
+                  disabled={Object.entries(selected).length === 0 ? true : false} />
+              }
             </div>
 
             <div className="bg-gray-500 h-px w-full rounded-full" />
@@ -187,7 +187,9 @@ const LotSummary = () => {
             {editing && <LotEdit toggleEdit={onEditClick} />}
             {deleting && <LotDelete toggleDelete={onRemoveClick} /> }
           </div>
+
           <LotInfo />
+
         </div>
       </div>
     </div>

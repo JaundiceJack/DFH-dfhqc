@@ -269,7 +269,7 @@ const formatEntries = async body => {
       fish: body.fish,
       wheat: body.wheat,
       peanut: body.peanut,
-      tree_nut: body.treeNut,
+      tree_nut: body.tree_nut,
       shellfish: body.shellfish
     },
     assays: await makeAssays(body.assays), // Array

@@ -73,7 +73,7 @@ const RawAdd = ({toggleAdd}) => {
     fish: false,
     wheat: false,
     peanut: false,
-    treeNut: false,
+    tree_nut: false,
     shellfish: false
   })
 

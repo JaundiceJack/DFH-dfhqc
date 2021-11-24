@@ -41,7 +41,7 @@ const BulkSummary = () => {
   if (!user.token) return (<Redirect to='/login' />)
   else if (!user.isAuthenticated) return (<Message info="Authenticating..." extraClasses="w-1/2 self-center mx-auto" />)
   else return (
-    <div className="h-full p-4 w-full rounded border-l border-gray-800 bg-gradient-to-br from-gray-800 via-transparent to-gray-800">
+    <div className="h-full p-4 w-full rounded bg-gradient-to-br from-gray-800 via-transparent to-gray-800">
       <div className="flex flex-col h-full mb-4 2xl:mb-0">
         <h1 className="mb-4 ml-2 text-xl font-bold text-blue-200"> Bulks </h1>
         <div className="grid grid-cols-5 h-full">

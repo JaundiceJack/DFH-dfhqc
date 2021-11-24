@@ -9,7 +9,7 @@ const BlendDelete = ({toggleDelete}) => {
   return (
     <div className="mx-4 my-2">
       <h3 className="text-blue-100 font-semibold text-center">
-        Are you sure you want to delete
+        Are you sure you want to delete {" "}
         <p className="inline capitalize">{selected.name}</p>?
       </h3>
       <div className="w-full flex flex-row justify-center">

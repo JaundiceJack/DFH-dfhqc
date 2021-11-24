@@ -3,8 +3,8 @@ import Detail from '../../../detail.js';
 
 const InfoBlendTesting = ({ lot }) => {
   return (
-    <div className="bg-gray-600 rounded text-blue-100 font-semibold">
-      <h2 className="text-lg text-left px-2 py-1 text-blue-200">Evaluations</h2>
+    <div className="bg-gray-600 rounded">
+      <h2 className="text-lg text-left px-2 py-1 text-blue-200 font-semibold">Evaluations</h2>
       <Divider />
       <div className="flex flex-col">
         <Detail label="Lot #:"    data={lot && lot.lot} />

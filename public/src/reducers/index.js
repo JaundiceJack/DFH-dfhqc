@@ -14,7 +14,7 @@ import identityReducer from './identityReducer.js';
 import textureReducer from './textureReducer.js';
 import vendorReducer from './vendorReducer.js';
 import manufacturerReducer from './manufacturerReducer.js';
-import sampleReducer from './sampleReducer.js';
+import testingReducer from './testingReducer.js';
 
 export default combineReducers({
   raw: rawReducer,
@@ -32,5 +32,5 @@ export default combineReducers({
   texture: textureReducer,
   vendor: vendorReducer,
   manufacturer: manufacturerReducer,
-  samples: sampleReducer
+  testing: testingReducer
 })

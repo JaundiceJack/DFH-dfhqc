@@ -20,8 +20,7 @@ const RawLotSchema = new Schema({
     manufacturer:     { type: Schema.Types.ObjectId, ref: 'manufacturers' },
     manufacturer_lot: { type: String },
     vendor:           { type: Schema.Types.ObjectId, ref: 'vendors' },
-  },
-  testing: [{ type: Schema.Types.ObjectId, ref: 'rawsamples' }]
+  }
 });
 
 const RawLot = mongoose.model('rawlots', RawLotSchema);

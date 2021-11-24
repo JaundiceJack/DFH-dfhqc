@@ -2,144 +2,101 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // Import server actions
-import { editRawSample } from '../../../../../actions/lotActions';
+import { editRawSample } from '../../../../../actions/testingActions';
 // Import components
 import Button from '../../../../button.js';
+import Selection from '../../../../inputs/selection.js';
+import Entry from '../../../../inputs/entry.js';
 
-const AddMicroResults = ({ lotId, test, spec, close}) => {
+const AddMicroResults = ({ lotId, sample, spec, takeResults }) => {
   // Get labs from global state
   const labs = useSelector(state => state.lab.labs);
 
-  // Declare internal state variables (include sample number to locate sample)
-  const [sample, setSample] = useState({
-    sample_number: test.sample_number,
-    sent_to: test.sent_to !== null ? test.sent_to._id : (labs.length > 0 ? labs[0]._id : null),
-    sent_date: test.sent_date ?
-      new Date(test.sent_date).toISOString().split('T')[0] :
+  // Declare internal state variables
+  const [current, setCurrent] = useState({
+    lab:     sample && sample.lab ? sample.lab._id : (labs.length > 0 ? labs[0]._id : null),
+    number:  sample && sample.number,
+    amount:  sample && sample.amount,
+    units:   sample && sample.units,
+    results: {
+      tpc:        (sample && sample.results) ? sample.results.tpc       : "",
+      ym:         sample && sample.results && sample.results.ym         || "",
+      entero:     sample && sample.results && sample.results.entero     || "",
+      salmonella: sample && sample.results && sample.results.salmonella || "",
+      ecoli:      sample && sample.results && sample.results.ecoli      || "",
+      staph:      sample && sample.results && sample.results.staph      || "",
+      paeru:      sample && sample.results && sample.results.paeru      || "",
+    },
+    date_sampled: sample && sample.date_sampled ?
+      new Date(sample.date_sampled).toISOString().split('T')[0] :
       new Date().toISOString().split('T')[0],
-    tpc:    test.tpc    !== null ? test.tpc    : "",
-    ym:     test.ym     !== null ? test.ym     : "",
-    entero: test.entero !== null ? test.entero : "",
-    salmonella: test.salmonella || "",
-    ecoli:      test.ecoli      || "",
-    staph:      test.staph      || "",
-    paeru:      test.paeru      || "",
+    date_sent: sample && sample.date_sent ?
+      new Date(sample.date_sent).toISOString().split('T')[0] :
+      new Date().toISOString().split('T')[0],
+    date_of_result: sample && sample.date_of_result ?
+      new Date(sample.date_of_result).toISOString().split('T')[0] :
+      null,
   });
 
-  // Dispatch the edits to the sample
-  const dispatch = useDispatch();
-  const enterResults = (e) => {
-    e.preventDefault();
-    dispatch(editRawSample(lotId, 'micro', sample));
-    close();
-  }
-
   return (
-    <form className="flex flex-col" onSubmit={enterResults}>
+    <form className="flex flex-col px-2 pb-4" onSubmit={e => takeResults(e, current)}>
       <p className="text-center mb-2">Testing...</p>
-      <div className="grid grid-cols-3 gap-x-2 my-2">
-        <p className="text-right">Testing Lab:</p>
-        <select name="sent_to"
-          value={sample.sent_to}
-          onChange={e => setSample({...sample, sent_to: e.target.value})}
-          className="rounded text-black px-1 capitalize" >
-          {labs.map((lab, index) =>
-            <option key={index} value={lab._id}>{lab.name}</option>) }
-        </select>
-        <input type="date"
-          name="sent_date"
-          value={sample.sent_date}
-          onChange={e => setSample({...sample, sent_date: e.target.value})}
-          className="rounded text-black px-1" />
-      </div>
-      <div className="grid grid-cols-6 gap-x-2 my-2">
-        <p className="text-right col-span-2">TPC:</p>
-        <input type="number"
-          name="tpc"
-          value={sample.tpc}
-          onChange={e => setSample({...sample, tpc: e.target.value})}
-          className="rounded text-black px-1 col-span-2 w-full" />
-        <p className="text-blue-100 font-semibold">{spec.tpc_units}</p>
-      </div>
-      <div className="grid grid-cols-6 gap-x-2 my-2">
-        <p className="text-right col-span-2">Y&M:</p>
-        <input type="number"
-          name="ym"
-          value={sample.ym}
-          onChange={e => setSample({...sample, ym: e.target.value})}
-          className="rounded text-black px-1 col-span-2 w-full" />
-        <p className="text-blue-100 font-semibold">{spec.ym_units}</p>
-      </div>
-      <div className="grid grid-cols-6 gap-x-2 my-2">
-        <p className="text-right col-span-2">Enterobacteria:</p>
-        <input type="number"
-          name="entero"
-          value={sample.entero}
-          onChange={e => setSample({...sample, entero: e.target.value})}
-          className="rounded text-black px-1 col-span-2 w-full" />
-        <p className="text-blue-100 font-semibold">{spec.entero_units}</p>
-      </div>
-      <div className="grid grid-cols-6 gap-x-2 my-2">
-        <p className="text-right col-span-2">Salmonella:</p>
-        <select
-          name="salmonella"
-          value={sample.salmonella}
-          onChange={e => setSample({...sample, salmonella: e.target.value})}
-          className="rounded text-black px-1 col-span-2" >
-          <option value={null}></option>
-          <option value="Negative">Negative</option>
-          <option value="Positive">Positive</option>
-          <option value="Not Tested">Not Tested</option>
-        </select>
-      </div>
-      <div className="grid grid-cols-6 gap-x-2 my-2">
-        <p className="text-right col-span-2">E. Coli:</p>
-        <select
-          name="ecoli"
-          value={sample.ecoli}
-          onChange={e => setSample({...sample, ecoli: e.target.value})}
-          className="rounded text-black px-1 col-span-2" >
-          <option value={null}></option>
-          <option value="Negative">Negative</option>
-          <option value="Positive">Positive</option>
-          <option value="Not Tested">Not Tested</option>
-        </select>
-      </div>
-      <div className="grid grid-cols-6 gap-x-2 my-2">
-        <p className="text-right col-span-2">Staph:</p>
-        <select
-          name="staph"
-          value={sample.staph}
-          onChange={e => setSample({...sample, staph: e.target.value})}
-          className="rounded text-black px-1 col-span-2" >
-          <option value={null}></option>
-          <option value="Negative">Negative</option>
-          <option value="Positive">Positive</option>
-          <option value="Not Tested">Not Tested</option>
-        </select>
-      </div>
+      <Selection label="Testing Lab:" name="lab" value={current.lab}
+        onChange={e => setCurrent({...current, lab: e.target.value})}
+        options={labs.map(lab => { return { name: lab.name, value: lab._id }})}
+        append={
+          <Entry type="date" name="date_sent" value={current.date_sent}
+            onChange={e => setCurrent({...current, date_sent: e.target.value})}
+            extraClasses="ml-2 " /> } />
+      <Entry type="number" label="TPC:" name="tpc" value={current.results.tpc}
+        onChange={e => setCurrent({...current, results: { ...current.results, tpc: e.target.value }})}
+        append={spec.tpc_units} />
+      <Entry type="number" label="Y&M:" name="ym" value={current.results.ym}
+        onChange={e => setCurrent({...current, results: { ...current.results, ym: e.target.value }})}
+        append={spec.ym_units} />
+      <Entry type="number" label="Enterobacteria:" name="entero" value={current.results.entero}
+        onChange={e => setCurrent({...current, results: { ...current.results, entero: e.target.value }})}
+        append={spec.entero_units} />
+      <Selection label="Salmonella:" name="salmonella" value={current.results.salmonella}
+        onChange={e => setCurrent({...current, results: { ...current.results, salmonella: e.target.value }})}
+        options={[
+          { name: "", value: null },
+          { name: "Negative", value: "Negative" },
+          { name: "Positive", value: "Positive" },
+          { name: "Not Tested", value: "Not Tested" },
+        ]} append=" " />
+      <Selection label="E. Coli:" name="ecoli" value={current.results.ecoli}
+        onChange={e => setCurrent({...current, results: { ...current.results, ecoli: e.target.value }})}
+        options={[
+          { name: "", value: null },
+          { name: "Negative", value: "Negative" },
+          { name: "Positive", value: "Positive" },
+          { name: "Not Tested", value: "Not Tested" },
+        ]} append=" " />
+      <Selection label="Staph:" name="staph" value={current.results.staph}
+        onChange={e => setCurrent({...current, results: { ...current.results, staph: e.target.value }})}
+        options={[
+          { name: "", value: null },
+          { name: "Negative", value: "Negative" },
+          { name: "Positive", value: "Positive" },
+          { name: "Not Tested", value: "Not Tested" },
+        ]} append=" " extraClasses="mb-2" />
       {spec.paeru_tested &&
-        <div className="grid grid-cols-6 gap-x-2 my-2">
-          <p className="text-right col-span-2">P. Aeru:</p>
-          <select
-            name="paeru"
-            value={sample.paeru}
-            onChange={e => setSample({...sample, paeru: e.target.value})}
-            className="rounded text-black px-1 col-span-2" >
-            <option value={null}></option>
-            <option value="Negative">Negative</option>
-            <option value="Positive">Positive</option>
-            <option value="Not Tested">Not Tested</option>
-          </select>
-        </div>
+        <Selection label="P. Aeru:" name="paeru" value={current.results.paeru}
+          onChange={e => setCurrent({...current, results: { ...current.results, paeru: e.target.value }})}
+          options={[
+            { name: "", value: null },
+            { name: "Negative", value: "Negative" },
+            { name: "Positive", value: "Positive" },
+            { name: "Not Tested", value: "Not Tested" },
+          ]} append=" " extraClasses="mb-2" />
       }
-      <div className="grid grid-cols-6 my-2">
-        <Button color="bg-green-300"
-          type="submit"
-          text="Submit Testing"
-          title="Submit Testing"
-          extraClasses="col-start-2 col-span-4" />
-      </div>
+      <Button color="bg-green-300"
+        type="submit"
+        text="Submit Testing"
+        title="Submit Testing"
+        extraClasses="w-1/3 h-8 mx-auto" />
+
     </form>
   )
 }

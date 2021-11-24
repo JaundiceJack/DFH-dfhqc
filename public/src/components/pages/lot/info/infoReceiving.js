@@ -3,8 +3,8 @@ import Detail from '../../../detail.js';
 
 const InfoBasic = ({ lot }) => {
   return (
-    <div className="bg-gray-600 rounded text-blue-100 font-semibold">
-      <h2 className="text-lg text-left px-2 py-1 text-blue-200">Receiving</h2>
+    <div className="bg-gray-600 rounded">
+      <h2 className="text-lg text-left px-2 py-1 text-blue-200 font-semibold">Receiving</h2>
       <Divider />
       <div className="flex flex-col mb-2">
         <Detail label="Facility:" data={lot && lot.receiving && lot.receiving.facility} />

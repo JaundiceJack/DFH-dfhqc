@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux';
 //import { getAssay } from '../../../actions/assayActions';
 
-import SpecBasics from './specBasics';
-import SpecExtra  from './specExtra';
+import SpecBasics from './specBasics.js';
+import SpecExtra  from './specExtra.js';
 
 const BulkSpec = () => {
   // Get the current selection from the redux state

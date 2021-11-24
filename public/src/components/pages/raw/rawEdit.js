@@ -93,7 +93,7 @@ const RawEdit = ({toggleEdit}) => {
     fish: selected.allergens.fish,
     wheat: selected.allergens.wheat,
     peanut: selected.allergens.peanut,
-    treeNut: selected.allergens.treeNut,
+    tree_nut: selected.allergens.tree_nut,
     shellfish: selected.allergens.shellfish
   })
 

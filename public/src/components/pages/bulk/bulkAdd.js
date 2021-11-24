@@ -18,13 +18,15 @@ const BulkAdd = ({ toggleAdd }) => {
       name:           "",
       blendId:        blends.length > 0 ? blends[0]._id : "",
       capId:          caps.length > 0   ? caps[0]._id   : "",
-      dosageType:     'capsule',
-      servingUnits:   'mg',
-      batchSize:      "",
-      capsuleWeight:  "",
-      netWeight:      "",
-      capsPerBatch:   "",
-      capsPerBottle:  "",
+      dosage_type:     'capsule',
+      serving_units:   'mg',
+      fill_weight:     "",
+      batch_size:      "",
+      capsule_weight:  "",
+      net_weight:      "",
+      caps_per_batch:   "",
+      caps_per_serving: "",
+      caps_per_bottle:  "",
     }
   );
 

@@ -22,7 +22,7 @@ const AddAllergens = ({ vals, onClick }) => {
 
         <Checkbox label="Peanut" name="peanut" value={vals.peanut} onClick={onClick} defaultChecked={vals.peanut} />
 
-        <Checkbox label="Tree Nut" name="treeNut" value={vals.treeNut} onClick={onClick} defaultChecked={vals.treeNut} />
+        <Checkbox label="Tree Nut" name="tree_nut" value={vals.tree_nut} onClick={onClick} defaultChecked={vals.tree_nut} />
 
         <Checkbox label="Shellfish" name="shellfish" value={vals.shellfish} onClick={onClick} defaultChecked={vals.shellfish} />
       </div>

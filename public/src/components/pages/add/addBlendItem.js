@@ -4,7 +4,7 @@ import Divider from '../../divider.js';
 const AddBlendItem = ({ vals, onEntry, blendOptions }) => {
   return (
     <div className="flex flex-col">
-      <h3 className="font-semibold text-blue-100 text-lg">Blend</h3>
+      <h3 className="font-semibold text-blue-100 text-lg">Blend Used</h3>
       <Divider />
       <div className="grid grid-cols-4 mb-4">
         <div className={"col-span-4 rounded-lg border border-gray-400 p-2 mb-2"}>

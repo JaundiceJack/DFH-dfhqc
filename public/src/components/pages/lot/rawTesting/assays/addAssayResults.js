@@ -2,108 +2,73 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // Import server actions
-import { editRawSample } from '../../../../../actions/lotActions';
+import { editRawSample } from '../../../../../actions/testingActions';
 // Import components
 import Button from '../../../../button.js';
+import Selection from '../../../../inputs/selection.js';
+import Entry from '../../../../inputs/entry.js';
 
-const AddAssayResults = ({ lotId, test, spec, close}) => {
+const AddAssayResults = ({ lotId, sample, spec, takeResults }) => {
   // Get labs from global state
   const labs = useSelector(state => state.lab.labs);
 
-  // Declare internal state variables (include sample number to locate sample)
-  const [sample, setSample] = useState({
-    sample_number: test.sample_number,
-    sent_to: test.sent_to !== null ? test.sent_to._id : (labs.length > 0 ? labs[0]._id : null),
-    sent_date: test.sent_date ?
-      new Date(test.sent_date).toISOString().split('T')[0] :
+  // Declare internal state variables
+  const [current, setCurrent] = useState({
+    lab:     sample && sample.lab ? sample.lab._id : (labs.length > 0 ? labs[0]._id : null),
+    number:  sample && sample.number,
+    amount:  sample && sample.amount,
+    units:   sample && sample.units,
+    results: {
+      arsenic: (sample && sample.results) ? sample.results.arsenic : "",
+      cadmium: (sample && sample.results) ? sample.results.cadmium : "",
+      lead:    (sample && sample.results) ? sample.results.lead    : "",
+      mercury: (sample && sample.results) ? sample.results.mercury : "",
+      nickel:  (sample && sample.results) ? sample.results.nickel  : "",
+    },
+    date_sampled: sample && sample.date_sampled ?
+      new Date(sample.date_sampled).toISOString().split('T')[0] :
       new Date().toISOString().split('T')[0],
-    arsenic:    test.arsenic    !== null ? test.arsenic    : "",
-    cadmium:     test.cadmium     !== null ? test.cadmium     : "",
-    lead:       test.lead !== null ? test.lead : "",
-    mercury:    test.mercury !== null ? test.mercury : "",
-    nickel:     test.nickel !== null ? test.nickel : "",
+    date_sent: sample && sample.date_sent ?
+      new Date(sample.date_sent).toISOString().split('T')[0] :
+      new Date().toISOString().split('T')[0],
+    date_of_result: sample && sample.date_of_result ?
+      new Date(sample.date_of_result).toISOString().split('T')[0] :
+      null,
   });
 
-  // Dispatch the edits to the sample
-  const dispatch = useDispatch();
-  const enterResults = (e) => {
-    e.preventDefault();
-    dispatch(editRawSample(lotId, 'hm', sample));
-    close();
-  }
-
   return (
-    <form className="flex flex-col" onSubmit={enterResults}>
+    <form className="flex flex-col px-2 pb-4" onSubmit={e => takeResults(e, current)}>
       <p className="text-center mb-2">Testing...</p>
-      <div className="grid grid-cols-3 gap-x-2 my-2">
-        <p className="text-right">Testing Lab:</p>
-        <select name="sent_to"
-          value={sample.sent_to}
-          onChange={e => setSample({...sample, sent_to: e.target.value})}
-          className="rounded text-black px-1 capitalize" >
-          {labs.map((lab, index) =>
-            <option key={index} value={lab._id}>{lab.name}</option>) }
-        </select>
-        <input type="date"
-          name="sent_date"
-          value={sample.sent_date}
-          onChange={e => setSample({...sample, sent_date: e.target.value})}
-          className="rounded text-black px-1" />
-      </div>
-      <div className="grid grid-cols-6 gap-x-2 my-2">
-        <p className="text-right col-span-2">Arsenic:</p>
-        <input type="number"
-          name="arsenic"
-          value={sample.arsenic}
-          onChange={e => setSample({...sample, arsenic: e.target.value})}
-          className="rounded text-black px-1 col-span-1 w-full" />
-        <p className="text-blue-100 font-semibold">{spec.units}</p>
-      </div>
-      <div className="grid grid-cols-6 gap-x-2 my-2">
-        <p className="text-right col-span-2">Cadmium:</p>
-        <input type="number"
-          name="cadmium"
-          value={sample.cadmium}
-          onChange={e => setSample({...sample, cadmium: e.target.value})}
-          className="rounded text-black px-1 col-span-1 w-full" />
-        <p className="text-blue-100 font-semibold">{spec.units}</p>
-      </div>
-      <div className="grid grid-cols-6 gap-x-2 my-2">
-        <p className="text-right col-span-2">Lead:</p>
-        <input type="number"
-          name="lead"
-          value={sample.lead}
-          onChange={e => setSample({...sample, lead: e.target.value})}
-          className="rounded text-black px-1 col-span-1 w-full" />
-        <p className="text-blue-100 font-semibold">{spec.units}</p>
-      </div>
-      <div className="grid grid-cols-6 gap-x-2 my-2">
-        <p className="text-right col-span-2">Mercury:</p>
-        <input type="number"
-          name="mercury"
-          value={sample.mercury}
-          onChange={e => setSample({...sample, mercury: e.target.value})}
-          className="rounded text-black px-1 col-span-1 w-full" />
-        <p className="text-blue-100 font-semibold">{spec.units}</p>
-      </div>
+      <Selection label="Testing Lab:" name="lab" value={current.lab}
+        onChange={e => setCurrent({...current, lab: e.target.value})}
+        options={labs.map(lab => { return { name: lab.name, value: lab._id }})}
+        append={
+          <Entry type="date" name="date_sent" value={current.date_sent}
+            onChange={e => setCurrent({...current, date_sent: e.target.value})}
+            extraClasses="ml-2 " /> } />
+      <Entry type="number" label="Arsenic:" name="arsenic" value={current.results.arsenic}
+        onChange={e => setCurrent({...current, results: { ...current.results, arsenic: e.target.value }})}
+        append={spec.hm_units} />
+      <Entry type="number" label="Cadmium:" name="cadmium" value={current.results.cadmium}
+        onChange={e => setCurrent({...current, results: { ...current.results, cadmium: e.target.value }})}
+        append={spec.hm_units} />
+      <Entry type="number" label="Lead:" name="lead" value={current.results.lead}
+        onChange={e => setCurrent({...current, results: { ...current.results, lead: e.target.value }})}
+        append={spec.hm_units} />
+      <Entry type="number" label="Mercury:" name="mercury" value={current.results.mercury}
+        onChange={e => setCurrent({...current, results: { ...current.results, mercury: e.target.value }})}
+        append={spec.hm_units} />
       {spec.nickel_tested &&
-        <div className="grid grid-cols-6 gap-x-2 my-2">
-          <p className="text-right col-span-2">Nickel:</p>
-          <input type="number"
-            name="nickel"
-            value={sample.nickel}
-            onChange={e => setSample({...sample, nickel: e.target.value})}
-            className="rounded text-black px-1 col-span-1 w-full" />
-          <p className="text-blue-100 font-semibold">{spec.units}</p>
-        </div>
+        <Entry type="number" label="Nickel:" name="nickel" value={current.results.nickel}
+          onChange={e => setCurrent({...current, results: { ...current.results, nickel: e.target.value }})}
+          append={spec.hm_units} />
       }
-      <div className="grid grid-cols-6 my-2">
-        <Button color="bg-green-300"
-          type="submit"
-          text="Submit Testing"
-          title="Submit Testing"
-          extraClasses="col-start-2 col-span-4" />
-      </div>
+      <Button color="bg-green-300"
+        type="submit"
+        text="Submit Testing"
+        title="Submit Testing"
+        extraClasses="w-1/3 h-8 mx-auto" />
+
     </form>
   )
 }
