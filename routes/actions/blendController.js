@@ -13,6 +13,14 @@ const getBlends = trycatch( async (req, res) => {
   else { res.status(404); throw new Error("Unable to find blends.") };
 });
 
+// GET: api/blends/id | Get a single blend by it's id | Private
+const getBlend = trycatch( async (req, res) => {
+  // Find the raw and populate it's testing history
+  const blend = await Blend.findById(req.params.id).populate('ingredients.raw').exec();
+  if (blend) res.status(200).json(blend);
+  else { res.status(404); throw new Error("Unable to find the requested blend.") };
+});
+
 // POST: api/blends/ | Create a new blend | Private
 const createBlend = trycatch( async (req, res) => {
   const entries = await formatEntries(req.body);
@@ -44,7 +52,7 @@ const editBlend = trycatch( async (req, res) => {
 // DELETE: api/blends/blend_id | Remove the blend with the given ID | Private
 const removeBlend = trycatch(async (req, res) => {
   const blend = await Blend.findById(req.params.id);
-  if (blend) blend.remove().then(() => res.status(200).json({success: true})).catch(e => { throw new Error(e) })
+  if (blend) blend.remove().then(() => res.status(200).json(req.params.id)).catch(e => { throw new Error(e) })
   else { res.status(404); throw new Error("Could not find the blend to delete."); };
 });
 
@@ -78,12 +86,21 @@ const makeIngredients = ingredients => {
 const formatEntries = async body => {
   return {
     number:      Number(body.number),
-    name:        body.name.toLowerCase(),
+    name:               body.name.toLowerCase(),
     batch_size:  Number(body.batch_size),
     units_per_serving: Number(body.units_per_serving),
-    customer:    body.customer.toLowerCase(),
+    customer:           body.customer.toLowerCase(),
     ingredients: await makeIngredients(body.ingredients),
+    hm: {
+      arsenic: body.hm.arsenic ? Number(body.hm.arsenic) : null,
+      cadmium: body.hm.cadmium ? Number(body.hm.cadmium) : null,
+      lead:    body.hm.lead ? Number(body.hm.lead) : null,
+      mercury: body.hm.mercury ? Number(body.hm.mercury) : null,
+      nickel:  body.hm.nickel ? Number(body.hm.nickel) : null,
+      nickel_tested: body.hm.nickel_tested,
+      units:   body.hm.units,
+    }
   }
 }
 
-module.exports = {getBlends, createBlend, editBlend, removeBlend};
+module.exports = {getBlends, getBlend, createBlend, editBlend, removeBlend};

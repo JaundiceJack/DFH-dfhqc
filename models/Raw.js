@@ -1,9 +1,14 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+// TODO: The annual testing (pesticides, rancidity, solvents) can be turned into
+// an array of annual test references to an annualTesting schema
+// then I'd be able to add any test for annual checking
+
 const RawSchema = new Schema({
   number: { type: Number, required: true, unique: true },
   name: { type: String, required: true },
+  lots: [{ type: Schema.Types.ObjectId, ref: 'lots' }],
   color: { type: String },
   odor: { type: String },
   taste: { type: String },
@@ -15,7 +20,9 @@ const RawSchema = new Schema({
     mercury: { type: Number },
     nickel:  { type: Number },
     nickel_tested: { type: Boolean },
-    units:   { type: String }
+    units:   { type: String },
+    lots_passing: [{ lot: { type: Schema.Types.ObjectId, ref: 'lots' }, date: { type: Date } }],
+    lots_failing: [{ lot: { type: Schema.Types.ObjectId, ref: 'lots' }, date: { type: Date } }]
   },
   moisture: {
     min: { type: Number, min: 0, max: 100 },
@@ -57,19 +64,22 @@ const RawSchema = new Schema({
   pesticide: {
     tested: { type: Boolean },
     standard: { type: String },
-    last_tested: { type: Date },
+    lots_passing: [{ lot: { type: Schema.Types.ObjectId, ref: 'lots' }, date: { type: Date } }],
+    lots_failing: [{ lot: { type: Schema.Types.ObjectId, ref: 'lots' }, date: { type: Date } }]
   },
   solvent: {
     tested: { type: Boolean },
     standard: { type: String },
-    last_tested: { type: Date },
+    lots_passing: [{ lot: { type: Schema.Types.ObjectId, ref: 'lots' }, date: { type: Date } }],
+    lots_failing: [{ lot: { type: Schema.Types.ObjectId, ref: 'lots' }, date: { type: Date } }]
   },
   rancidity: {
     tested: { type: Boolean },
     peroxide: { type: Number },
     anisidine: { type: Number },
     totox: { type: Number },
-    last_tested: { type: Date },
+    lots_passing: [{ lot: { type: Schema.Types.ObjectId, ref: 'lots' }, date: { type: Date } }],
+    lots_failing: [{ lot: { type: Schema.Types.ObjectId, ref: 'lots' }, date: { type: Date } }]
   },
   allergens: {
     soy: {type: Boolean},

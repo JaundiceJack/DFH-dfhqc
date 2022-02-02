@@ -11,8 +11,8 @@ import VendorSpec   from './vendorSpec.js';
 import VendorAdd    from './vendorAdd.js';
 import VendorEdit   from './vendorEdit.js';
 import VendorDelete from './vendorDelete.js';
-import Message   from '../../message.js';
-import Button    from '../../button.js';
+import Message   from '../../misc/message.js';
+import Button    from '../../inputs/button.js';
 
 const VendorSummary = () => {
   const selected = useSelector(state => state.vendor.selectedVendor);

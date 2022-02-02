@@ -8,9 +8,10 @@ import { Link } from 'react-router-dom'
 // Import actions
 import { loadUser, changePage, login, logout } from '../actions/authActions.js';
 import { clearMessages } from '../actions/msgActions.js'
-import Button from './button.js';
-import TextInput from './textInput.js';
-import Message from './message.js';
+import Button from './inputs/button.js';
+import TextInput from './inputs/textInput.js';
+import Message from './misc/message.js';
+import Container from './misc/container.js';
 
 const Home = () => {
   // Set internal variables for username+password
@@ -56,13 +57,13 @@ const Home = () => {
   const onLogout = () => { dispatch(logout()); };
   const changeActive = nextPage => { dispatch(changePage(nextPage)) };
 
-  const linkTextCs = "ml-1 text-blue-100 text-lg font-semibold transform duration-75 ease-in-out hover:scale-105";
+  const linkTextCs = "ml-1 text-blue-100 text-lg font-semibold transform duration-75 ease-in-out hover:scale-110 w-min whitespace-nowrap";
 
   return (
     <div className={"w-full h-full flex flex-col rounded "+
                     "bg-gradient-to-br from-gray-800 "+
                     "via-transparent to-gray-800"}>
-      <div className="flex flex-row items-baseline">
+      <div className="flex flex-col sm:flex-row items-center sm:items-baseline">
         <img className="rounded-lg mt-4 ml-4 p-2 bg-white"
              src={logo} alt="Designs for Health Logo" />
         <h1 className="font-semibold text-blue-100 ml-2 mt-2 self-center">
@@ -71,7 +72,7 @@ const Home = () => {
         <form onSubmit={onSubmit}
               className={"mt-2 mr-2 h-full bg-gradient-to-bl "+
                          "from-gray-700 to-transparent rounded-lg "+
-                         "grid self-start p-4"}>
+                         "grid self-center sm:self-start p-4"}>
           {isAuthenticated &&
             <Button color="bg-red-300"
                     text="Logout"
@@ -97,62 +98,45 @@ const Home = () => {
         </form>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 mb-6 mr-4">
-        <div className="sm:mx-5 mx-2 mt-10 rounded-xl border-l border-gray-800 bg-gray-700">
-          <h2 className="font-semibold text-blue-200 text-xl mx-4 my-2">Materials</h2>
-          <div className="bg-blue-200 h-px w-full rounded-full mb-2" />
-          <div className="mx-4 mb-4 flex flex-col justify-start items-start">
-            <Link to="/raws"  onClick={() => changeActive('raws')} >
-              <p className={linkTextCs}>Raws</p>
-            </Link>
-            <Link to="/blends" onClick={() => changeActive('blends')} >
-              <p className={linkTextCs}>Blends</p>
-            </Link>
-            <Link to="/bulks" onClick={() => changeActive('bulks')} >
-              <p className={linkTextCs}>Bulks</p>
-            </Link>
-            <Link to="/fgs" onClick={() => changeActive('fgs')} >
-              <p className={linkTextCs}>Finished Goods</p>
-            </Link>
-          </div>
-        </div>
-        <div className="sm:mx-5 mx-2 mt-10 rounded-xl border-l border-gray-800 bg-gray-700">
-          <h2 className="font-semibold text-blue-200 text-xl mx-4 my-2">Lots</h2>
-          <div className="bg-blue-200 h-px w-full rounded-full mb-2" />
-          <div className="mx-4 mb-4 flex flex-col justify-start items-start">
-            <Link to="/samples" onClick={() => changeActive('samples')}>
-              <p className={linkTextCs}>Sample Log</p>
-            </Link>
-          </div>
-        </div>
-        <div />
-        <div className="sm:mx-5 mx-2 mt-10 rounded-xl border-l border-gray-800 bg-gray-700">
-          <h2 className="font-semibold text-blue-200 text-xl mx-4 my-2">Documents</h2>
-          <div className="bg-blue-200 h-px w-full rounded-full mb-2" />
-          <div className="mx-4 mb-4 flex flex-col justify-start items-start">
-            <Link to="/sops" onClick={() => changeActive('sops')}>
-              <p className={linkTextCs}>SOPs</p>
-            </Link>
-            <Link to="/wos" onClick={() => changeActive('wos')}>
-              <p className={linkTextCs}>Work Orders</p>
-            </Link>
-          </div>
-        </div>
-        <div className="sm:mx-5 mx-2 mt-10 rounded-xl border-l border-gray-800 bg-gray-700">
-          <h2 className="font-semibold text-blue-200 text-xl mx-4 my-2">Other</h2>
-          <div className="bg-blue-200 h-px w-full rounded-full mb-2" />
-          <div className="mx-4 mb-4 flex flex-col justify-start items-start">
-            <Link to="/labs" onClick={() => changeActive('labs')}>
-              <p className={linkTextCs}>Testing Labs</p>
-            </Link>
-            <Link to="/vendors" onClick={() => changeActive('vendors')}>
-              <p className={linkTextCs}>Vendors</p>
-            </Link>
-            <Link to="/manufacturers" onClick={() => changeActive('manufacturers')}>
-              <p className={linkTextCs}>Manufacturers</p>
-            </Link>
-          </div>
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 xl:w-2/3 justify-center mb-6 mr-4">
+        <Container title="Materials" loading={false} extraClasses="m-4" contents={[
+          <Link to="/raws"  onClick={() => changeActive('raws')} >
+            <p className={linkTextCs}>Raws</p>
+          </Link>,
+          <Link to="/blends" onClick={() => changeActive('blends')} >
+            <p className={linkTextCs}>Blends</p>
+          </Link>,
+          <Link to="/bulks" onClick={() => changeActive('bulks')} >
+            <p className={linkTextCs}>Bulks</p>
+          </Link>,
+          <Link to="/fgs" onClick={() => changeActive('fgs')} >
+            <p className={linkTextCs}>Finished Goods</p>
+          </Link>
+        ]} />
+        <Container title="Lots" loading={false} extraClasses="m-4" contents={[
+          <Link to="/samples" onClick={() => changeActive('samples')}>
+            <p className={linkTextCs}>Sample Log</p>
+          </Link>
+        ]} />
+        <Container title="Documents" loading={false} extraClasses="m-4" contents={[
+          <Link to="/sops" onClick={() => changeActive('sops')}>
+            <p className={linkTextCs}>SOPs</p>
+          </Link>,
+          <Link to="/wos" onClick={() => changeActive('wos')}>
+            <p className={linkTextCs}>Work Orders</p>
+          </Link>
+        ]} />
+        <Container title="Other" loading={false} extraClasses="m-4" contents={[
+          <Link to="/labs" onClick={() => changeActive('labs')}>
+            <p className={linkTextCs}>Testing Labs</p>
+          </Link>,
+          <Link to="/vendors" onClick={() => changeActive('vendors')}>
+            <p className={linkTextCs}>Vendors</p>
+          </Link>,
+          <Link to="/manufacturers" onClick={() => changeActive('manufacturers')}>
+            <p className={linkTextCs}>Manufacturers</p>
+          </Link>
+        ]} />
       </div>
 
     </div>

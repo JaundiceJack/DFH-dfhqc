@@ -30,14 +30,14 @@ const Selection = ({
       }
       <select name={name} value={value} onChange={onChange} disabled={disabled}
         className={
-          "rounded my-1 py-1 pl-2 bg-gray-200 w-full self-end text-black " +
+          "rounded my-1 py-1 pl-2 bg-gray-200 w-full self-end text-black focus:outline-none focus:ring-2 focus:ring-yellow-500 " +
           (cap ? " capitalize " : "") +
           (( label &&  append) ? "col-span-1" :
            (!label && !append) ? "col-span-3" :
                                  "col-span-2")
         }>
         {options.map((option, index) => {
-          return <option key={index} value={option.value}>
+          return <option key={index} value={option.value} className="text-black">
             {cap ? capitalize(option.name) : option.name}
             </option>
         })}

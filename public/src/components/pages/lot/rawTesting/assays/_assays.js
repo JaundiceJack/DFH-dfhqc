@@ -6,34 +6,27 @@ import { getTests, takeRawSample, editRawSample, removeRawSample,
   setShowTesting, setShowSampling, setShowDeleting }
   from '../../../../../actions/testingActions.js';
 // Import Components
-import Divider from '../../../../divider.js';
-import Button from '../../../../button.js';
-import SampleHeader from './sampleHeader.js';
-import SampleSelector from './sampleSelector.js';
-import SampleInfo from './sampleInfo.js';
-import AddAssaySample from './addAssaySample.js';
-import AddAssayResults from './addAssayResults.js';
-import DeleteAssay from './deleteAssay.js';
+import Button from '../../../../inputs/button.js';
+import Divider from '../../../../misc/divider.js';
+import Container from '../../../../misc/container.js';
 import Assay from './assay.js';
+// Get components common to the testing dialogs
+import TestHeader   from '../common/testHeader.js';
 
 const AssayTests = ({ lot }) => {
-  // Set/Get component variables
-  const {
-    tests, loading, error,
-    sampling, testing, deleting
-  } = useSelector(state => state.testing);
-
-
+  const { loading } = useSelector(state => state.testing);
 
   return (
-    <div className="bg-gray-600 rounded text-blue-100 font-semibold">
-    <SampleHeader title="Assays" />
-      {
-        lot.item.assays.map((assay, index) => {
-          return <Assay key={index} lot={lot} spec={assay} />
-        })
-      }
-    </div>
+    <Container title="Assays" loading={loading} contents={
+      lot.raw.assays.map((assay, index) => {
+        return (
+          <div key={index}>
+            <Assay lot={lot} spec={assay} />
+            {index !== lot.raw.assays.length-1 && <div className="mb-2 h-px w-full bg-gradient-to-r from-transparent via-blue-300 to-transparent" />}
+          </div>
+        )
+      })
+    } />
   )
 }
 

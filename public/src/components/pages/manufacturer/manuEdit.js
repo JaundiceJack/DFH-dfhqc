@@ -5,9 +5,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addManufacturer } from '../../../actions/manufacturerActions.js';
 import { clearMessages } from '../../../actions/msgActions.js';
 // Import components
-import Button     from '../../button.js';
-import Message    from '../../message.js';
-import TextInput  from '../../textInput.js';
+import Button     from '../../inputs/button.js';
+import Message    from '../../misc/message.js';
+import TextInput  from '../../inputs/textInput.js';
 
 const ManufacturerEdit = ({toggleEdit}) => {
   const selected = useSelector(state => state.manufacturer.selectedManufacturer);

@@ -4,8 +4,9 @@ import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { selectLot } from '../../../actions/lotActions';
 import { getTests } from '../../../actions/testingActions';
+import { getRaw } from '../../../actions/rawActions';
 
-const LotList = ({lots}) => {
+const LotList = ({ lots }) => {
   // Get the items from the server upon loading
   const selectedId = useSelector(state => state.lot.selectedLot._id);
 
@@ -37,6 +38,10 @@ const LotList = ({lots}) => {
   const rowClick = (lot) => {
     dispatch(selectLot(lot));
     dispatch(getTests(lot._id));
+    if (lot.type === 'raw') dispatch(getRaw(lot.raw._id));
+    //else if (lot.type === 'blend') dispatch(getBlend(lot.blend._id));
+    //else if (lot.type === 'bulk') dispatch(getBlend(lot.bulk._id));
+    //else if (lot.type === 'fg') dispatch(getBlend(lot.fg._id));
   }
   const rowClasses = (index, id) => {
     if (selectedId === id) return selRow;
@@ -52,12 +57,22 @@ const LotList = ({lots}) => {
     const lot = lots[index];
     return (
       <div onClick={() => rowClick(lot)}
-        title={lot && lot.item && `${lot.item.number} - ${capitalize(lot.item.name)}: ${lot.lot}`}
+        title={lot && (
+          lot.raw   ? `${lot.raw.number} - ${capitalize(lot.raw.name)}: ${lot.lot}` :
+          lot.blend ? `${lot.blend.number} - ${capitalize(lot.blend.name)}: ${lot.lot}` :
+          lot.bulk  ? `${lot.bulk.number} - ${capitalize(lot.bulk.name)}: ${lot.lot}` :
+          lot.fg    && `${lot.fg.number} - ${capitalize(lot.fg.name)}: ${lot.lot}`
+        )}
         className={ rowClasses(index, lot._id) }
         style={style}>
         <p className="col-span-2">{lot && formatDate(lot.date_created)}</p>
         <p className="col-span-3">{lot && lot.lot}</p>
-        <p className="col-span-7">{lot && lot.item && lot.item.name}</p>
+        <p className="col-span-7">{lot && (
+          lot.raw ? lot.raw.name :
+          lot.blend ? lot.blend.name :
+          lot.bulk ? lot.bulk.name :
+          lot.fg && lot.fg.name
+        )}</p>
       </div>
     )
   }

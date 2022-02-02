@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const BulkSchema = new Schema({
   number:      { type: Number, required: true, unique: true },
   name:        { type: String, required: true },
+  lots:        [{ type: Schema.Types.ObjectId, ref: 'lots' }],
   blend:       { type: Schema.Types.ObjectId, ref: 'blends' },
   dosage_type: { type: String },
   capsule:     { type: Schema.Types.ObjectId, ref: 'raws' },

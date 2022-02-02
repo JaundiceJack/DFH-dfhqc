@@ -1,3 +1,13 @@
+/*
+  TODO: when multiple new methods with the same name are submitted at once,
+  while i do seem to check for it, it still complains that there are duplicate methods when saving
+
+  to get around this, I can run a check beforehand on the submitted methods
+  and check if they have the same name, then just save that one and proceed with saving the raw data
+  or i can modify the front end to filter it out before-hand somehow
+*/
+
+
 // Import Libraries
 const trycatch = require('express-async-handler');
 
@@ -17,12 +27,27 @@ const rawPopPaths = [
   'ids.identity',
   'ids.method',
 ];
+const testingPopPaths = [
+  { path: 'pesticide.lots_passing.lot', populate: 'tests' },
+  { path: 'rancidity.lots_passing.lot', populate: 'tests' },
+  { path: 'solvent.lots_passing.lot', populate: 'tests' },
+  { path: 'hm.lots_passing.lot', populate: 'tests' },
+  { path: 'micro.lots_passing.lot', populate: 'tests' },
+]
 
 // GET: api/raws/ | Get a list of all raw specifications | Private
 const getRaws = trycatch( async (req, res) => {
   const raws = await Raw.find().populate(rawPopPaths).exec();
   if (raws) res.status(200).json(raws);
   else { res.status(404); throw new Error("Unable to find raw materials.") };
+});
+
+// GET: api/raws/ | Get a list of all raw specifications | Private
+const getRaw = trycatch( async (req, res) => {
+  // Find the raw and populate it's testing history
+  const raw = await Raw.findById(req.params.id).populate(testingPopPaths).exec();
+  if (raw) res.status(200).json(raw);
+  else { res.status(404); throw new Error("Unable to find the requested raw material.") };
 });
 
 // POST: api/raws/ | Create a new raw material | Private
@@ -56,7 +81,7 @@ const editRaw = trycatch( async (req, res) => {
 // DELETE: api/raws/ | Remove the raw with the given ID from the database | Private
 const removeRaw = trycatch( async (req, res) => {
   const raw = await Raw.findById(req.params.id);
-  if (raw) raw.remove().then(() => res.json({success: true})).catch(e => { return new Error(e) })
+  if (raw) raw.remove().then(() => res.json(req.params.id)).catch(e => { return new Error(e) })
   else { res.status(404); throw new Error("Could not find the raw item to delete."); };
 });
 
@@ -66,8 +91,8 @@ const makeAssays = assays => {
     return new Promise(async (resolve, reject) => {
       // Format the assay entries to have proper data-types
       let formatted = {
-        min: Number(assay.min),
-        max: Number(assay.max),
+        min: assay.min !== "" ? Number(assay.min) : null,
+        max: assay.max !== "" ? Number(assay.max) : null,
       };
 
       // Check for a new assay
@@ -92,7 +117,7 @@ const makeAssays = assays => {
       if (assay.newMethod) {
         const methCheck = await Method.findOne({ name: assay.newMethod });
         if (!methCheck) {
-          const newMethod = new Method({name: assay.newMethod});
+          const newMethod = new Method({ name: assay.newMethod });
           const savedMethod = await newMethod.save();
           if (savedMethod) formatted.method = savedMethod._id;
           else reject("Unable to save new method.");
@@ -167,7 +192,7 @@ const makeIds = ids => {
       if (id.newMethod) {
         const methCheck = await Method.findOne({ name: id.newMethod });
         if (!methCheck) {
-          const newMethod = new Method({name: id.newMethod});
+          const newMethod = new Method({ name: id.newMethod });
           const savedMethod = await newMethod.save();
           if (savedMethod) formatted.method = savedMethod._id;
           else reject("Unable to save new method.");
@@ -219,62 +244,62 @@ const formatEntries = async body => {
     taste:   body.taste.toLowerCase(),
     texture: await makeTexture(body.textureId, body.newTexture),
     hm: {
-      arsenic:   Number(body.arsenic),
-      cadmium:   Number(body.cadmium),
-      lead:      Number(body.lead),
-      mercury:   Number(body.mercury),
-      nickel:    Number(body.nickel),
-      nickel_tested:    body.nickel_tested,
-      units:            body.hm_units,
+      arsenic:   Number(body.hm.arsenic),
+      cadmium:   Number(body.hm.cadmium),
+      lead:      Number(body.hm.lead),
+      mercury:   Number(body.hm.mercury),
+      nickel:    Number(body.hm.nickel),
+      nickel_tested:    body.hm.nickel_tested,
+      units:            body.hm.units,
     },
     moisture: {
-      min: Number(body.moisture_min),
-      max: Number(body.moisture_max)
+      min: Number(body.moisture.min),
+      max: Number(body.moisture.max)
     },
     density: {
-      min: Number(body.density_min),
-      max: Number(body.density_max)
+      min: Number(body.density.min),
+      max: Number(body.density.max)
     },
     micro: {
-      tpc: Number(body.tpc),
-      tpc_units: body.tpc_units,
-      ym: Number(body.ym),
-      ym_units: body.ym_units,
-      entero: Number(body.entero),
-      entero_units: body.entero_units,
-      salmonella: body.salmonella,
-      staph: body.staph,
-      ecoli: body.ecoli,
-      paeru: body.paeru,
-      paeru_tested: body.paeru_tested
+      tpc:   Number(body.micro.tpc),
+      tpc_units:    body.micro.tpc_units,
+      ym:    Number(body.micro.ym),
+      ym_units:     body.micro.ym_units,
+      entero:Number(body.micro.entero),
+      entero_units: body.micro.entero_units,
+      salmonella:   body.micro.salmonella,
+      staph:        body.micro.staph,
+      ecoli:        body.micro.ecoli,
+      paeru:        body.micro.paeru,
+      paeru_tested: body.micro.paeru_tested
     },
     pesticide: {
-      tested: body.pesticide_tested,
-      standard: body.pesticide_standard
+      tested:   body.pesticide.tested,
+      standard: body.pesticide.standard
     },
     solvent: {
-      tested: body.solvent_tested,
-      standard: body.solvent_standard
+      tested:   body.solvent.tested,
+      standard: body.solvent.standard
     },
     rancidity: {
-      tested: body.rancidity_tested,
-      peroxide: Number(body.peroxide),
-      anisidine: Number(body.anisidine),
-      totox: Number(body.totox)
+      tested:           body.rancidity.tested,
+      peroxide:  Number(body.rancidity.peroxide),
+      anisidine: Number(body.rancidity.anisidine),
+      totox:     Number(body.rancidity.totox)
     },
     allergens: {
-      soy: body.soy,
-      egg: body.egg,
-      milk: body.milk,
-      fish: body.fish,
-      wheat: body.wheat,
-      peanut: body.peanut,
-      tree_nut: body.tree_nut,
-      shellfish: body.shellfish
+      soy:       body.allergens.soy,
+      egg:       body.allergens.egg,
+      milk:      body.allergens.milk,
+      fish:      body.allergens.fish,
+      wheat:     body.allergens.wheat,
+      peanut:    body.allergens.peanut,
+      tree_nut:  body.allergens.tree_nut,
+      shellfish: body.allergens.shellfish
     },
     assays: await makeAssays(body.assays), // Array
     ids:    await makeIds(body.ids)        // Array
   }
 }
 
-module.exports = {getRaws, createRaw, editRaw, removeRaw};
+module.exports = {getRaws, getRaw, createRaw, editRaw, removeRaw};

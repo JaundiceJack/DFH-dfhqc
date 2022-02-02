@@ -16,6 +16,14 @@ const getBulks = trycatch( async (req, res) => {
   else { res.status(404); throw new Error("Unable to locate bulks materials.")};
 });
 
+// GET: api/bulks/id | Get a single bulk by it's id | Private
+const getBulk = trycatch( async (req, res) => {
+  // Find the bulk  and populate it's testing history
+  const bulk = await Bulk.findById(req.params.id).populate('blend').exec();
+  if (bulk) res.status(200).json(bulk);
+  else { res.status(404); throw new Error("Unable to find the requested blend.") };
+});
+
 // POST: api/bulks/ | Create a new bulk material | Private
 const createBulk = trycatch( async (req, res) => {
   // Validate entries
@@ -47,16 +55,12 @@ const editBulk = trycatch( async (req, res) => {
   else { res.status(404); throw new Error("Could not locate selected bulk item."); };
 });
 
-
 // DELETE: api/bulks/bulk_id | Remove the bulk with the given ID | Private
 const removeBulk = trycatch( async (req, res) => {
   const bulk = await Bulk.findById(req.params.id);
-  if (bulk) bulk.remove().then(() => res.status(200).json({success: true})).catch(e => { throw new Error(e) })
+  if (bulk) bulk.remove().then(() => res.status(200).json(req.params.id)).catch(e => { throw new Error(e) })
   else { res.status(404); throw new Error("Could not find the bulk to delete."); };
 });
-
-
-
 
 // Validate entries and convert them to the required format
 const formatEntries = async body => {
@@ -64,8 +68,8 @@ const formatEntries = async body => {
     name:          body.name.toLowerCase(),
     dosage_type:   body.dosage_type.toLowerCase(),
     serving_units: body.serving_units,
-    blend:         body.blendId,
-    capsule:      body.capId,
+    blend:         body.blend,
+    capsule:       body.capsule,
     number:           Number(body.number),
     batch_size:       Number(body.batch_size),
     fill_weight:      Number(body.fill_weight),
@@ -77,4 +81,4 @@ const formatEntries = async body => {
   }
 }
 
-module.exports = {getBulks, createBulk, editBulk, removeBulk};
+module.exports = {getBulks, getBulk, createBulk, editBulk, removeBulk};

@@ -12,7 +12,7 @@ const Checkbox = ({
       <p className={"ml-2 text-blue-100 font-semibold w-min whitespace-nowrap"}>{label}</p>
       <input type="checkbox" value={value} name={name} disabled={disabled}
         defaultChecked={defaultChecked} onClick={onClick} />
-      <span className="checkmark"/>
+      <span className="checkmark" />
     </label>
   )
 }

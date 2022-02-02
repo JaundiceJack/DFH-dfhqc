@@ -9,12 +9,11 @@ import { getBlends } from '../../../actions/blendActions.js';
 import { loadUser } from '../../../actions/authActions.js';
 // Import Components
 import BulkList   from './bulkList';
-import BulkSpec   from './bulkSpec';
-import BulkAdd    from './bulkAdd';
-import BulkEdit   from './bulkEdit';
-import BulkDelete from './bulkDelete';
-import Message   from '../../message.js';
-import Button    from '../../button.js';
+import BulkSpec   from './info/_bulkSpec.js';
+import BulkGen    from './creation/_bulkGen.js';
+import BulkDelete from './creation/_bulkDelete.js';
+import Message    from '../../misc/message.js';
+import Button     from '../../inputs/button.js';
 
 const BulkSummary = () => {
   const user     = useSelector(state => state.auth);
@@ -77,8 +76,8 @@ const BulkSummary = () => {
               </div>
             }
 
-            {adding && <BulkAdd toggleAdd={onAddClick} /> }
-            {editing && <BulkEdit toggleEdit={onEditClick} />}
+            {adding && <BulkGen toggle={onAddClick} /> }
+            {editing && <BulkGen toggle={onEditClick} editing={true} />}
             {deleting && <BulkDelete toggleDelete={onRemoveClick} /> }
 
           </div>

@@ -1,73 +1,66 @@
+// Import Basics
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getLots,
-  toggleAdding, toggleDeleting, toggleEditing,
+import { Redirect } from 'react-router-dom';
+// Import server/redux actions
+import { getLots, toggleAdding, toggleDeleting, toggleEditing,
   toggleRaws, toggleBlends, toggleBulks, toggleFgs, toggleOthers,
   toggleMT, toggleNV, toggleCT, incrementYear, decrementYear
 } from '../../../actions/lotActions';
-import { getRaws } from '../../../actions/rawActions';
-import { getFgs } from '../../../actions/fgActions';
-import { getBulks } from '../../../actions/bulkActions';
-import { getBlends } from '../../../actions/blendActions';
-import { getVendors } from '../../../actions/vendorActions.js';
+import { getRaws }          from '../../../actions/rawActions';
+import { getFgs }           from '../../../actions/fgActions';
+import { getBulks }         from '../../../actions/bulkActions';
+import { getBlends }        from '../../../actions/blendActions';
+import { getVendors }       from '../../../actions/vendorActions.js';
 import { getManufacturers } from '../../../actions/manufacturerActions.js';
-import { getLabs } from '../../../actions/labActions.js';
-import { loadUser } from '../../../actions/authActions.js';
-import { Redirect } from 'react-router-dom';
+import { getLabs }          from '../../../actions/labActions.js';
+import { loadUser }         from '../../../actions/authActions.js';
+// Import Icons
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 // Import Components
-import LotList from './lotList';
-import LotInfo from './lotInfo';
-import LotAdd from './lotAdd';
-import LotEdit from './lotEdit';
-import LotDelete from './lotDelete';
-import Button from '../../button.js'
-import Message from '../../message.js';
-import Checkbox from '../../inputs/checkbox.js';
+import LotList   from './lotList.js';
+import LotInfo   from './lotInfo.js';
+import LotGen    from './creation/lotGen.js';
+import LotDelete from './creation/lotDelete.js';
+import Button    from '../../inputs/button.js'
+import Checkbox  from '../../inputs/checkbox.js';
+import Message   from '../../misc/message.js';
+import Spinner   from '../../misc/spinner.js';
 
 const LotSummary = () => {
-  const user       = useSelector(state => state.auth);
-  const selected   = useSelector(state => state.lot.selectedLot);
-  const year       = useSelector(state => state.lot.currentYear);
-  const rawLots    = useSelector(state => state.lot.rawLots);
-  const blendLots  = useSelector(state => state.lot.blendLots);
-  const bulkLots   = useSelector(state => state.lot.bulkLots);
-  const fgLots     = useSelector(state => state.lot.fgLots);
-  const otherLots  = useSelector(state => state.lot.otherLots);
-  const adding     = useSelector(state => state.lot.adding);
-  const deleting   = useSelector(state => state.lot.deleting);
-  const editing    = useSelector(state => state.lot.editing);
-  const showRaws   = useSelector(state => state.lot.showRaws);
-  const showBlends = useSelector(state => state.lot.showBlends);
-  const showBulks  = useSelector(state => state.lot.showBulks);
-  const showFgs    = useSelector(state => state.lot.showFgs);
-  const showOthers = useSelector(state => state.lot.showOthers);
-  const showMT     = useSelector(state => state.lot.showMT);
-  const showNV     = useSelector(state => state.lot.showNV);
-  const showCT     = useSelector(state => state.lot.showCT);
+  // Get variables from the component state
+  const user = useSelector(state => state.auth);
+  const {
+    lots, selectedLot: selected, currentYear: year,
+    adding, deleting, editing, loading,
+    showRaws, showBulks, showBlends, showFgs, showOthers,
+    showMT, showNV, showCT
+  } = useSelector(state => state.lot);
 
   // Compose the total list of lots to display
-  const locFilteredLots = (lots) => {
-    const timeFiltered = lots.filter(lot => {
+  const lotArray = () => {
+    let filtered = [...lots];
+    // Filter by type
+    filtered = showRaws   ? filtered : filtered.filter(lot => { return lot.type !== 'raw' });
+    filtered = showBlends ? filtered : filtered.filter(lot => { return lot.type !== 'blend' });
+    filtered = showBulks  ? filtered : filtered.filter(lot => { return lot.type !== 'bulk' });
+    filtered = showFgs    ? filtered : filtered.filter(lot => { return lot.type !== 'fg' });
+    // Filter by year
+    filtered = filtered.filter(lot => {
       const lotYear = new Date(lot.date_created).getFullYear();
       return lotYear === year;
-    })
-    return timeFiltered.filter(lot => {
+    });
+    // Filter by location
+    filtered = filtered.filter(lot => {
       let locs = [];
       showMT && locs.push('MT');
       showNV && locs.push('NV');
       showCT && locs.push('CT');
       return (locs.indexOf(lot.receiving.facility) !== -1);
-    })
-  }
-  const lotArray = () => {
-    let filteredLots = [];
-    showRaws && filteredLots.push(...locFilteredLots(rawLots));
-    showBlends && filteredLots.push(...locFilteredLots(blendLots));
-    showBulks && filteredLots.push(...locFilteredLots(bulkLots));
-    showFgs && filteredLots.push(...locFilteredLots(fgLots));
-    showOthers && filteredLots.push(...locFilteredLots(otherLots));
-    return filteredLots.sort((a, b) => { return Date(b.date_created) - Date(a.date_created) })
+    });
+    // Sort the filtered lots by date created
+    return filtered.sort((a, b) => {
+      return (new Date(a.date_created) - new Date(b.date_created)) })
   }
 
   // Load the items when the component loads
@@ -96,17 +89,18 @@ const LotSummary = () => {
   const onDecClick = () => { dispatch(decrementYear()); };
   const onToggle = toggleTarget => {
     switch(toggleTarget) {
-      case 'raws': return dispatch(toggleRaws())
+      case 'raws':   return dispatch(toggleRaws())
       case 'blends': return dispatch(toggleBlends())
-      case 'bulks': return dispatch(toggleBulks());
-      case 'fgs': return dispatch(toggleFgs());
+      case 'bulks':  return dispatch(toggleBulks());
+      case 'fgs':    return dispatch(toggleFgs());
       case 'others': return dispatch(toggleOthers());
-      case 'MT': return dispatch(toggleMT());
-      case 'NV': return dispatch(toggleNV());
-      case 'CT': return dispatch(toggleCT());
+      case 'MT':     return dispatch(toggleMT());
+      case 'NV':     return dispatch(toggleNV());
+      case 'CT':     return dispatch(toggleCT());
     }
   }
 
+  // TODO: use history.push('/login?=samples') instead of Redirect
   if (!user.token) return (<Redirect to='/login' />)
   else if (!user.isAuthenticated) return (<Message info="Authenticating..." extraClasses="w-1/2 self-center mx-auto" />)
   else return (
@@ -179,12 +173,12 @@ const LotSummary = () => {
 
             {!adding && !deleting && !editing &&
               <div className="h-96 2xl:h-full mx-4 my-2">
-                <LotList lots={lotArray()} />
+                {loading ? <Spinner /> : <LotList lots={lotArray()} />}
               </div>
             }
 
-            {adding && <LotAdd toggleAdd={onAddClick} /> }
-            {editing && <LotEdit toggleEdit={onEditClick} />}
+            {adding && <LotGen toggle={onAddClick} editing={false} /> }
+            {editing && <LotGen toggle={onEditClick} editing={true} />}
             {deleting && <LotDelete toggleDelete={onRemoveClick} /> }
           </div>
 

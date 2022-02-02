@@ -4,11 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 // Import server actions
 import { editRawSample } from '../../../../../actions/testingActions';
 // Import components
-import Button from '../../../../button.js';
+import Button from '../../../../inputs/button.js';
 import Selection from '../../../../inputs/selection.js';
 import Entry from '../../../../inputs/entry.js';
 
-const AddMicroResults = ({ lotId, sample, spec, takeResults }) => {
+const AddMicroResults = ({ lotId, sample, spec, takeResults, close }) => {
   // Get labs from global state
   const labs = useSelector(state => state.lab.labs);
 
@@ -19,13 +19,16 @@ const AddMicroResults = ({ lotId, sample, spec, takeResults }) => {
     amount:  sample && sample.amount,
     units:   sample && sample.units,
     results: {
-      tpc:        (sample && sample.results) ? sample.results.tpc       : "",
-      ym:         sample && sample.results && sample.results.ym         || "",
-      entero:     sample && sample.results && sample.results.entero     || "",
-      salmonella: sample && sample.results && sample.results.salmonella || "",
-      ecoli:      sample && sample.results && sample.results.ecoli      || "",
-      staph:      sample && sample.results && sample.results.staph      || "",
-      paeru:      sample && sample.results && sample.results.paeru      || "",
+      tpc: (sample && sample.results && sample.results.tpc !== "" && sample.results.tpc !== null) ?
+        sample.results.tpc : "",
+      ym: (sample && sample.results && sample.results.ym !== "" && sample.results.ym !== null) ?
+        sample.results.ym : "",
+      entero: (sample && sample.results && sample.results.entero !== "" && sample.results.entero !== null) ?
+        sample.results.entero : "",
+      salmonella: (sample && sample.results) ? sample.results.salmonella : "",
+      ecoli:      (sample && sample.results) ? sample.results.ecoli      : "",
+      staph:      (sample && sample.results) ? sample.results.staph      : "",
+      paeru:      (sample && sample.results) ? sample.results.paeru      : "",
     },
     date_sampled: sample && sample.date_sampled ?
       new Date(sample.date_sampled).toISOString().split('T')[0] :
@@ -63,7 +66,6 @@ const AddMicroResults = ({ lotId, sample, spec, takeResults }) => {
           { name: "", value: null },
           { name: "Negative", value: "Negative" },
           { name: "Positive", value: "Positive" },
-          { name: "Not Tested", value: "Not Tested" },
         ]} append=" " />
       <Selection label="E. Coli:" name="ecoli" value={current.results.ecoli}
         onChange={e => setCurrent({...current, results: { ...current.results, ecoli: e.target.value }})}
@@ -71,7 +73,6 @@ const AddMicroResults = ({ lotId, sample, spec, takeResults }) => {
           { name: "", value: null },
           { name: "Negative", value: "Negative" },
           { name: "Positive", value: "Positive" },
-          { name: "Not Tested", value: "Not Tested" },
         ]} append=" " />
       <Selection label="Staph:" name="staph" value={current.results.staph}
         onChange={e => setCurrent({...current, results: { ...current.results, staph: e.target.value }})}
@@ -79,7 +80,6 @@ const AddMicroResults = ({ lotId, sample, spec, takeResults }) => {
           { name: "", value: null },
           { name: "Negative", value: "Negative" },
           { name: "Positive", value: "Positive" },
-          { name: "Not Tested", value: "Not Tested" },
         ]} append=" " extraClasses="mb-2" />
       {spec.paeru_tested &&
         <Selection label="P. Aeru:" name="paeru" value={current.results.paeru}
@@ -88,15 +88,16 @@ const AddMicroResults = ({ lotId, sample, spec, takeResults }) => {
             { name: "", value: null },
             { name: "Negative", value: "Negative" },
             { name: "Positive", value: "Positive" },
-            { name: "Not Tested", value: "Not Tested" },
           ]} append=" " extraClasses="mb-2" />
       }
-      <Button color="bg-green-300"
-        type="submit"
-        text="Submit Testing"
-        title="Submit Testing"
-        extraClasses="w-1/3 h-8 mx-auto" />
-
+      <div className="flex flex-row justify-center">
+        <Button type="submit" color="bg-green-300"
+          text="Submit Testing" title="Submit Testing"
+          extraClasses="w-48 h-7" />
+        <Button onClick={close} color="bg-red-200"
+          text="Cancel" title="Cancel Testing"
+          extraClasses="w-16 h-7" />
+      </div>
     </form>
   )
 }

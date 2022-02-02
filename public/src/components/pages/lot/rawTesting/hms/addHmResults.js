@@ -4,11 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 // Import server actions
 import { editRawSample } from '../../../../../actions/testingActions';
 // Import components
-import Button from '../../../../button.js';
+import Button from '../../../../inputs/button.js';
 import Selection from '../../../../inputs/selection.js';
 import Entry from '../../../../inputs/entry.js';
 
-const AddHmResults = ({ lotId, sample, spec, takeResults }) => {
+const AddHmResults = ({ lotId, sample, spec, takeResults, close }) => {
   // Get labs from global state
   const labs = useSelector(state => state.lab.labs);
 
@@ -19,11 +19,16 @@ const AddHmResults = ({ lotId, sample, spec, takeResults }) => {
     amount:  sample && sample.amount,
     units:   sample && sample.units,
     results: {
-      arsenic: (sample && sample.results) ? sample.results.arsenic : "",
-      cadmium: (sample && sample.results) ? sample.results.cadmium : "",
-      lead:    (sample && sample.results) ? sample.results.lead    : "",
-      mercury: (sample && sample.results) ? sample.results.mercury : "",
-      nickel:  (sample && sample.results) ? sample.results.nickel  : "",
+      arsenic: (sample && sample.results && sample.results.arsenic !== "" && sample.results.arsenic !== null) ?
+        sample.results.arsenic : "",
+      cadmium: (sample && sample.results && sample.results.cadmium !== "" && sample.results.cadmium !== null) ?
+        sample.results.cadmium : "",
+      lead:    (sample && sample.results && sample.results.lead !== "" && sample.results.lead !== null) ?
+        sample.results.lead : "",
+      mercury: (sample && sample.results && sample.results.mercury !== "" && sample.results.mercury !== null) ?
+        sample.results.mercury : "",
+      nickel:  (sample && sample.results && sample.results.nickel !== "" && sample.results.nickel !== null) ?
+        sample.results.nickel : "",
     },
     date_sampled: sample && sample.date_sampled ?
       new Date(sample.date_sampled).toISOString().split('T')[0] :
@@ -48,26 +53,29 @@ const AddHmResults = ({ lotId, sample, spec, takeResults }) => {
             extraClasses="ml-2 " /> } />
       <Entry type="number" label="Arsenic:" name="arsenic" value={current.results.arsenic}
         onChange={e => setCurrent({...current, results: { ...current.results, arsenic: e.target.value }})}
-        append={spec.hm_units} />
+        append={spec.units} />
       <Entry type="number" label="Cadmium:" name="cadmium" value={current.results.cadmium}
         onChange={e => setCurrent({...current, results: { ...current.results, cadmium: e.target.value }})}
-        append={spec.hm_units} />
+        append={spec.units} />
       <Entry type="number" label="Lead:" name="lead" value={current.results.lead}
         onChange={e => setCurrent({...current, results: { ...current.results, lead: e.target.value }})}
-        append={spec.hm_units} />
+        append={spec.units || " "} />
       <Entry type="number" label="Mercury:" name="mercury" value={current.results.mercury}
         onChange={e => setCurrent({...current, results: { ...current.results, mercury: e.target.value }})}
-        append={spec.hm_units} />
+        append={spec.units} extraClasses="mb-4" />
       {spec.nickel_tested &&
         <Entry type="number" label="Nickel:" name="nickel" value={current.results.nickel}
           onChange={e => setCurrent({...current, results: { ...current.results, nickel: e.target.value }})}
-          append={spec.hm_units} />
+          append={spec.units} extraClasses="mb-4" />
       }
-      <Button color="bg-green-300"
-        type="submit"
-        text="Submit Testing"
-        title="Submit Testing"
-        extraClasses="w-1/3 h-8 mx-auto" />
+      <div className="flex flex-row justify-center">
+        <Button type="submit" color="bg-green-300"
+          text="Submit Testing" title="Submit Testing"
+          extraClasses="w-48 h-7" />
+        <Button onClick={close} color="bg-red-200"
+          text="Cancel" title="Cancel Testing"
+          extraClasses="w-16 h-7" />
+      </div>
 
     </form>
   )

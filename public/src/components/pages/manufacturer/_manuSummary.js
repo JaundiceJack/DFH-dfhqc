@@ -11,8 +11,8 @@ import ManufacturerSpec   from './manuSpec.js';
 import ManufacturerAdd    from './manuAdd.js';
 import ManufacturerEdit   from './manuEdit.js';
 import ManufacturerDelete from './manuDelete.js';
-import Message   from '../../message.js';
-import Button    from '../../button.js';
+import Message   from '../../misc/message.js';
+import Button    from '../../inputs/button.js';
 
 const ManuSummary = () => {
   const selected = useSelector(state => state.manufacturer.selectedManufacturer);

@@ -1,14 +1,12 @@
 // Import action types
 import {
-  GET_BULKS,
-  SELECT_BULK,
-  BULK_ADDED,
-  BULK_EDITED,
-  BULK_DELETED,
-  TOGGLE_ADDING_BULK,
-  TOGGLE_EDITING_BULK,
-  TOGGLE_DELETING_BULK,
-   } from './types';
+  BULK_LIST_REQUEST, BULK_LIST_SUCCESS, BULK_LIST_FAILURE,
+  BULK_GET_REQUEST, BULK_GET_SUCCESS, BULK_GET_FAILURE,
+  BULK_ADD_REQUEST, BULK_ADD_SUCCESS, BULK_ADD_FAILURE,
+  BULK_EDIT_REQUEST, BULK_EDIT_SUCCESS, BULK_EDIT_FAILURE,
+  BULK_DELETE_REQUEST, BULK_DELETE_SUCCESS, BULK_DELETE_FAILURE,
+  BULK_TOGGLE_ADDING, BULK_TOGGLE_EDITING, BULK_TOGGLE_DELETING,
+  BULK_DIRECT_SELECT } from './types';
 // Import axios to handle http requests
 import axios from 'axios';
 // Import server actions: to report errors
@@ -25,38 +23,54 @@ const tokenConfig = getState => {
 }
 
 // Obtain an array of bulks from the server and dispatch them to the redux state
-export const getBulks = () => (dispatch, getState) => {
-  const config = tokenConfig(getState);
-  axios.get(`${server}/api/bulks`, config)
-  .then(res => { dispatch({ type: GET_BULKS, payload: res.data }) })
-  .catch(err => { handleError(err) });
+export const getBulks = () => async (dispatch, getState) => {
+  dispatch({ type: BULK_LIST_REQUEST });
+  try {
+    const { data } = await axios.get('/api/bulks', tokenConfig(getState));
+    dispatch({ type: BULK_LIST_SUCCESS, payload: data });
+  } catch (e) { dispatch({ type: BULK_LIST_FAILURE, payload: handleError(e) }); }
 }
+
+// Get a single bulk from it's id
+export const getBulk = id => async (dispatch, getState) => {
+  dispatch({ type: BULK_GET_REQUEST });
+  try {
+    const { data } = await axios.get(`/api/bulks/${id}`, tokenConfig(getState));
+    dispatch({ type: BULK_GET_SUCCESS, payload: data });
+  } catch (e) { dispatch({ type: BULK_GET_FAILURE, payload: handleError(e) }) }
+}
+
 // Take entries and add a new bulk to the database
-export const addBulk = bulk => (dispatch, getState) => {
-  const config = tokenConfig(getState);
-  const newBulk = JSON.stringify(bulk);
-  axios.post(`${server}/api/bulks/`, newBulk, config)
-  .then(res => { dispatch({ type: BULK_ADDED, payload: res.data }) })
-  .catch(err => { handleError(err) });
+export const addBulk = bulk => async (dispatch, getState) => {
+  dispatch({ type: BULK_ADD_REQUEST });
+  try {
+    const newBulk = JSON.stringify(bulk);
+    const { data } = await axios.post('/api/bulks', newBulk, tokenConfig(getState));
+    dispatch({ type: BULK_ADD_SUCCESS, payload: data });
+  } catch (e) { dispatch({ type: BULK_ADD_FAILURE, payload: handleError(e) }); }
 }
+
 // Modify the selected bulk
-export const editBulk = bulk => (dispatch, getState) => {
-  const config = tokenConfig(getState);
-  const editedBulk = JSON.stringify(bulk);
-  axios.post(`${server}/api/bulks/${bulk._id}`, editedBulk, config)
-  .then(res => { dispatch({ type: BULK_EDITED, payload: res.data }) })
-  .catch(err => { handleError(err) });
+export const editBulk = bulk => async (dispatch, getState) => {
+  dispatch({ type: BULK_EDIT_REQUEST });
+  try {
+    const editedBulk = JSON.stringify(bulk);
+    const { data } = await axios.put(`/api/bulks/${bulk._id}`, editedBulk, tokenConfig(getState));
+    dispatch({ type: BULK_EDIT_SUCCESS, payload: data });
+  } catch (e) { dispatch({ type: BULK_EDIT_FAILURE, payload: handleError(e) }); }
 }
+
 // Remove the selected bulk
-export const deleteBulk = id => (dispatch, getState) => {
-  const config = tokenConfig(getState);
-  axios.delete(`${server}/api/bulks/${id}`, config)
-  .then(res => { dispatch({ type: BULK_DELETED, payload: id }) })
-  .catch(err => { handleError(err) });
+export const deleteBulk = id => async (dispatch, getState) => {
+  dispatch({ type: BULK_DELETE_REQUEST });
+  try {
+    const { data } = await axios.delete(`/api/bulks/${id}`, tokenConfig(getState));
+    dispatch({ type: BULK_DELETE_SUCCESS, payload: data });
+  } catch (e) { dispatch({ type: BULK_DELETE_FAILURE, payload: handleError(e) }); }
 }
 
 // Selection and toggles
-export const selectBulk = bulk   => dispatch => dispatch({ type: SELECT_BULK, payload: bulk }) 
-export const toggleAdding   = () => dispatch => dispatch({ type: TOGGLE_ADDING_BULK });
-export const toggleDeleting = () => dispatch => dispatch({ type: TOGGLE_DELETING_BULK });
-export const toggleEditing  = () => dispatch => dispatch({ type: TOGGLE_EDITING_BULK });
+export const selectBulk = bulk => dispatch => dispatch({ type: BULK_DIRECT_SELECT, payload: bulk });
+export const toggleAdding   = () => dispatch => dispatch({ type: BULK_TOGGLE_ADDING });
+export const toggleEditing  = () => dispatch => dispatch({ type: BULK_TOGGLE_EDITING });
+export const toggleDeleting = () => dispatch => dispatch({ type: BULK_TOGGLE_DELETING });

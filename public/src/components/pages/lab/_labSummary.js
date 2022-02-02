@@ -11,17 +11,16 @@ import { loadUser } from '../../../actions/authActions.js';
 // Import Components
 import LabList   from './labList.js';
 import LabSpec   from './labSpec.js';
-import LabAdd    from './labAdd.js';
-import LabEdit   from './labEdit.js';
-import LabDelete from './labDelete.js';
-import Button    from '../../button.js';
-import Message    from '../../message.js';
+import LabGen    from './creation/labGen.js';
+import LabDelete from './creation/labDelete.js';
+import Button    from '../../inputs/button.js';
+import Message    from '../../misc/message.js';
+import Spinner    from '../../misc/spinner.js';
 
 const LabSummary = () => {
-  const selected = useSelector(state => state.lab.selectedLab);
-  const adding = useSelector(state => state.lab.adding);
-  const deleting = useSelector(state => state.lab.deleting);
-  const editing = useSelector(state => state.lab.editing);
+  const { selectedLab: selected,
+    adding, deleting, editing,
+    loading, error } = useSelector(state => state.lab);
   const user = useSelector(state => state.auth);
 
   // Load the items when the component loads
@@ -37,9 +36,23 @@ const LabSummary = () => {
   const cleanup = () => { setTimeout(() => { return }, 5000); }
 
   // Set up button functions
-  const onAddClick = () => { dispatch(toggleAdding()); };
+  const onAddClick    = () => { dispatch(toggleAdding()); };
   const onRemoveClick = () => { dispatch(toggleDeleting()); };
-  const onEditClick = () => { dispatch(toggleEditing()); };
+  const onEditClick   = () => { dispatch(toggleEditing()); };
+
+/*
+
+i made the assay/id adding function
+i guess from here i need to write logic to add the lab to the assay document's array
+and to remove it if removed, which is the harder part
+maybe like, every time an edit is made,
+scan through each assay's document from the labs capabilities
+and make sure the lab's id is there
+then... scan the remaining assays and remove?
+sounds intensive
+
+
+*/
 
   if (!user.token) return (<Redirect to='/login' />)
   else if (!user.isAuthenticated) return (<Message info="Authenticating..." extraClasses="w-1/2 self-center mx-auto" />)
@@ -75,11 +88,11 @@ const LabSummary = () => {
               <div className="bg-gray-500 h-px w-full mb-3" />
               {!adding && !deleting && !editing &&
               <div className="h-96 2xl:h-full mx-4 my-2">
-                <LabList />
+                {loading ? <Spinner /> : <LabList />}
               </div>
             }
-            {adding && <LabAdd toggleAdd={onAddClick} /> }
-            {editing && <LabEdit toggleEdit={onEditClick} />}
+            {adding   && <LabGen toggle={onAddClick} /> }
+            {editing  && <LabGen toggle={onEditClick} editing={true} />}
             {deleting && <LabDelete toggleDelete={onRemoveClick} /> }
           </div>
           <LabSpec />

@@ -4,21 +4,20 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 // Import server actions
 import { getBlends, toggleAdding, toggleDeleting, toggleEditing } from '../../../actions/blendActions';
-import { getRaws } from '../../../actions/rawActions.js';
+import { getRaws }       from '../../../actions/rawActions.js';
 import { getUnits }      from '../../../actions/unitActions.js';
 import { getAssays }     from '../../../actions/assayActions.js';
 import { getIdentities } from '../../../actions/identityActions.js';
 import { getMethods }    from '../../../actions/methodActions.js';
 import { getTextures }   from '../../../actions/textureActions.js';
-import { loadUser } from '../../../actions/authActions.js';
+import { loadUser }      from '../../../actions/authActions.js';
 // Import Components
 import BlendList   from './blendList';
-import BlendSpec   from './blendSpec';
-import BlendAdd    from './blendAdd';
-import BlendEdit   from './blendEdit';
-import BlendDelete from './blendDelete';
-import Message   from '../../message.js';
-import Button    from '../../button.js';
+import BlendSpec   from './info/_blendSpec.js';
+import BlendGen    from './creation/_blendGen.js';
+import BlendDelete from './creation/_blendDelete';
+import Message     from '../../misc/message.js';
+import Button      from '../../inputs/button.js';
 
 const BlendSummary = () => {
   const user     = useSelector(state => state.auth);
@@ -89,8 +88,8 @@ const BlendSummary = () => {
               </div>
             }
 
-            {adding && <BlendAdd toggleAdd={onAddClick} /> }
-            {editing && <BlendEdit toggleEdit={onEditClick} />}
+            {adding && <BlendGen toggle={onAddClick} /> }
+            {editing && <BlendGen toggle={onEditClick} editing={true} />}
             {deleting && <BlendDelete toggleDelete={onRemoveClick} /> }
           </div>
           <BlendSpec />

@@ -11,13 +11,12 @@ import { getMethods }    from '../../../actions/methodActions.js';
 import { getTextures }   from '../../../actions/textureActions.js';
 import { loadUser }      from '../../../actions/authActions.js';
 // Import Components
-import Button from '../../button.js'
-import Message   from '../../message.js';
-import RawList from './rawList';
-import RawSpec from './rawSpec';
-import RawAdd from './rawAdd';
-import RawEdit from './rawEdit';
-import RawDelete from './rawDelete';
+import Button    from '../../inputs/button.js'
+import Message   from '../../misc/message.js';
+import RawList   from './rawList';
+import RawSpec   from './info/_rawSpec.js';
+import RawGen    from './creation/_rawGen.js';
+import RawDelete from './creation/_rawDelete.js';
 
 const RawSummary = () => {
   // Get variables from the state
@@ -95,8 +94,8 @@ const RawSummary = () => {
               </div>
             }
 
-            {adding   && <RawAdd    toggleAdd={onAddClick} /> }
-            {editing  && <RawEdit   toggleEdit={onEditClick} />}
+            {adding   && <RawGen toggle={onAddClick} /> }
+            {editing  && <RawGen toggle={onEditClick} editing={true} />}
             {deleting && <RawDelete toggleDelete={onRemoveClick} /> }
           </div>
           <RawSpec />

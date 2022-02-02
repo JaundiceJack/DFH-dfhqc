@@ -10,12 +10,11 @@ import { loadUser } from '../../../actions/authActions.js';
 import { Redirect } from 'react-router-dom';
 // Import Components
 import FgList   from './fgList';
-import FgSpec   from './fgSpec';
-import FgAdd    from './fgAdd';
-import FgEdit   from './fgEdit';
-import FgDelete from './fgDelete';
-import Button    from '../../button.js';
-import Message    from '../../message.js';
+import FgSpec   from './info/_fgSpec.js';
+import FgGen    from './creation/_fgGen.js';
+import FgDelete from './creation/_fgDelete.js';
+import Button   from '../../inputs/button.js';
+import Message  from '../../misc/message.js';
 
 const FgSummary = () => {
   const user       = useSelector(state => state.auth);
@@ -78,8 +77,8 @@ const FgSummary = () => {
               </div>
             }
 
-            {adding && <FgAdd toggleAdd={onAddClick} /> }
-            {editing && <FgEdit toggleEdit={onEditClick} />}
+            {adding && <FgGen toggle={onAddClick} /> }
+            {editing && <FgGen toggle={onEditClick} editing={true} />}
             {deleting && <FgDelete toggleDelete={onRemoveClick} /> }
 
           </div>

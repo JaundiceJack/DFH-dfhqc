@@ -13,6 +13,9 @@ import FgSummary     from './pages/fg/_fgSummary.js';
 import LabSummary    from './pages/lab/_labSummary.js';
 import VendorSummary from './pages/vendor/_vendorSummary.js';
 import ManuSummary   from './pages/manufacturer/_manuSummary.js';
+import Certificate   from './pages/certificate/_certificate.js';
+import Labels        from './pages/labels/_labels.js';
+import Spec          from './pages/specSheet/_spec.js';
 
 const Routes = () => {
   return (
@@ -29,6 +32,9 @@ const Routes = () => {
       <Route exact path="/labs"    component={LabSummary} />
       <Route exact path="/vendors" component={VendorSummary} />
       <Route exact path="/manufacturers" component={ManuSummary} />
+      <Route path="/certificate/:lotId" component={Certificate} />
+      <Route path="/labels/:lotId" component={Labels} />
+      <Route path="/rawspec/:rawId" component={Spec} />
     </Switch>
   )
 }

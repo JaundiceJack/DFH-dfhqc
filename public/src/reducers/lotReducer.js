@@ -1,18 +1,19 @@
 import {
-  GET_LOTS, LOT_ADDED, LOT_EDITED, LOT_DELETED,
+  GET_LOTS, LOT_ADDED, LOT_EDITED, LOT_DELETED, LOT_GET_REQUEST,
+  LOT_ADD_REQUEST, LOT_EDIT_REQUEST, LOT_DELETE_REQUEST,
+  LOT_ADD_FAIL, LOT_EDIT_FAIL, LOT_DELETE_FAIL, LOT_GET_FAIL,
   TOGGLE_ADDING_LOT, TOGGLE_EDITING_LOT, TOGGLE_DELETING_LOT,
   TOGGLE_RAW_LOTS, TOGGLE_BLEND_LOTS, TOGGLE_BULK_LOTS, TOGGLE_FG_LOTS, TOGGLE_OTHER_LOTS,
   TOGGLE_MT_LOTS, TOGGLE_NV_LOTS, TOGGLE_CT_LOTS,
-  SELECT_LOT, INCREMENT_YEAR, DECREMENT_YEAR,
+  SELECT_LOT, INCREMENT_YEAR, DECREMENT_YEAR, LOT_PRIOR_SUCCESS
 } from '../actions/types.js';
 
 const initialState = {
-  rawLots:   [],
-  blendLots: [],
-  bulkLots:  [],
-  fgLots:    [],
-  otherLots: [],
+  lots:   [],
   selectedLot: {},
+  prior_lot: null,
+  loading: false,
+  error: null,
   adding: false,  editing: false,   deleting: false,
   showRaws: true, showBlends: true, showBulks: true, showFgs: true, showOthers: true,
   showMT: true,   showNV: true,     showCT: true,
@@ -21,53 +22,44 @@ const initialState = {
 
 const lotReducer = (state = initialState, action) => {
   switch(action.type) {
+    case LOT_ADD_REQUEST:
+    case LOT_EDIT_REQUEST:
+    case LOT_DELETE_REQUEST:
+    case LOT_GET_REQUEST: return { ...state, loading: true }
+    case LOT_ADD_FAIL:
+    case LOT_EDIT_FAIL:
+    case LOT_DELETE_FAIL:
+    case LOT_GET_FAIL: return { ...state, loading: false, error: action.payload }
     case GET_LOTS:
-      return {
-        ...state,
-        rawLots:   action.payload.raws,
-        blendLots: action.payload.blends,
-        bulkLots:  action.payload.bulks,
-        fgLots:    action.payload.fgs,
-        otherLots: action.payload.others
-      }
+      return { ...state, loading: false, lots: action.payload }
     case LOT_ADDED:
-      return {
-        ...state,
-        rawLots:     action.payload.item_type === 'raw'   ? [...state.rawLots,   action.payload] : state.rawLots,
-        blendLots:   action.payload.item_type === 'blend' ? [...state.blendLots, action.payload] : state.blendLots,
-        bulkLots:    action.payload.item_type === 'bulk'  ? [...state.bulkLots,  action.payload] : state.bulkLots,
-        fgLots:      action.payload.item_type === 'fg'    ? [...state.fgLots,    action.payload] : state.fgLots,
-        otherLots:   action.payload.item_type === 'other' ? [...state.otherLots, action.payload] : state.otherLots,
+      return { ...state,
+        lots: [...state.lots, action.payload].sort((a, b) => {
+          return (new Date(a.date_created) - new Date(b.date_created)) }),
         selectedLot: action.payload,
+        loading: false
       }
     case LOT_EDITED:
-      return {
-        ...state,
-        rawLots:   action.payload.item_type === 'raw'   ? [...state.rawLots.filter(lot => { return lot._id !== action.payload._id }), action.payload].sort((a, b) => { return Date(b.date_created) - Date(a.date_created) }) : state.rawLots,
-        blendLots: action.payload.item_type === 'blend' ? [...state.blendLots.filter(lot => { return lot._id !== action.payload._id }), action.payload].sort((a, b) => { return Date(b.date_created) - Date(a.date_created) }) : state.blendLots,
-        bulkLots:  action.payload.item_type === 'bulk'  ? [...state.bulkLots.filter(lot => { return lot._id !== action.payload._id }), action.payload].sort((a, b) => { return Date(b.date_created) - Date(a.date_created) }) : state.bulkLots,
-        fgLots:    action.payload.item_type === 'fg'    ? [...state.fgLots.filter(lot => { return lot._id !== action.payload._id }), action.payload].sort((a, b) => { return Date(b.date_created) - Date(a.date_created) }) : state.fgLots,
-        otherLots: action.payload.item_type === 'other' ? [...state.otherLots.filter(lot => { return lot._id !== action.payload._id }), action.payload].sort((a, b) => { return Date(b.date_created) - Date(a.date_created) }) : state.otherLots,
+      return { ...state,
+        lots: [...state.lots.filter(lot => {
+          return lot._id !== action.payload._id }), action.payload].sort((a, b) => {
+            return Date(b.date_created) - Date(a.date_created) }),
         selectedLot: action.payload,
+        loading: false
       }
     case LOT_DELETED:
-      return {
-        ...state,
-        rawLots:     action.payload.item_type === 'raw'   ? [...state.rawLots.filter(  lot => lot._id !== action.payload._id)] : state.rawLots,
-        blendLots:   action.payload.item_type === 'blend' ? [...state.blendLots.filter(lot => lot._id !== action.payload._id)] : state.blendLots,
-        bulkLots:    action.payload.item_type === 'bulk'  ? [...state.bulkLots.filter( lot => lot._id !== action.payload._id)] : state.bulkLots,
-        fgLots:      action.payload.item_type === 'fg'    ? [...state.fgLots.filter(   lot => lot._id !== action.payload._id)] : state.fgLots,
-        otherLots:   action.payload.item_type === 'other' ? [...state.otherLots.filter(lot => lot._id !== action.payload._id)] : state.otherLots,
+      return { ...state,
+        lots: action.payload,
         selectedLot: {},
         adding: false,
         editing: false,
         deleting: false,
+        loading: false
       }
+    case LOT_PRIOR_SUCCESS:
+      return { ...state, prior_lot: action.payload, loading: false }
     case SELECT_LOT:
-      return {
-        ...state,
-        selectedLot: action.payload,
-      }
+      return { ...state, selectedLot: action.payload, loading: false }
     case TOGGLE_ADDING_LOT:
       return { ...state, adding: !state.adding }
     case TOGGLE_DELETING_LOT:
@@ -94,11 +86,8 @@ const lotReducer = (state = initialState, action) => {
       return { ...state, currentYear: state.currentYear + 1 }
     case DECREMENT_YEAR:
       return { ...state, currentYear: state.currentYear - 1 }
-    default:
-      return state;
+    default: return state;
   }
 };
-
-
 
 export default lotReducer;

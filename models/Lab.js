@@ -7,10 +7,12 @@ const LabSchema = new Schema({
     emails: [String],
     phones: [String]
   },
-  assays: [{
+  capabilities: [{
     assay: { type: Schema.Types.ObjectId, ref: 'assays' },
+    identity: { type: Schema.Types.ObjectId, ref: 'ids'},
     price: { type: Number },
-    method: { type: Schema.Types.ObjectId, ref: 'methods' }
+    method: { type: Schema.Types.ObjectId, ref: 'methods' },
+    tat: { type: Number }
   }],
   tat: {
     standard: { type: Number, default: 10 },
@@ -22,12 +24,14 @@ const LabSchema = new Schema({
   shipping: {
     address: { type: String },
     city: { type: String },
-    zip: { type: String }
+    zip: { type: String },
+    state: { type: String }
   },
   billing: {
     address: { type: String },
     city: { type: String },
-    zip: { type: String }
+    zip: { type: String },
+    state: { type: String }
   },
 });
 

@@ -16,6 +16,14 @@ const getFgs = trycatch( async (req, res) => {
   else { res.status(404); throw new Error("Unable to locate finished goods."); };
 });
 
+// GET: api/fgs/id | Get a single finished good by it's id | Private
+const getFg = trycatch( async (req, res) => {
+  // Find the fg and populate it's testing history
+  const fg = await FinishedGood.findById(req.params.id).exec();
+  if (fg) res.status(200).json(fg);
+  else { res.status(404); throw new Error("Unable to find the requested finished good.") };
+});
+
 // POST: api/fgs/ | Create a new fg material | Private
 const createFg = trycatch( async (req, res) => {
   const entries = await formatEntries(req.body);
@@ -41,11 +49,9 @@ const editFg = trycatch( async (req, res) => {
 // DELETE: api/fgs/ | Remove the fg with the given ID from the database | Private
 const removeFg = trycatch( async (req, res) => {
   const fg = await FinishedGood.findById(req.params.id);
-  if (fg) { fg.remove().then(() => res.status(200).json({success: true})) }
+  if (fg) { fg.remove().then(() => res.status(200).json(req.params.id)) }
   else { res.status(404); throw new Error("Could not find the finished good to delete.")}
 });
-
-
 
 // Validate entries and convert them to the required format
 const formatEntries = async body => {
@@ -55,4 +61,4 @@ const formatEntries = async body => {
   }
 }
 
-module.exports = {getFgs, createFg, editFg, removeFg};
+module.exports = {getFgs, getFg, createFg, editFg, removeFg};

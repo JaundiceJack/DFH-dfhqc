@@ -1,27 +1,27 @@
-import HmTestLine from './hmTestLine.js';
+import TestLine from '../common/testLine.js';
 
 const SampleInfo = ({ sample, spec }) => {
   return (
 
     <div className="flex flex-col">
       {/* Testing Information Lines*/}
-      <HmTestLine label="Arsenic:" sample={sample} spec={spec.arsenic}
+      <TestLine type="hm" label="Arsenic:" sample={sample} spec={spec.arsenic}
         result={sample && sample.results && sample.results.arsenic}
-        unit={spec.arsenic} />
-      <HmTestLine label="Cadmium:" sample={sample} spec={spec.cadmium}
+        unit={spec && spec.units} />
+      <TestLine type="hm" label="Cadmium:" sample={sample} spec={spec.cadmium}
         result={sample && sample.results && sample.results.cadmium}
-        unit={spec.cadmium} />
-      <HmTestLine label="Lead:" sample={sample} spec={spec.lead}
+        unit={spec && spec.units} />
+      <TestLine type="hm" label="Lead:" sample={sample} spec={spec.lead}
         result={sample && sample.results && sample.results.lead}
-        unit={spec.lead} />
-      <HmTestLine label="Mercury:" sample={sample} spec={spec.mercury}
+        unit={spec && spec.units} />
+      <TestLine type="hm" label="Mercury:" sample={sample} spec={spec.mercury}
         result={sample && sample.results && sample.results.mercury}
-        unit={spec.mercury} />
+        unit={spec && spec.units} />
 
       {spec.nickel_tested &&
-        <HmTestLine label="Nickel:" sample={sample} spec={spec.nickel}
+        <TestLine type="hm" label="Nickel:" sample={sample} spec={spec.nickel}
            result={sample && sample.results && sample.results.nickel}
-           unit={spec.nickel}/>
+           unit={spec && spec.units}/>
       }
     </div>
   )

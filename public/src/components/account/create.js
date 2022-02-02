@@ -57,7 +57,7 @@ const Create = () => {
     // If there were entry errors, display them for 5 seconds
     else { !updateTimer.current && setUpdate(); }
   }
-  const changeActive = nextPage => { dispatch(changePage(nextPage)) }
+  //const changeActive = nextPage => { dispatch(changePage(nextPage)) }
 
   const inputCs = "rounded my-1 py-1 pl-2 bg-gray-200 w-1/2";
   const errorMsgCs = " px-3 py-2 mb-2 font-semibold text-white rounded-xl" +

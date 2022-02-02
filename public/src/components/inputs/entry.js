@@ -19,7 +19,7 @@ const Entry = ({
       <input type={type} value={value} name={name} onChange={onChange}
         disabled={disabled} placeholder={placeholder}
         className={
-          "rounded my-1 py-1 pl-2 bg-gray-200 w-full opacity-100 disabled:opacity-70 text-black self-end " +
+          "rounded my-1 py-1 pl-2 bg-gray-200 w-full opacity-100 disabled:opacity-70 text-black self-end focus:outline-none focus:ring-2 focus:ring-yellow-500 " +
           (( label &&  append) ? "col-span-1" :
            (!label && !append) ? "col-span-3" :
                                  "col-span-2"

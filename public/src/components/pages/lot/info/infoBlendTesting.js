@@ -1,18 +1,21 @@
-import Divider from '../../../divider.js';
-import Detail from '../../../detail.js';
+import { useSelector } from 'react-redux';
+import Container from '../../../misc/container.js';
+import Detail from '../../../misc/detail.js';
 
 const InfoBlendTesting = ({ lot }) => {
+  const { loading } = useSelector( state => state.lot );
+
   return (
-    <div className="bg-gray-600 rounded">
-      <h2 className="text-lg text-left px-2 py-1 text-blue-200 font-semibold">Evaluations</h2>
-      <Divider />
-      <div className="flex flex-col">
-        <Detail label="Lot #:"    data={lot && lot.lot} />
-        <Detail label="Item #:"   data={lot && lot.item && lot.item.number} />
-        <Detail label="Name:"     data={lot && lot.item && lot.item.name} />
-        <Detail label="Location:" data={lot && lot.location} />
-      </div>
-    </div>
+    <Container title="Receiving" loading={loading} contents={[
+      <Detail label="Lot #:"
+              data={lot && lot.lot} key={1} />,
+      <Detail label="Item #:"
+              data={lot && lot.blend && lot.blend.number} key={2} />,
+      <Detail label="Name:"
+              data={lot && lot.blend && lot.blend.name} key={3} />,
+      <Detail label="Location:"
+              data={lot && lot.location} key={4} />
+    ]} />
   )
 }
 
