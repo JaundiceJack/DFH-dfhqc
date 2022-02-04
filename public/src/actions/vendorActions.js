@@ -1,8 +1,12 @@
 // Import action types
 import {
-  GET_VENDORS, SELECT_VENDOR, VENDOR_ADDED, VENDOR_EDITED, VENDOR_DELETED,
-  TOGGLE_ADDING_VENDOR, TOGGLE_EDITING_VENDOR, TOGGLE_DELETING_VENDOR,
-} from './types';
+  VENDOR_LIST_REQUEST, VENDOR_LIST_SUCCESS, VENDOR_LIST_FAILURE,
+  VENDOR_GET_REQUEST, VENDOR_GET_SUCCESS, VENDOR_GET_FAILURE,
+  VENDOR_ADD_REQUEST, VENDOR_ADD_SUCCESS, VENDOR_ADD_FAILURE,
+  VENDOR_EDIT_REQUEST, VENDOR_EDIT_SUCCESS, VENDOR_EDIT_FAILURE,
+  VENDOR_DELETE_REQUEST, VENDOR_DELETE_SUCCESS, VENDOR_DELETE_FAILURE,
+  VENDOR_TOGGLE_ADDING, VENDOR_TOGGLE_EDITING, VENDOR_TOGGLE_DELETING,
+  VENDOR_DIRECT_SELECT } from './types';
 // Import axios to handle http requests
 import axios from 'axios';
 // Import server actions: to report errors
@@ -10,46 +14,63 @@ import { handleError } from './msgActions';
 // Import the server route
 import server from './route';
 
+// Get a header with the token if available
+const tokenConfig = getState => {
+  const token = getState().auth.token;
+  const config = { headers: {"Content-type": "application/json"} };
+  if (token) config.headers["x-auth-token"] = token;
+  return config;
+}
+
 // Obtain an array of vendors from the server and dispatch them to the redux state
-export const getVendors = () => dispatch => {
-  // Set Headers
-  const config = { headers: {"Content-type": "application/json"} };
-  // Make request for vendor info
-  axios.get(`${server}/api/vendors`, config)
-  .then(res => { dispatch({ type: GET_VENDORS, payload: res.data }) })
-  .catch(err => { handleError(err) });
+export const getVendors = () => async (dispatch, getState) => {
+  dispatch({ type: VENDOR_LIST_REQUEST });
+  try {
+    const { data } = await axios.get('/api/vendors', tokenConfig(getState));
+    dispatch({ type: VENDOR_LIST_SUCCESS, payload: data });
+  } catch (e) { dispatch({ type: VENDOR_LIST_FAILURE, payload: handleError(e) }) }
 }
 
-// TODO: add authentication
+// Get an individual vendor's info and place it in the selectedVendor state
+export const getVendor = id => async (dispatch, getState) => {
+  dispatch({ type: VENDOR_GET_REQUEST });
+  try {
+    const { data } = await axios.get(`/api/vendors/${id}`, tokenConfig(getState));
+    dispatch({ type: VENDOR_GET_SUCCESS, payload: data });
+  } catch (e) { dispatch({ type: VENDOR_GET_FAILURE, payload: handleError(e) }) }
+}
+
 // Take entries and add a new vendor to the database
-export const addVendor = (vendor) => dispatch => {
-  // Set Headers
-  const config = { headers: {"Content-type": "application/json"} };
-  // Convert the new vendor to JSON for sending
-  const newVendor = JSON.stringify(vendor);
-  // Submit a post with the new vendor
-  axios.post(`${server}/api/vendors/`, newVendor, config)
-  .then(res => { dispatch({type: VENDOR_ADDED, payload: res.data}) })
-  .catch(err => { handleError(err) });
-}
-export const editVendor = (vendor) => dispatch => {
-  // Set Headers
-  const config = { headers: {"Content-type": "application/json"} };
-  // Convert the new vendor to JSON for sending
-  const editedVendor = JSON.stringify(vendor);
-  // Submit a post with the new vendor
-  axios.post(`${server}/api/vendors/${vendor._id}`, editedVendor, config)
-  .then(res => { dispatch({type: VENDOR_EDITED, payload: res.data}) })
-  .catch(err => { handleError(err) })
-}
-export const deleteVendor = (id) => dispatch => {
-  const config = { headers: {"Content-type": "application/json"} };
-  axios.delete(`${server}/api/vendors/${id}`, config)
-  .then(res => { dispatch({ type: VENDOR_DELETED, payload: id })})
-  .catch(err => { handleError(err) })
+export const addVendor = vendor => async (dispatch, getState) => {
+  dispatch({ type: VENDOR_ADD_REQUEST });
+  try {
+    const newVendor = JSON.stringify(vendor);
+    const { data } = await axios.post('/api/vendors', newVendor, tokenConfig(getState));
+    dispatch({ type: VENDOR_ADD_SUCCESS, payload: data });
+  } catch (e) { dispatch({ type: VENDOR_ADD_FAILURE, payload: handleError(e) }) }
 }
 
-export const selectVendor = (vendor) => dispatch => dispatch({type: SELECT_VENDOR, payload: vendor});
-export const toggleAdding = () => dispatch => dispatch({ type: TOGGLE_ADDING_VENDOR });
-export const toggleDeleting = () => dispatch => dispatch({ type: TOGGLE_DELETING_VENDOR });
-export const toggleEditing = () => dispatch => dispatch({ type: TOGGLE_EDITING_VENDOR });
+// Modify the selected vendor
+export const editVendor = vendor => async (dispatch, getState) => {
+  dispatch({ type: VENDOR_EDIT_REQUEST });
+  try {
+    const editedVendor = JSON.stringify(vendor);
+    const { data } = await axios.put(`/api/vendors/${vendor._id}`, editedVendor, tokenConfig(getState));
+    dispatch({ type: VENDOR_EDIT_SUCCESS, payload: data });
+  } catch (e) { dispatch({ type: VENDOR_EDIT_FAILURE, payload: handleError(e) }) }
+}
+
+// Remove the selected vendor
+export const deleteVendor = id => async (dispatch, getState) => {
+  dispatch({ type: VENDOR_DELETE_REQUEST });
+  try {
+    const { data } = await axios.delete(`/api/vendors/${id}`, tokenConfig(getState));
+    dispatch({ type: VENDOR_DELETE_SUCCESS, payload: data });
+  } catch (e) { dispatch({ type: VENDOR_DELETE_FAILURE, payload: handleError(e) }) }
+}
+
+// Selection and toggles
+export const selectVendor = vendor => dispatch => dispatch({type: VENDOR_DIRECT_SELECT, payload: vendor});
+export const toggleAdding = () => dispatch => dispatch({ type: VENDOR_TOGGLE_ADDING });
+export const toggleDeleting = () => dispatch => dispatch({ type: VENDOR_TOGGLE_DELETING });
+export const toggleEditing = () => dispatch => dispatch({ type: VENDOR_TOGGLE_EDITING });

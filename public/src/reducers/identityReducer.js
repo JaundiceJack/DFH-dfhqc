@@ -53,7 +53,7 @@ const identityReducer = (state = initialState, action) => {
     case LOADING_IDENTITIES:
       return { ...state, loading: true }
     case GET_IDENTITIES:
-      return { ...state, loading: false, identities: action.payload }
+      return { ...state, loading: false, identities: action.payload.sort((a, b) => b.name < a.name ? 1 : b.name > a.name ? -1 : 0 ) }
     case SELECT_IDENTITY:
       return { ...state, selectedIdentity: action.payload }
     case TOGGLE_ADDING_IDENTITY:

@@ -94,19 +94,19 @@ const RawGen = ({ toggle, editing=false }) => {
     micro: {
       tpc: editing ?
         (selected && selected.micro && selected.micro.tpc) :
-        "",
+        "1000",
       tpc_units: editing ?
         (selected && selected.micro && selected.micro.tpc_units) :
         "CFU/g",
       ym: editing ?
         (selected && selected.micro && selected.micro.ym) :
-        "",
+        "100",
       ym_units: editing ?
         (selected && selected.micro && selected.micro.ym_units) :
         "CFU/g",
       entero: editing ?
         (selected && selected.micro && selected.micro.entero) :
-        "",
+        "100",
       entero_units: editing ?
         (selected && selected.micro && selected.micro.entero_units) :
         "MPN/g",
@@ -389,7 +389,7 @@ const RawGen = ({ toggle, editing=false }) => {
 
         <div className="h-6" />
         { badEntries.map(err => <Message error={err} /> )  }
-        <Button type="submit" color="bg-green-300" text="Apply Changes" extraClasses="h-10" />
+        <Button type="submit" color="bg-green-300" text="Submit" extraClasses="h-10" />
       </form>
     </div>
   )

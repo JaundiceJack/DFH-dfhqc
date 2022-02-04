@@ -1,11 +1,11 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { deleteManufacturer } from '../../../actions/manufacturerActions'
+import { deleteVendor } from '../../../../actions/vendorActions.js'
 
-const ManufacturerDelete = ({toggleDelete}) => {
-  const selected = useSelector(state => state.manufacturer.selectedManufacturer)
+const VendorDelete = ({toggleDelete}) => {
+  const selected = useSelector(state => state.vendor.selectedVendor)
   const dispatch = useDispatch();
   const onDelete = () => {
-    dispatch(deleteManufacturer(selected._id));
+    dispatch(deleteVendor(selected._id));
   }
 
   return (
@@ -20,4 +20,4 @@ const ManufacturerDelete = ({toggleDelete}) => {
   )
 }
 
-export default ManufacturerDelete;
+export default VendorDelete;

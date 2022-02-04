@@ -11,6 +11,14 @@ const getVendors = trycatch( async (req, res) => {
   else { res.status(404); throw new Error("Vendors not found."); };
 });
 
+// GET: api/vendors/id | Get a single vendor by it's id  | Private
+const getVendor = trycatch( async (req, res) => {
+  // Find the vendor and populate it's testing history
+  const vendor = await Vendor.findById(req.params.id).exec();
+  if (vendor) res.status(200).json(vendor);
+  else { res.status(404); throw new Error("Unable to find the requested vendor.") };
+});
+
 // POST: api/vendors/ Create a new vendor with the given info | Private
 const createVendor = trycatch( async (req, res) => {
   const entries = await formatEntries(req.body);
@@ -53,4 +61,4 @@ const formatEntries = async body => {
   return { name: body.name.toLowerCase() };
 };
 
-module.exports = {getVendors, createVendor, editVendor, removeVendor};
+module.exports = {getVendors, getVendor, createVendor, editVendor, removeVendor};

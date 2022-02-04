@@ -40,9 +40,9 @@ const LotInfo = () => {
   let annualPesticideLot = null;
   currentRaw && currentRaw.pesticide && currentRaw.pesticide.lots_passing.forEach((annual, index) => {
     const annualYear = new Date(annual.date).getFullYear();
-    const annualManufacturer = annual.lot.receiving.manufacturer;
+    const annualManufacturer = annual.lot && annual.lot.receiving && annual.lot.receiving.manufacturer;
     const lotYear = new Date(selectedLot.date_created).getFullYear();
-    const lotManufacturer = selectedLot.receiving.manufacturer._id;
+    const lotManufacturer = selectedLot && selectedLot.receiving && selectedLot.receiving.manufacturer._id;
     if (annualYear === lotYear && annualManufacturer === lotManufacturer && annual.lot._id !== selectedLot._id) {
       const tests = annual.lot.tests.filter(test => test.type === 'pesticides');
       if (tests.length > 0) {
@@ -57,9 +57,9 @@ const LotInfo = () => {
   let annualRancidityLot = null;
   currentRaw && currentRaw.rancidity && currentRaw.rancidity.lots_passing.forEach((annual, index) => {
     const annualYear = new Date(annual.date).getFullYear();
-    const annualManufacturer = annual.lot.receiving.manufacturer;
+    const annualManufacturer = annual.lot && annual.lot.receiving && annual.lot.receiving.manufacturer;
     const lotYear = new Date(selectedLot.date_created).getFullYear();
-    const lotManufacturer = selectedLot.receiving.manufacturer._id;
+    const lotManufacturer = selectedLot && selectedLot.receiving && selectedLot.receiving.manufacturer._id;
     if (annualYear === lotYear && annualManufacturer === lotManufacturer && annual.lot._id !== selectedLot._id) {
       const tests = annual.lot.tests.filter(test => test.type === 'rancidity');
       if (tests.length > 0) {

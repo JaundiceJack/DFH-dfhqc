@@ -2,20 +2,22 @@
 import { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // Import server actions
-import { addVendor } from '../../../actions/vendorActions.js';
-import { clearMessages } from '../../../actions/msgActions.js';
+import { addVendor, editVendor } from '../../../../actions/vendorActions.js';
+import { clearMessages } from '../../../../actions/msgActions.js';
 // Import components
-import Button     from '../../inputs/button.js';
-import Message    from '../../misc/message.js';
-import TextInput  from '../../inputs/textInput.js';
+import Button   from '../../../inputs/button.js';
+import Message  from '../../../misc/message.js';
+import Entry    from '../../../inputs/entry.js';
 
-const VendorEdit = ({toggleEdit}) => {
+const VendorGen = ({ toggle, editing=false }) => {
   const selected = useSelector(state => state.vendor.selectedVendor);
   const errorMsg = useSelector(state => state.msg.error);
 
   // Set internal state variables for the form
   const [vendorVals, setVendorVals] = useState({
-    name: selected.name,
+    name: editing ?
+      (selected && selected.name) :
+      "",
   });
 
   // Clear the badEntries warning after the timer runs out
@@ -43,9 +45,12 @@ const VendorEdit = ({toggleEdit}) => {
       errs.push("Please enter a vendor name.");
     setBadEntries(errs);
     // Create a new vendor
-    if (errs.length === 0 && !clearTimer.current) { dispatch(addVendor(vendorVals)); }
+    if (errs.length === 0 && !clearTimer.current) {
+      editing ?
+        dispatch(editVendor(vendorVals)) :
+        dispatch(addVendor(vendorVals)); }
     // Hide the form on submission
-    errs.length !== 0 && !clearTimer.current ? setClear() : toggleEdit();
+    errs.length !== 0 && !clearTimer.current ? setClear() : toggle();
   }
 
   // Handle events
@@ -56,13 +61,12 @@ const VendorEdit = ({toggleEdit}) => {
     <div className="mx-4 my-2">
       <form className="flex flex-col" onSubmit={onSubmit}>
         <div className="">
-          <label htmlFor="name" className="flex flex-row justify-between items-end text-blue-100">Vendor Name:
-            <TextInput
-              name="name"
-              value={vendorVals.name}
-              onEntry={e => onEntry(e)}
-              extraClasses="text-black h-8" />
-          </label>
+          <Entry
+            label="Name:"
+            name="name"
+            placeholder="name"
+            value={vendorVals.name}
+            onChange={e => onEntry(e)} />
         </div>
 
         <div className="h-6" />
@@ -74,4 +78,4 @@ const VendorEdit = ({toggleEdit}) => {
   )
 }
 
-export default VendorEdit;
+export default VendorGen;

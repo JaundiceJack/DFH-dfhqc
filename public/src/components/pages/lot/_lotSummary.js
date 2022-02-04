@@ -20,8 +20,8 @@ import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 // Import Components
 import LotList   from './lotList.js';
 import LotInfo   from './lotInfo.js';
-import LotGen    from './creation/lotGen.js';
-import LotDelete from './creation/lotDelete.js';
+import LotGen    from './creation/_lotGen.js';
+import LotDelete from './creation/_lotDelete.js';
 import Button    from '../../inputs/button.js'
 import Checkbox  from '../../inputs/checkbox.js';
 import Message   from '../../misc/message.js';

@@ -11,6 +11,14 @@ const getManufacturers = trycatch( async (req, res) => {
   else { res.status(404); throw new Error("Manufacturers not found."); };
 });
 
+// GET: api/vendors/id | Get a single vendor by it's id  | Private
+const getManufacturer = trycatch( async (req, res) => {
+  // Find the manufacturer and populate it's testing history
+  const manufacturer = await Manufacturer.findById(req.params.id).exec();
+  if (manufacturer) res.status(200).json(manufacturer);
+  else { res.status(404); throw new Error("Unable to find the requested manufacturer.") };
+});
+
 // POST: api/manufacturers/ Create a new manufacturer with the given info | Private
 const createManufacturer = trycatch( async (req, res) => {
   const entries = await formatEntries(req.body);
@@ -26,7 +34,7 @@ const createManufacturer = trycatch( async (req, res) => {
   else { res.status(401); throw new Error("This manufacturer already exists."); };
 });
 
-// POST api/manufacturers/manufacturer_id | Edit the manufacturer with the given ID | Private
+// PUT api/manufacturers/manufacturer_id | Edit the manufacturer with the given ID | Private
 const editManufacturer = trycatch( async (req, res) => {
   const current = await Manufacturer.findById(req.params.id);
   if (current) {
@@ -53,4 +61,4 @@ const formatEntries = async body => {
   return { name: body.name.toLowerCase() };
 };
 
-module.exports = { getManufacturers, createManufacturer, editManufacturer, removeManufacturer };
+module.exports = { getManufacturers, getManufacturer, createManufacturer, editManufacturer, removeManufacturer };

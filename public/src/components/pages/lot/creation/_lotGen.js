@@ -36,7 +36,7 @@ const LotGen = ({ toggle, editing=false }) => {
       (selected && selected.type) :
       'raw',
     prior_lot: editing ?
-      (selected && selected.prior_lot) :
+      (selected && selected.prior_lot && selected.prior_lot._id) :
       null,
     status: editing ?
       (selected && selected.inventory && selected.inventory.status) :

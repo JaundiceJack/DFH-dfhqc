@@ -1,14 +1,12 @@
 // Import action types
 import {
-  GET_MANUFACTURERS,
-  SELECT_MANUFACTURER,
-  MANUFACTURER_ADDED,
-  MANUFACTURER_EDITED,
-  MANUFACTURER_DELETED,
-  TOGGLE_ADDING_MANUFACTURER,
-  TOGGLE_EDITING_MANUFACTURER,
-  TOGGLE_DELETING_MANUFACTURER,
-   } from './types';
+  MANUFACTURER_LIST_REQUEST, MANUFACTURER_LIST_SUCCESS, MANUFACTURER_LIST_FAILURE,
+  MANUFACTURER_GET_REQUEST, MANUFACTURER_GET_SUCCESS, MANUFACTURER_GET_FAILURE,
+  MANUFACTURER_ADD_REQUEST, MANUFACTURER_ADD_SUCCESS, MANUFACTURER_ADD_FAILURE,
+  MANUFACTURER_EDIT_REQUEST, MANUFACTURER_EDIT_SUCCESS, MANUFACTURER_EDIT_FAILURE,
+  MANUFACTURER_DELETE_REQUEST, MANUFACTURER_DELETE_SUCCESS, MANUFACTURER_DELETE_FAILURE,
+  MANUFACTURER_TOGGLE_ADDING, MANUFACTURER_TOGGLE_EDITING, MANUFACTURER_TOGGLE_DELETING,
+  MANUFACTURER_DIRECT_SELECT } from './types';
 // Import axios to handle http requests
 import axios from 'axios';
 // Import server actions: to report errors
@@ -16,46 +14,63 @@ import { handleError } from './msgActions';
 // Import the server route
 import server from './route';
 
+// Get a header with the token if available
+const tokenConfig = getState => {
+  const token = getState().auth.token;
+  const config = { headers: {"Content-type": "application/json"} };
+  if (token) config.headers["x-auth-token"] = token;
+  return config;
+}
+
 // Obtain an array of manufacturers from the server and dispatch them to the redux state
-export const getManufacturers = () => dispatch => {
-  // Set Headers
-  const config = { headers: {"Content-type": "application/json"} };
-  // Make request for manufacturer info
-  axios.get(`${server}/api/manufacturers`, config)
-  .then(res => { dispatch({ type: GET_MANUFACTURERS, payload: res.data }) })
-  .catch(err => { handleError(err) });
+export const getManufacturers = () => async (dispatch, getState) => {
+  dispatch({ type: MANUFACTURER_LIST_REQUEST });
+  try {
+    const { data } = await axios.get('/api/manufacturers', tokenConfig(getState));
+    dispatch({ type: MANUFACTURER_LIST_SUCCESS, payload: data });
+  } catch (e) { dispatch({ type: MANUFACTURER_LIST_FAILURE, payload: handleError(e) }) }
 }
 
-// TODO: add authentication
+// Get an individual manufacturer's info and place it in the selectedManufacturer state
+export const getManufacturer = id => async (dispatch, getState) => {
+  dispatch({ type: MANUFACTURER_GET_REQUEST });
+  try {
+    const { data } = await axios.get(`/api/manufacturers/${id}`, tokenConfig(getState));
+    dispatch({ type: MANUFACTURER_GET_SUCCESS, payload: data });
+  } catch (e) { dispatch({ type: MANUFACTURER_GET_FAILURE, payload: handleError(e) }) }
+}
+
 // Take entries and add a new manufacturer to the database
-export const addManufacturer = (manufacturer) => dispatch => {
-  // Set Headers
-  const config = { headers: {"Content-type": "application/json"} };
-  // Convert the new manufacturer to JSON for sending
-  const newManufacturer = JSON.stringify(manufacturer);
-  // Submit a post with the new manufacturer
-  axios.post(`${server}/api/manufacturers/`, newManufacturer, config)
-  .then(res => { dispatch({type: MANUFACTURER_ADDED, payload: res.data}) })
-  .catch(err => { handleError(err) });
-}
-export const editManufacturer = (manufacturer) => dispatch => {
-  // Set Headers
-  const config = { headers: {"Content-type": "application/json"} };
-  // Convert the new manufacturer to JSON for sending
-  const editedManufacturer = JSON.stringify(manufacturer);
-  // Submit a post with the new manufacturer
-  axios.post(`${server}/api/manufacturers/${manufacturer._id}`, editedManufacturer, config)
-  .then(res => { dispatch({type: MANUFACTURER_EDITED, payload: res.data}) })
-  .catch(err => { handleError(err) })
-}
-export const deleteManufacturer = (id) => dispatch => {
-  const config = { headers: {"Content-type": "application/json"} };
-  axios.delete(`${server}/api/manufacturers/${id}`, config)
-  .then(res => { dispatch({ type: MANUFACTURER_DELETED, payload: id })})
-  .catch(err => { handleError(err) })
+export const addManufacturer = manufacturer => async (dispatch, getState) => {
+  dispatch({ type: MANUFACTURER_ADD_REQUEST });
+  try {
+    const newManufacturer = JSON.stringify(manufacturer);
+    const { data } = await axios.post('/api/manufacturers', newManufacturer, tokenConfig(getState));
+    dispatch({ type: MANUFACTURER_ADD_SUCCESS, payload: data });
+  } catch (e) { dispatch({ type: MANUFACTURER_ADD_FAILURE, payload: handleError(e) }) }
 }
 
-export const selectManufacturer = manufacturer => dispatch => dispatch({type: SELECT_MANUFACTURER, payload: manufacturer});
-export const toggleAdding = () => dispatch => dispatch({ type: TOGGLE_ADDING_MANUFACTURER });
-export const toggleDeleting = () => dispatch => dispatch({ type: TOGGLE_DELETING_MANUFACTURER });
-export const toggleEditing = () => dispatch => dispatch({ type: TOGGLE_EDITING_MANUFACTURER });
+// Modify the selected manufacturer
+export const editManufacturer = manufacturer => async (dispatch, getState) => {
+  dispatch({ type: MANUFACTURER_EDIT_REQUEST });
+  try {
+    const editedManufacturer = JSON.stringify(manufacturer);
+    const { data } = await axios.put(`/api/manufacturers/${manufacturer._id}`, editedManufacturer, tokenConfig(getState));
+    dispatch({ type: MANUFACTURER_EDIT_SUCCESS, payload: data });
+  } catch (e) { dispatch({ type: MANUFACTURER_EDIT_FAILURE, payload: handleError(e) }) }
+}
+
+// Remove the selected manufacturer
+export const deleteManufacturer = id => async (dispatch, getState) => {
+  dispatch({ type: MANUFACTURER_DELETE_REQUEST });
+  try {
+    const { data } = await axios.delete(`/api/manufacturers/${id}`, tokenConfig(getState));
+    dispatch({ type: MANUFACTURER_DELETE_SUCCESS, payload: data });
+  } catch (e) { dispatch({ type: MANUFACTURER_DELETE_FAILURE, payload: handleError(e) }) }
+}
+
+// Selection and toggles
+export const selectManufacturer = manufacturer => dispatch => dispatch({type: MANUFACTURER_DIRECT_SELECT, payload: manufacturer});
+export const toggleAdding = () => dispatch => dispatch({ type: MANUFACTURER_TOGGLE_ADDING });
+export const toggleDeleting = () => dispatch => dispatch({ type: MANUFACTURER_TOGGLE_DELETING });
+export const toggleEditing = () => dispatch => dispatch({ type: MANUFACTURER_TOGGLE_EDITING });

@@ -200,7 +200,7 @@ const createTest = trycatch( async (req, res) => {
   if (lot) {
     // Find existing tests/samples before adding a new one
     savedTest = await findExisting(
-        lot._id, req.body.sample, req.body.sampleType,
+        req.params.lotId, req.body.sample, req.body.sampleType,
         req.body.assayId, req.body.identityId);
     // Respond with the updated samples
     if (savedTest) {

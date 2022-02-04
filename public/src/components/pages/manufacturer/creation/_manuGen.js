@@ -2,20 +2,22 @@
 import { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // Import server actions
-import { addManufacturer } from '../../../actions/manufacturerActions.js';
-import { clearMessages } from '../../../actions/msgActions.js';
+import { addManufacturer, editManufacturer } from '../../../../actions/manufacturerActions.js';
+import { clearMessages } from '../../../../actions/msgActions.js';
 // Import components
-import Button     from '../../inputs/button.js';
-import Message    from '../../misc/message.js';
-import TextInput  from '../../inputs/textInput.js';
+import Button     from '../../../inputs/button.js';
+import Message    from '../../../misc/message.js';
+import Entry      from '../../../inputs/entry.js';
 
-const ManufacturerEdit = ({toggleEdit}) => {
+const ManuGen = ({ toggle, editing=false }) => {
   const selected = useSelector(state => state.manufacturer.selectedManufacturer);
   const errorMsg = useSelector(state => state.msg.error);
 
   // Set internal state variables for the form
   const [manufacturerVals, setManufacturerVals] = useState({
-    name: selected.name,
+    name: editing ?
+      (selected && selected.name) :
+      "",
   });
 
   // Clear the badEntries warning after the timer runs out
@@ -43,9 +45,12 @@ const ManufacturerEdit = ({toggleEdit}) => {
       errs.push("Please enter a manufacturer name.");
     setBadEntries(errs);
     // Create a new manufacturer
-    if (errs.length === 0 && !clearTimer.current) { dispatch(addManufacturer(manufacturerVals)); }
+    if (errs.length === 0 && !clearTimer.current) {
+      editing ?
+        dispatch(editManufacturer(manufacturerVals)) :
+        dispatch(addManufacturer(manufacturerVals)); }
     // Hide the form on submission
-    errs.length !== 0 && !clearTimer.current ? setClear() : toggleEdit();
+    errs.length !== 0 && !clearTimer.current ? setClear() : toggle();
   }
 
   // Handle events
@@ -56,22 +61,21 @@ const ManufacturerEdit = ({toggleEdit}) => {
     <div className="mx-4 my-2">
       <form className="flex flex-col" onSubmit={onSubmit}>
         <div className="">
-          <label htmlFor="name" className="flex flex-row justify-between items-end text-blue-100">Manufacturer Name:
-            <TextInput
-              name="name"
-              value={manufacturerVals.name}
-              onEntry={e => onEntry(e)}
-              extraClasses="text-black h-8" />
-          </label>
+          <Entry
+            label="Name:"
+            placeholder="name"
+            name="name"
+            value={manufacturerVals.name}
+            onChange={e => onEntry(e)} />
         </div>
 
         <div className="h-6" />
         { badEntries.map(err => <Message error={err} /> )  }
         { errorMsg && <Message error={errorMsg} /> }
-        <Button type="submit" color="bg-green-300" text="Apply Changes" extraClasses="h-10" />
+        <Button type="submit" color="bg-green-300" text="Submit" extraClasses="h-10" />
       </form>
     </div>
   )
 }
 
-export default ManufacturerEdit;
+export default ManuGen;

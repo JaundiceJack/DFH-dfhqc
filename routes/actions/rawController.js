@@ -28,6 +28,12 @@ const rawPopPaths = [
   'ids.method',
 ];
 const testingPopPaths = [
+  'texture',
+  'assays.assay',
+  'assays.method',
+  'assays.units',
+  'ids.identity',
+  'ids.method',
   { path: 'pesticide.lots_passing.lot', populate: 'tests' },
   { path: 'rancidity.lots_passing.lot', populate: 'tests' },
   { path: 'solvent.lots_passing.lot', populate: 'tests' },
@@ -42,7 +48,7 @@ const getRaws = trycatch( async (req, res) => {
   else { res.status(404); throw new Error("Unable to find raw materials.") };
 });
 
-// GET: api/raws/ | Get a list of all raw specifications | Private
+// GET: api/raws/ | Get a single raw by it's id | Private
 const getRaw = trycatch( async (req, res) => {
   // Find the raw and populate it's testing history
   const raw = await Raw.findById(req.params.id).populate(testingPopPaths).exec();

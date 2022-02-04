@@ -4,10 +4,11 @@ const Schema  = mongoose.Schema;
 const UserSchema = new Schema({
   email:       { type: String, required: true, unique: true },
   password:    { type: String, required: true },
-  sign_up_date:  { type: Date,   default: Date.now },
+  sign_up_date: { type: Date,   default: Date.now },
   access_level: { type: Number, default: 0 },
+  access_modules: [{ type: String }],
   facility_location: { type: String, default: 'MT' },
-  passwordResetToken: String,
+  passwordResetToken:  String,
   passwordResetExpire: Date
 });
 

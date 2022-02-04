@@ -19,18 +19,10 @@ const Certificate = ({ match }) => {
   const { selectedRaw,              loading: loadingRaw }   = useSelector(state => state.raw);
 
   const ftirTests = tests && tests.filter(test => test.type === 'ftir');
-  // For FT-IR CoAs, i need access to the prior lot's lot and testing
-  // I may need to make a separate redux state for prior_lot and prior_tests
-  // to get the previous results to replace the ft-ir sample results
-
-
 
   // const { selectedBlend, loading: loadingBlend }  = useSelector(state => state.blend);
   // const { selectedBulk, loading: loadingBulk }  = useSelector(state => state.bulk);
   // const { selectedFg, loading: loadingFg }  = useSelector(state => state.fg);
-
-  // One idea to make this a bit easier maybe
-  // is to make a separate coa route, so that i can issue requests for populations that only the coa's need
 
 
   const dispatch = useDispatch();
@@ -42,8 +34,8 @@ const Certificate = ({ match }) => {
     if (selectedLot && selectedLot.type === 'raw' && !selectedRaw.number)
       dispatch(getRaw(selectedLot.raw._id));
     if (selectedLot && selectedLot.prior_lot) {
-      dispatch(getPriorLot(selectedLot.prior_lot))
-      dispatch(getPriorTests(selectedLot.prior_lot));
+      dispatch(getPriorLot(selectedLot.prior_lot._id))
+      dispatch(getPriorTests(selectedLot.prior_lot._id));
     }
   }, [dispatch, match, selectedLot, selectedRaw, tests])
 

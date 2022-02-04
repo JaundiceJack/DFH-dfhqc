@@ -7,19 +7,18 @@ import { getVendors, toggleAdding, toggleDeleting, toggleEditing } from '../../.
 import { loadUser } from '../../../actions/authActions.js';
 // Import Components
 import VendorList   from './vendorList.js';
-import VendorSpec   from './vendorSpec.js';
-import VendorAdd    from './vendorAdd.js';
-import VendorEdit   from './vendorEdit.js';
-import VendorDelete from './vendorDelete.js';
-import Message   from '../../misc/message.js';
-import Button    from '../../inputs/button.js';
+import VendorSpec   from './info/_vendorSpec.js';
+import VendorGen    from './creation/_vendorGen.js';
+import VendorDelete from './creation/_vendorDelete.js';
+import Message      from '../../misc/message.js';
+import Button       from '../../inputs/button.js';
 
 const VendorSummary = () => {
   const selected = useSelector(state => state.vendor.selectedVendor);
-  const adding = useSelector(state => state.vendor.adding);
+  const adding   = useSelector(state => state.vendor.adding);
   const deleting = useSelector(state => state.vendor.deleting);
-  const editing = useSelector(state => state.vendor.editing);
-  const user = useSelector(state => state.auth);
+  const editing  = useSelector(state => state.vendor.editing);
+  const user     = useSelector(state => state.auth);
 
   // Load the items when the component loads
   const dispatch = useDispatch();
@@ -31,9 +30,9 @@ const VendorSummary = () => {
   const cleanup = () => { setTimeout(() => { return }, 5000); }
 
   // Set up button functions
-  const onAddClick = () => { dispatch(toggleAdding()); };
+  const onAddClick    = () => { dispatch(toggleAdding()); };
   const onRemoveClick = () => { dispatch(toggleDeleting()); };
-  const onEditClick = () => { dispatch(toggleEditing()); };
+  const onEditClick   = () => { dispatch(toggleEditing()); };
 
   if (!user.token) return (<Redirect to='/login' />)
   else if (!user.isAuthenticated) return (<Message info="Authenticating..." extraClasses="w-1/2 self-center mx-auto" />)
@@ -72,8 +71,8 @@ const VendorSummary = () => {
                 <VendorList />
               </div>
             }
-            {adding && <VendorAdd toggleAdd={onAddClick} /> }
-            {editing && <VendorEdit toggleEdit={onEditClick} />}
+            {adding && <VendorGen toggle={onAddClick} /> }
+            {editing && <VendorGen toggle={onEditClick} editing={true} />}
             {deleting && <VendorDelete toggleDelete={onRemoveClick} /> }
           </div>
           <VendorSpec />

@@ -18,10 +18,12 @@ const SpecPhysical = ({ density, moisture }) => {
     <Container title="Physical Tests" loading={loading} contents={[
       <Detail label="Density:"
               data={density && rangeString(density.min, density.max, "g/mL")}
-              capData={false} />,
+              capData={false}
+              key={1} />,
       <Detail label="Moisture:"
               data={moisture && rangeString(moisture.min, moisture.max, "%")}
-              capData={false} />
+              capData={false}
+              key={2} />
     ]} />
   )
 }

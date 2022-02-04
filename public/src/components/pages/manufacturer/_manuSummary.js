@@ -6,20 +6,19 @@ import { Redirect } from 'react-router-dom';
 import { getManufacturers, toggleAdding, toggleDeleting, toggleEditing } from '../../../actions/manufacturerActions';
 import { loadUser } from '../../../actions/authActions.js';
 // Import Components
-import ManufacturerList   from './manuList.js';
-import ManufacturerSpec   from './manuSpec.js';
-import ManufacturerAdd    from './manuAdd.js';
-import ManufacturerEdit   from './manuEdit.js';
-import ManufacturerDelete from './manuDelete.js';
+import ManuList   from './manuList.js';
+import ManuSpec   from './info/_manuSpec.js';
+import ManuGen    from './creation/_manuGen.js';
+import ManuDelete from './creation/_manuDelete.js';
 import Message   from '../../misc/message.js';
 import Button    from '../../inputs/button.js';
 
 const ManuSummary = () => {
   const selected = useSelector(state => state.manufacturer.selectedManufacturer);
-  const adding = useSelector(state => state.manufacturer.adding);
+  const adding   = useSelector(state => state.manufacturer.adding);
   const deleting = useSelector(state => state.manufacturer.deleting);
-  const editing = useSelector(state => state.manufacturer.editing);
-  const user = useSelector(state => state.auth);
+  const editing  = useSelector(state => state.manufacturer.editing);
+  const user     = useSelector(state => state.auth);
 
   // Load the items when the component loads
   const dispatch = useDispatch();
@@ -69,14 +68,14 @@ const ManuSummary = () => {
               <div className="bg-gray-500 h-px w-full mb-3" />
               {!adding && !deleting && !editing &&
               <div className="h-96 2xl:h-full mx-4 my-2">
-                <ManufacturerList />
+                <ManuList />
               </div>
             }
-            {adding && <ManufacturerAdd toggleAdd={onAddClick} /> }
-            {editing && <ManufacturerEdit toggleEdit={onEditClick} />}
-            {deleting && <ManufacturerDelete toggleDelete={onRemoveClick} /> }
+            {adding && <ManuGen toggle={onAddClick} /> }
+            {editing && <ManuGen toggle={onEditClick} editing={true} />}
+            {deleting && <ManuDelete toggleDelete={onRemoveClick} /> }
           </div>
-          <ManufacturerSpec />
+          <ManuSpec />
         </div>
       </div>
     </div>

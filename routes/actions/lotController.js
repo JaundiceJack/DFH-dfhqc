@@ -49,7 +49,7 @@ const getLots = trycatch( async (req, res) => {
 const getLot = trycatch( async (req, res) => {
   const lot = await Lot.findById(req.params.id).populate(popPaths).exec();
   if (lot) res.status(200).json(lot);
-  else { res.status(404); throw new Error("Unable to locate requested lot.")}
+  else { res.status(404); throw new Error(`Unable to locate requested lot. ID: ${req.params.id}`)}
 })
 
 /**/
@@ -132,7 +132,7 @@ const removeLot = trycatch( async (req, res) => {
 // Convert/Validate the fields for a new/existing lot
 const formatEntries = body => {
   return {
-    lot:   body.lot,
+    lot:       body.lot,
     prior_lot: body.prior_lot,
     raw:   body.rawId,
     blend: body.blendId,
